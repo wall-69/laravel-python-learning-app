@@ -11,35 +11,50 @@
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="d-flex flex-column" style="min-height: 100svh;">
+<body class="d-flex flex-column min-vh-100">
     <div id="app" class="flex-grow-1 d-flex flex-column">
-        <header class="sticky-top">
-            <nav
-                class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-md-evenly py-3">
-                <a href="#">PyTutor</a>
-                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2">Home</a></li>
-                    <li><a href="#" class="nav-link px-2">Features</a></li>
-                    <li><a href="#" class="nav-link px-2">Pricing</a></li>
-                    <li><a href="#" class="nav-link px-2">FAQs</a></li>
-                    <li><a href="#" class="nav-link px-2">About</a></li>
-                </ul>
-                <div class="text-end">
-                    <button type="button" class="btn btn-outline-primary me-2">Prihlásiť sa</button>
-
-                    <button type="button" class="btn btn-primary">
-                        Registrovať sa
+        <header class="sticky-top bg-light">
+            <nav class="navbar navbar-expand-md border-bottom">
+                <div class="container">
+                    <a href="#" class="navbar-brand">PyTutor</a>
+                    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+                        <i class="navbar-toggler-icon"></i>
                     </button>
+                    <div id="nav" class="collapse navbar-collapse justify-content-center">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a href="#" class="nav-link">Lekcie</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Cvičenia</a></li>
+                            <li class="nav-item"><a href="#" class="nav-link">Kvízy</a></li>
+                        </ul>
+
+                        <div class="ms-auto">
+                            <button type="button" class="btn btn-outline-primary me-2">Prihlásiť sa</button>
+
+                            <button type="button" class="btn btn-primary">
+                                Registrovať sa
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </header>
 
-        <main class="flex-grow-1">
-            <aside>
-
+        <main class="flex-grow-1 row">
+            <aside class="d-none d-lg-block col-md-2 border-end pe-0">
+                <div class="list-group list-group-flush list-group-numbered">
+                    <a href="#" class="list-group-item border-bottom active px-2 py-1">
+                        Čo je to Python?
+                    </a>
+                    <a href="#" class="list-group-item border-bottom px-2 py-1">
+                        Základy
+                    </a>
+                    <a href="#" class="list-group-item border-bottom px-2 py-1">
+                        Premenné a dátové typy
+                    </a>
+                </div>
             </aside>
 
-            <div>
+            <div class="col-12 col-lg-10 pt-3">
                 @yield('content')
             </div>
         </main>

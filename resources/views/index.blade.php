@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    hi??
+    <h1>
+        Čo je to Python?
+    </h1>
 @endsection
