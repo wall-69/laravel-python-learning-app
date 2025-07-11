@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
+import monacoEditorEsmPlugin from "vite-plugin-monaco-editor-esm";
 
 export default defineConfig({
     plugins: [
@@ -9,6 +10,28 @@ export default defineConfig({
             refresh: true,
         }),
         vue(),
+        monacoEditorEsmPlugin({
+            languageWorkers: ["editorWorkerService"],
+        }),
+
+        // Monaco editor Vite-Laravel proxy
+        (() => {
+            return {
+                name: "monaco-editor:rewrite-worker",
+                transform(code, id) {
+                    if (this.environment.mode !== "dev") {
+                        return;
+                    }
+
+                    if (id.includes("worker")) {
+                        return code.replace(
+                            "__laravel_vite_placeholder__.test",
+                            "localhost:8000"
+                        );
+                    }
+                },
+            };
+        })(),
     ],
     resolve: {
         alias: {
