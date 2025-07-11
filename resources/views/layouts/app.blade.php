@@ -16,7 +16,7 @@
         <header class="sticky-top bg-light">
             <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
-                    <a href="#" class="navbar-brand">PyTutor</a>
+                    <a href="{{ route('index') }}" class="navbar-brand">PyTutor</a>
                     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
                         <i class="navbar-toggler-icon"></i>
                     </button>
@@ -28,18 +28,28 @@
                         </ul>
 
                         <div class="ms-auto">
-                            <button type="button" class="btn btn-outline-primary me-2">Prihlásiť sa</button>
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Prihlásiť sa</a>
 
-                            <button type="button" class="btn btn-primary">
-                                Registrovať sa
-                            </button>
+                                <a href="{{ route('register') }}" class="btn btn-primary">
+                                    Registrovať sa
+                                </a>
+                            @endguest
+                            @auth
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+
+                                    <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
+                                </form>
+                            @endauth
                         </div>
                     </div>
                 </div>
             </nav>
         </header>
 
-        <main class="flex-grow-1 row">
+        <main class="flex-grow-1 row g-0">
             <aside class="d-none d-lg-block col-md-2 border-end pe-0">
                 <div class="list-group list-group-flush list-group-numbered">
                     <a href="#" class="list-group-item border-bottom active px-2 py-1">
@@ -54,7 +64,7 @@
                 </div>
             </aside>
 
-            <div class="col-12 col-lg-10 pt-3">
+            <div class="col-12 col-lg-10 container py-3">
                 @yield('content')
             </div>
         </main>
