@@ -3,11 +3,11 @@
 <div class="alert alert-{{ $type }} alert-dismissible fade show d-flex align-items-center gap-2"
     style="min-width: 320px;" role="alert">
     @if ($type == 'success')
-        <i class="bx bxs-check-circle" style="font-size: 24px;"></i>
+        <i class="bx bx-md bxs-check-circle"></i>
     @elseif($type == 'warning')
-        <i class="bx bxs-alert-circle" style="font-size: 24px;"></i>
+        <i class="bx bx-md bxs-alert-circle"></i>
     @elseif($type == 'danger')
-        <i class="bx bxs-fire" style="font-size: 24px;"></i>
+        <i class="bx bx-md bxs-fire"></i>
     @endif
 
     {{ $message }}

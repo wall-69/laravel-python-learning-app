@@ -6,7 +6,7 @@ import monacoEditorEsmPlugin from "vite-plugin-monaco-editor-esm";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/css/app.css", "resources/js/app.js"],
+            input: ["resources/sass/app.scss", "resources/js/app.js"],
             refresh: true,
         }),
         vue(),
