@@ -21,6 +21,7 @@ class UserController extends Controller
 
         User::create($data);
 
-        return redirect(route("login"));
+        return redirect(route("login"))
+            ->with("success", "Váš účet bol úspešne vytvorený. Aktivujte si ho cez overovací e-mail.");
     }
 }
