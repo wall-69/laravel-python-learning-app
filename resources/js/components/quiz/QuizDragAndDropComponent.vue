@@ -12,8 +12,16 @@
             <i v-else-if="reveal && !correct" class="bx bx-x fw-bold"></i>
         </p>
 
-        <div class="mb-1 answers">
-            <slot name="answers"></slot>
+        <div class="answers row m-0 mb-1">
+            <!-- Drops -->
+            <div class="col-6 row g-1">
+                <slot name="drops"></slot>
+            </div>
+
+            <!-- Drags -->
+            <div ref="drags" class="col-6 row g-1">
+                <slot name="drags"></slot>
+            </div>
         </div>
 
         <div
@@ -49,16 +57,24 @@
     </li>
 </template>
 <script setup>
-import { computed, inject, provide } from "vue";
+import { computed, inject, onMounted, provide, ref } from "vue";
 
 const props = defineProps({
     type: String,
     questionNumber: Number,
 });
 
+const drags = ref(null);
+
 provide("questionNumber", props.questionNumber);
 const reveal = inject("reveal");
 const questionMap = inject("questionMap");
 
 const correct = computed(() => questionMap[props.questionNumber]);
+
+onMounted(() => {
+    for (let i = drags.value.children.length; i >= 0; i--) {
+        drags.value.appendChild(drags.value.children[(Math.random() * i) | 0]);
+    }
+});
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="form-check">
+    <div class="answer form-check">
         <!-- radio -->
         <template v-if="type == 'radio'">
             <input

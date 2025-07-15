@@ -50,9 +50,41 @@
                 nohy.
             </template>
         </quiz-choice>
+        {{-- Drag and drop --}}
+        <quiz-drag-and-drop :question-number="3">
+            <template #question>
+                Priraď pojmy k vysvetleniam.
+            </template>
 
-        <!-- Drag & drop -->
+            <template #drags>
+                <quiz-drag :drop="1">
+                    Peking
+                </quiz-drag>
+                <quiz-drag :drop="2">
+                    Washington DC
+                </quiz-drag>
+                <quiz-drag :drop="3">
+                    Canberra
+                </quiz-drag>
+            </template>
+            <template #drops>
+                <quiz-drop :id="1">
+                    Čína
+                </quiz-drop>
+                <quiz-drop :id="2">
+                    USA
+                </quiz-drop>
+                <quiz-drop :id="3">
+                    Austrália
+                </quiz-drop>
+            </template>
+
+            <template #explanation>
+                Hlavné mestá môžu byť nájdené na napríklad mapách. Tí, ktorí dávali pozor na geografii môžu potvrdiť, že
+                toto sú správne odpovede.
+            </template>
+        </quiz-drag-and-drop>
     </quiz>
 
-    <code-runner :id="1"></code-runner>
+    {{-- <code-runner :id="1"></code-runner> --}}
 @endsection

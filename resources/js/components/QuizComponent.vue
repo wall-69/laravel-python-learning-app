@@ -88,17 +88,29 @@ function checkQuiz(event) {
 
     for (let question of questions.value.children) {
         let allCorrect = true;
+        let answersContainer = question.querySelector(".answers");
+        for (let answer of answersContainer.children) {
+            if (answer.classList.contains("answer")) {
+                const input = answer.querySelector("input");
 
-        for (let answerContainer of question.children) {
-            if (!answerContainer.classList.contains("form-check")) continue;
+                if (input.type == "radio" || input.type == "checkbox") {
+                    const isChecked = input.checked;
+                    const isCorrect = input.dataset.correct === "true";
 
-            const input = answerContainer.querySelector("input");
-            const isChecked = input.checked;
-            const isCorrect = input.dataset.correct === "true";
-
-            if ((isChecked && !isCorrect) || (!isChecked && isCorrect)) {
-                allCorrect = false;
-                break;
+                    if (
+                        (isChecked && !isCorrect) ||
+                        (!isChecked && isCorrect)
+                    ) {
+                        allCorrect = false;
+                        break;
+                    }
+                }
+            } else {
+                for (let drag of answer.querySelectorAll(".drag")) {
+                    if (drag.dataset.drop != drag.dataset.inDrop) {
+                        allCorrect = false;
+                    }
+                }
             }
         }
 
