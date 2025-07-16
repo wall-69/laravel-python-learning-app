@@ -23,12 +23,12 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
-        $data = $request->validate([
+        $credentials = $request->validate([
             "email" => "required",
-            "password" => "required"
+            "password" => "required",
         ]);
 
-        if (Auth::attempt($data)) {
+        if (Auth::attempt($credentials, (bool) $request->remember_me)) {
             session()->regenerate();
 
             return redirect(route("index"));
