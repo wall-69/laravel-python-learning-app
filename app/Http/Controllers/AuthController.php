@@ -24,19 +24,19 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            "email" => "required",
+            "email" => "required|email",
             "password" => "required",
         ]);
 
-        if (Auth::attempt($credentials, (bool) $request->remember_me)) {
-            session()->regenerate();
-
-            return redirect(route("index"));
+        if (!Auth::attempt($credentials, (bool) $request->remember_me)) {
+            return back()->withErrors([
+                "password" => __("auth.failed")
+            ])->onlyInput("email");
         }
 
-        return back()->withErrors([
-            "password" => "Zadali ste zlý email alebo heslo."
-        ])->onlyInput("email");
+        session()->regenerate();
+
+        return redirect(route("index"));
     }
 
     public function logout()
