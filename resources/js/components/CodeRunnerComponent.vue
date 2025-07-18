@@ -41,12 +41,36 @@ onMounted(() => {
 async function runCode() {
     const code = getEditorText();
 
-    const response = await axios.post("/code-runner", {
-        code: code,
-    });
+    try {
+        const response = await axios.post("/code-runner", { code });
 
-    if (response.status == 200) {
-        editorOutput.value.value = response.data.output;
+        if (response.status === 200) {
+            editorOutput.value.value = response.data.output;
+        }
+    } catch (error) {
+        // Server responded with a status outside 2xx
+        if (error.response) {
+            // Email not verified
+            if (error.response.status === 403) {
+                window.location.href = "/email/verify";
+                return;
+            }
+
+            editorOutput.value.value =
+                "Error: " + error.response.data.message ||
+                error.response.statusText;
+        }
+
+        // No response
+        else if (error.request) {
+            editorOutput.value.value =
+                "Error: Server neodpovedal. Skúste znova alebo neskôr.";
+        }
+
+        // Other errors
+        else {
+            editorOutput.value.value = "Error: " + error.message;
+        }
     }
 }
 

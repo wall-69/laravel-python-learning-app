@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CodeRunnerController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,14 @@ Route::controller(AuthController::class)->group(function () {
     });
 });
 
+// Email verification
+Route::controller(EmailVerificationController::class)->middleware("auth")->name("verification.")->group(function () {
+    Route::get("/email/verify", "notice")->name("notice");
+    Route::get("/email/verify/{id}/{hash}", "verify")->middleware("signed")->name("verify");
+
+    Route::post("/email/verification-notification", "send")->middleware("throttle:1,3")->name("send");
+});
+
 // User
 Route::controller(UserController::class)->name("users.")->group(function () {
     Route::middleware("guest")->group(function () {
@@ -36,6 +45,6 @@ Route::controller(UserController::class)->name("users.")->group(function () {
 });
 
 // CodeRunner
-Route::controller(CodeRunnerController::class)->middleware("auth")->group(function () {
+Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])->group(function () {
     Route::post("/code-runner", "runCode")->name("code-runner.run");
 });

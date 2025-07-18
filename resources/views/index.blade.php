@@ -86,5 +86,5 @@
         </quiz-drag-and-drop>
     </quiz>
 
-    {{-- <code-runner :id="1"></code-runner> --}}
+    <code-runner :id="1"></code-runner>
 @endsection

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Auth;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -19,9 +21,13 @@ class UserController extends Controller
             "tos" => "required|accepted",
         ]);
 
-        User::create($data);
+        $user = User::create($data);
 
-        return redirect(route("login"))
+        Auth::login($user);
+
+        event(new Registered($user));
+
+        return redirect(route("verification.notice"))
             ->with("success", "Váš účet bol úspešne vytvorený. Aktivujte si ho cez overovací e-mail.");
     }
 }

@@ -40,7 +40,7 @@ return [
     'distinct'               => ':Attribute má duplicitnú hodnotu.',
     'doesnt_end_with'        => ':Attribute nesmie končiť jednou z týchto možností: :values.',
     'doesnt_start_with'      => ':Attribute nesmie začínať jednou z týchto možností: :values.',
-    'email'                  => ':Attribute musí byť platná emailová adresa.',
+    'email'                  => ':Attribute musí byť platná e-mailová adresa.',
     'ends_with'              => ':Attribute musí končiť jednou z týchto možností: :values.',
     'enum'                   => 'Vybraná hodnota :attribute je neplatná.',
     'exists'                 => 'Zvolená Hodnota :attribute neexistuje.',
