@@ -9,11 +9,11 @@ class CodeRunnerController extends Controller
 {
     public function runCode(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             "code" => "required"
         ]);
 
-        $userCode = $data["code"];
+        $userCode = $request->code;
 
         // Write to a temp file
         $tempFile = storage_path('app/code_runner_' . uniqid() . '.py');
@@ -24,6 +24,8 @@ class CodeRunnerController extends Controller
         if (!isset($env['SystemRoot'])) {
             $env['SystemRoot'] = 'C:\\Windows';
         }
+        $env['PYTHONIOENCODING'] = 'utf-8';
+
         $process = new Process(
             ['C:\\Program Files\\Python310\\python.exe', $tempFile],
             null,
@@ -34,14 +36,9 @@ class CodeRunnerController extends Controller
         // Optional: delete temp file
         unlink($tempFile);
 
-        $output = "";
+        $output = $process->isSuccessful() ? $process->getOutput() : $process->getErrorOutput();
 
-        // Handle result
-        if (!$process->isSuccessful()) {
-            $output = $process->getErrorOutput();
-        } else {
-            $output = $process->getOutput();
-        }
+        $output = mb_convert_encoding($output, 'UTF-8', 'auto');
 
         return response()->json([
             "output" => $output
