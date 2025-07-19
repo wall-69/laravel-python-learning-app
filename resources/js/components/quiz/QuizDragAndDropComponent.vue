@@ -12,14 +12,13 @@
             <i v-else-if="reveal && !correct" class="bx bx-x fw-bold"></i>
         </p>
 
-        <div class="answers row m-0 mb-1">
-            <!-- Drops -->
-            <div class="col-6 row g-1">
+        <div
+            class="answers d-flex flex-column flex-md-row flex-md-wrap gap-3 gap-md-5"
+        >
+            <div ref="dropsCol" class="d-flex flex-column gap-2">
                 <slot name="drops"></slot>
             </div>
-
-            <!-- Drags -->
-            <div ref="drags" class="col-6 row g-1">
+            <div ref="dragsCol" class="d-flex flex-column gap-2">
                 <slot name="drags"></slot>
             </div>
         </div>
@@ -57,14 +56,15 @@
     </li>
 </template>
 <script setup>
-import { computed, inject, onMounted, provide, ref } from "vue";
+import { computed, inject, nextTick, onMounted, provide, ref } from "vue";
 
 const props = defineProps({
     type: String,
     questionNumber: Number,
 });
 
-const drags = ref(null);
+const dropsCol = ref(null);
+const dragsCol = ref(null);
 
 provide("questionNumber", props.questionNumber);
 const reveal = inject("reveal");
@@ -72,9 +72,27 @@ const questionMap = inject("questionMap");
 
 const correct = computed(() => questionMap[props.questionNumber]);
 
-onMounted(() => {
-    for (let i = drags.value.children.length; i >= 0; i--) {
-        drags.value.appendChild(drags.value.children[(Math.random() * i) | 0]);
+onMounted(async () => {
+    await nextTick();
+
+    // Randomize drag positions
+    for (let i = dragsCol.value.children.length; i >= 0; i--) {
+        dragsCol.value.appendChild(
+            dragsCol.value.children[(Math.random() * i) | 0]
+        );
+    }
+
+    for (let i = 0; i < dropsCol.value.children.length; i++) {
+        const dropEl = dropsCol.value.children[i].firstElementChild;
+        const dragEl = dragsCol.value.children[i].firstElementChild;
+
+        const dropHeight = dropEl.offsetHeight;
+        const dragHeight = dragEl.offsetHeight;
+        const maxHeight = Math.max(dropHeight, dragHeight);
+
+        dropEl.style.height = `${Math.min(maxHeight, 150)}px`;
+        dragEl.style.minHeight = `${Math.min(maxHeight, 150)}px`;
+        dragEl.parentElement.style.minHeight = `${Math.min(maxHeight, 150)}px`;
     }
 });
 </script>

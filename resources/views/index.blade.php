@@ -84,6 +84,47 @@
                 toto sú správne odpovede.
             </template>
         </quiz-drag-and-drop>
+
+        <quiz-drag-and-drop :question-number="4">
+            <template #question>
+                Priraď pojmy k vysvetleniam.
+            </template>
+
+            <template #drags>
+                <quiz-drag :drop="1">
+                    C++ je viacparadigmový programovací jazyk vyššej úrovne na všeobecné použitie, ktorý umožňuje pracovať
+                    aj s prostriedkami nízkej úrovne. Má statickú typovú kontrolu, podporuje procedurálne programovanie,
+                    dátovú abstrakciu, objektovo orientované programovanie, ale aj generické programovanie.
+
+                </quiz-drag>
+                <quiz-drag :drop="2">
+                    Python je interpretovaný, interaktívny programovací jazyk, ktorý vytvoril Guido van Rossum, pôvodne ako
+                    skriptovací jazyk pre Amoeba OS schopný systémových volaní. Python je často porovnávaný s jazykmi Tcl,
+                    Perl, Scheme, Java a Ruby. Python je vyvíjaný ako open source projekt, a je v súčasnosti pri verzii 3.12
+                </quiz-drag>
+                <quiz-drag :drop="3">
+                    JavaScript, je skriptovací programovací jazyk. Jazyk je používaný najmä pri tvorbe webových stránok.
+                    Pôvodne ho vyvíjal Brendan Eich zo spoločnosti Netscape Communications pod názvom Mocha, neskôr pod
+                    menom LiveScript.
+                </quiz-drag>
+            </template>
+            <template #drops>
+                <quiz-drop :id="1">
+                    C++
+                </quiz-drop>
+                <quiz-drop :id="2">
+                    Python
+                </quiz-drop>
+                <quiz-drop :id="3">
+                    JavaScript
+                </quiz-drop>
+            </template>
+
+            <template #explanation>
+                Hlavné mestá môžu byť nájdené na napríklad mapách. Tí, ktorí dávali pozor na geografii môžu potvrdiť, že
+                toto sú správne odpovede.
+            </template>
+        </quiz-drag-and-drop>
     </quiz>
 
     <code-runner :id="1"></code-runner>
