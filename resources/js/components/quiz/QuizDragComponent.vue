@@ -19,21 +19,12 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 
+// Define
 const props = defineProps({
     drop: Number,
 });
 
-const drag = ref(null);
-const inDrop = ref(-1);
-
-let startX = 0,
-    startY = 0;
-let offsetX = 0,
-    offsetY = 0;
-const dragging = ref(false);
-let relX = 0;
-let relY = 0;
-
+// Lifecycle
 onMounted(() => {
     startX = drag.value.offsetLeft;
     startY = drag.value.offsetTop;
@@ -55,6 +46,19 @@ onUnmounted(() => {
     window.removeEventListener("resize", onWindowResize);
 });
 
+// Variables
+const drag = ref(null);
+const inDrop = ref(-1);
+
+let startX = 0,
+    startY = 0;
+let offsetX = 0,
+    offsetY = 0;
+const dragging = ref(false);
+let relX = 0;
+let relY = 0;
+
+// Functions
 function onMouseDown(e) {
     dragging.value = true;
     const parentRect = drag.value.offsetParent.getBoundingClientRect();

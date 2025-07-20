@@ -10,6 +10,7 @@
     </div>
 </template>
 <script setup>
+// Define
 const props = defineProps({
     id: Number,
 });

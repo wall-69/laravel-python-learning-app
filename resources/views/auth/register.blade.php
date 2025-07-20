@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('form')
-    <form action="{{ route('users.store') }}" method="POST" class="m-auto p-3 border" style="max-width: 560px;">
+    <form action="{{ route('users.store') }}" method="POST" class="mw-form m-auto p-3 border">
         @csrf
         @method('POST')
 

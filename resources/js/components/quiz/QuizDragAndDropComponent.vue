@@ -25,7 +25,7 @@
 
         <div
             v-show="reveal"
-            class="border px-3 py-2"
+            class="border px-3 py-2 mt-1"
             :class="{
                 'bg-success text-bg-success': correct,
                 'bg-danger text-bg-danger': !correct,
@@ -58,20 +58,13 @@
 <script setup>
 import { computed, inject, nextTick, onMounted, provide, ref } from "vue";
 
+// Define
 const props = defineProps({
     type: String,
     questionNumber: Number,
 });
 
-const dropsCol = ref(null);
-const dragsCol = ref(null);
-
-provide("questionNumber", props.questionNumber);
-const reveal = inject("reveal");
-const questionMap = inject("questionMap");
-
-const correct = computed(() => questionMap[props.questionNumber]);
-
+// Lifecycle
 onMounted(async () => {
     await nextTick();
 
@@ -95,4 +88,16 @@ onMounted(async () => {
         dragEl.parentElement.style.minHeight = `${Math.min(maxHeight, 150)}px`;
     }
 });
+
+// Variables
+const dropsCol = ref(null);
+const dragsCol = ref(null);
+
+const reveal = inject("reveal");
+const questionMap = inject("questionMap");
+
+provide("questionNumber", props.questionNumber);
+
+// Computed
+const correct = computed(() => questionMap[props.questionNumber]);
 </script>

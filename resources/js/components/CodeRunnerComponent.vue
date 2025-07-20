@@ -19,14 +19,12 @@ import axios from "axios";
 import * as monaco from "monaco-editor";
 import { onMounted, ref } from "vue";
 
+// Define
 const props = defineProps({
     id: Number,
 });
 
-let editor = null;
-const editorContainer = ref(null);
-const editorOutput = ref(null);
-
+// Lifecycle
 onMounted(() => {
     if (editorContainer.value) {
         editor = monaco.editor.create(editorContainer.value, {
@@ -38,6 +36,12 @@ onMounted(() => {
     }
 });
 
+// Variables
+let editor = null;
+const editorContainer = ref(null);
+const editorOutput = ref(null);
+
+// Functions
 async function runCode() {
     const code = getEditorText();
 

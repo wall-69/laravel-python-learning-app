@@ -51,14 +51,18 @@
 <script setup>
 import { computed, inject, provide } from "vue";
 
+// Define
 const props = defineProps({
     type: String,
     questionNumber: Number,
 });
 
-provide("questionNumber", props.questionNumber);
+// Variables
 const reveal = inject("reveal");
 const questionMap = inject("questionMap");
 
+provide("questionNumber", props.questionNumber);
+
+// Computed
 const correct = computed(() => questionMap[props.questionNumber]);
 </script>

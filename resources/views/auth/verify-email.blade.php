@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('form')
-    <div class="m-auto p-3 border text-center" style="max-width: 500px;">
+    <div class="mw-form m-auto p-3 border text-center">
         <h2>Overte svoju e-mailovú adresu.</h2>
         <p>
             Pre dokončenie registrácie musíte overiť svoju e-mailovú adresu.

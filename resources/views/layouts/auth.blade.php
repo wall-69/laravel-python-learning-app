@@ -15,17 +15,7 @@
 <body class="d-flex flex-column min-vh-100">
     <div id="app" class="flex-grow-1 d-flex flex-column">
         {{-- Alerts --}}
-        <div class="position-absolute z-3" style="top: 80px; left: 50%; transform: translateX(-50%)">
-            @session('success')
-                <x-alert type="success" :message="session('success')"></x-alert>
-            @endsession
-            @session('warning')
-                <x-alert type="warning" :message="session('warning')"></x-alert>
-            @endsession
-            @session('danger')
-                <x-alert type="danger" :message="session('danger')"></x-alert>
-            @endsession
-        </div>
+        <x-alerts />
 
         <header class="sticky-top bg-light">
             <nav class="navbar navbar-expand-md border-bottom">

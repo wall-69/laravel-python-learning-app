@@ -22869,6 +22869,28 @@ namespace Illuminate\Http {
             }
     }
 
+namespace Illuminate\Routing {
+    /**
+     * 
+     *
+     * @mixin \Illuminate\Routing\RouteRegistrar
+     */
+    class Router {
+        /**
+         * 
+         *
+         * @see \LaravelLang\Routes\ServiceProvider::registerGroup()
+         * @param \Closure $callback
+         * @static 
+         */
+        public static function localizedGroup($callback)
+        {
+            return \Illuminate\Routing\Router::localizedGroup($callback);
+        }
+
+            }
+    }
+
 
 namespace  {
     class App extends \Illuminate\Support\Facades\App {}

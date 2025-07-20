@@ -31,6 +31,7 @@
 <script setup>
 import { inject } from "vue";
 
+// Define
 const props = defineProps({
     id: Number,
     type: String,
@@ -39,5 +40,7 @@ const props = defineProps({
         default: false,
     },
 });
+
+// Variables
 const questionNumber = inject("questionNumber");
 </script>

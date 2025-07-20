@@ -7,6 +7,10 @@
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
 
+/*
+    CUSTOM CLASSES
+*/
+
 // Icons sizing
 .bx-xs {
     font-size: 0.25rem;
@@ -19,4 +23,20 @@
 }
 .bx-lg {
     font-size: 2rem;
+}
+
+// Alerts
+.alerts-container {
+    top: 80px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    @extend .position-absolute;
+    @extend .z-3;
+}
+
+// Widths
+.mw-form {
+    max-width: 500px;
 }

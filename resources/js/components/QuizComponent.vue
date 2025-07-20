@@ -64,12 +64,17 @@
 <script setup>
 import { computed, provide, reactive, ref } from "vue";
 
+// Variables
 const questions = ref(null);
 const results = ref(null);
 
 const reveal = ref(false);
 const questionMap = reactive({});
 
+provide("reveal", reveal);
+provide("questionMap", questionMap);
+
+// Computed
 const correct = computed(
     () => Object.values(questionMap).filter((v) => v === true).length
 );
@@ -78,9 +83,7 @@ const correctPercent = computed(() =>
     Math.round((correct.value / total.value) * 100)
 );
 
-provide("reveal", reveal);
-provide("questionMap", questionMap);
-
+// Functions
 function checkQuiz(event) {
     event.preventDefault();
 
