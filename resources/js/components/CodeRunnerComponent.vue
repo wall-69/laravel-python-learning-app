@@ -54,6 +54,12 @@ async function runCode() {
     } catch (error) {
         // Server responded with a status outside 2xx
         if (error.response) {
+            // Not logged in
+            if (error.response.status === 401) {
+                window.location.href = "/login";
+                return;
+            }
+
             // Email not verified
             if (error.response.status === 403) {
                 window.location.href = "/email/verify";
