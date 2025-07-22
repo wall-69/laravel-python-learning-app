@@ -47,6 +47,7 @@ class CodeRunnerController extends Controller
         $output = mb_convert_encoding($output, "UTF-8", "auto");
 
         return response()->json([
+            "success" => $process->isSuccessful(),
             "output" => $output
         ]);
     }
