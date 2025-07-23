@@ -26,7 +26,7 @@ export default defineConfig({
                     if (id.includes("worker")) {
                         return code.replace(
                             "__laravel_vite_placeholder__.test",
-                            "localhost:8000"
+                            "127.0.0.1:8000"
                         );
                     }
                 },
