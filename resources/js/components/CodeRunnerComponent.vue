@@ -16,8 +16,8 @@
 </template>
 <script setup>
 import axios from "axios";
-import * as monaco from "monaco-editor";
 import { onMounted, ref } from "vue";
+import start, { E_EDITOR_THEME } from "monaco-python";
 
 // Define
 const props = defineProps({
@@ -25,14 +25,12 @@ const props = defineProps({
 });
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
     if (editorContainer.value) {
-        editor = monaco.editor.create(editorContainer.value, {
+        editor = await start(editorContainer.value, {
+            theme: E_EDITOR_THEME.LIGHT_VS,
             value: 'print("Ahoj, svet! Moje ID je ' + props.id + '")',
-            language: "python",
-            automaticLayout: true,
-            minimap: { enabled: false },
-        });
+        }).then((editor) => editor.getMonacoEditorApp().getEditor());
     }
 });
 

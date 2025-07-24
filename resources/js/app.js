@@ -11,8 +11,7 @@ import QuizDragComponent from "./components/quiz/QuizDragComponent.vue";
 import QuizDropComponent from "./components/quiz/QuizDropComponent.vue";
 
 // Monaco editor
-import * as monaco from "monaco-editor";
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import "monaco-python";
 
 // Vue
 const app = createApp({});
@@ -26,13 +25,3 @@ app.component("quiz-drag", QuizDragComponent);
 app.component("quiz-drop", QuizDropComponent);
 
 app.mount("#app");
-
-// Monaco editor
-globalThis.MonacoEnvironment = {
-    getWorker(workerId, label) {
-        switch (label) {
-            default:
-                return new editorWorker();
-        }
-    },
-};
