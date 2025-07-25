@@ -127,5 +127,29 @@
         </quiz-drag-and-drop>
     </quiz>
 
-    <code-runner :id="1"></code-runner>
+    <code-runner class="mb-5"></code-runner>
+    <code-runner class="mb-5"></code-runner>
+
+    <code-block>
+        <template #header>
+            Príklad bloku kódu.
+        </template>
+        <template #description>
+            Toto je popis bloku kódu, často bude obsahovať vysvetlivky ku kódu, ktorý sa nachádza nižšie.
+        </template>
+        <template #code>
+            <pre>
+                print("Hello!!")
+        
+                codeBlock = "Toto je code block"
+                mojeCislo = 2
+        
+                print(codeBlock, mojeCislo)
+        
+                # Tu je podmienka
+                if mojeCislo == 2:
+                    print("They are two!!")
+            </pre>
+        </template>
+    </code-block>
 @endsection

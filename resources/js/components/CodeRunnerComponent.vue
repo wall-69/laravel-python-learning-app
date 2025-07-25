@@ -1,36 +1,36 @@
 <template>
-    <div
-        ref="editorContainer"
-        class="border flex-grow-1"
-        style="width: calc(100% - 14px); height: 300px"
-    ></div>
-    <button @click="runCode" class="mt-1 btn btn-primary">Spustiť</button>
+    <div>
+        <div
+            ref="editorContainer"
+            class="border flex-grow-1"
+            style="width: calc(100% - 14px); height: 300px"
+        ></div>
+        <button @click="runCode" class="mt-1 btn btn-primary">Spustiť</button>
 
-    <h3 class="mt-3">Výstup</h3>
-    <textarea
-        ref="editorOutput"
-        class="form-control"
-        style="width: calc(100% - 14px); height: 200px"
-        readonly
-    ></textarea>
+        <h3 class="mt-3">Výstup</h3>
+        <textarea
+            ref="editorOutput"
+            class="form-control"
+            style="width: calc(100% - 14px); height: 200px"
+            readonly
+        ></textarea>
+    </div>
 </template>
 <script setup>
 import axios from "axios";
+import * as monaco from "monaco-editor";
 import { onMounted, ref } from "vue";
-import start, { E_EDITOR_THEME } from "monaco-python";
-
-// Define
-const props = defineProps({
-    id: Number,
-});
 
 // Lifecycle
-onMounted(async () => {
+onMounted(() => {
     if (editorContainer.value) {
-        editor = await start(editorContainer.value, {
-            theme: E_EDITOR_THEME.LIGHT_VS,
-            value: 'print("Ahoj, svet! Moje ID je ' + props.id + '")',
-        }).then((editor) => editor.getMonacoEditorApp().getEditor());
+        editor = monaco.editor.create(editorContainer.value, {
+            value: 'print("Ahoj, svet!")',
+            language: "python",
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            minimap: { enabled: false },
+        });
     }
 });
 
