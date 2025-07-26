@@ -127,8 +127,22 @@
         </quiz-drag-and-drop>
     </quiz>
 
-    <code-runner class="mb-5"></code-runner>
-    <code-runner class="mb-5"></code-runner>
+    <code-runner class="mb-5">
+        <template #header>
+            Príklad spúšťaču kódu
+        </template>
+
+        <template #code>
+            <pre>
+                print("Ahoj, svet!")
+            </pre>
+        </template>
+    </code-runner>
+    <code-runner class="mb-5">
+        <template #header>
+            Spúšťač kódu č. 2
+        </template>
+    </code-runner>
 
     <code-block>
         <template #header>

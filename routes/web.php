@@ -15,6 +15,10 @@ Route::get("/", function () {
     return view("index");
 })->name("index");
 
+Route::get("/editor-test", function () {
+    return view("editor-test");
+})->middleware("auth");
+
 // Auth
 Route::controller(AuthController::class)->group(function () {
     Route::middleware("guest")->group(function () {

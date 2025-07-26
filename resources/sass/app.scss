@@ -40,3 +40,18 @@
 .mw-form {
     max-width: 500px;
 }
+
+// Editorjs
+.editor-code-runner-header:empty::before {
+    content: "Enter heading...";
+    color: #aaa;
+    pointer-events: none;
+    user-select: none;
+}
+
+.editor-code-runner-description:empty::before {
+    content: "Enter description...";
+    color: #aaa;
+    pointer-events: none;
+    user-select: none;
+}

@@ -10,12 +10,8 @@ import QuizAnswerComponent from "./components/quiz/QuizAnswerComponent.vue";
 import QuizDragAndDropComponent from "./components/quiz/QuizDragAndDropComponent.vue";
 import QuizDragComponent from "./components/quiz/QuizDragComponent.vue";
 import QuizDropComponent from "./components/quiz/QuizDropComponent.vue";
+import AdminEditorComponent from "./components/AdminEditorComponent.vue";
 
-// Monaco editor
-import * as monaco from "monaco-editor";
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-
-// Vue
 const app = createApp({});
 
 app.config.compilerOptions.whitespace = "preserve";
@@ -28,10 +24,12 @@ app.component("quiz-answer", QuizAnswerComponent);
 app.component("quiz-drag-and-drop", QuizDragAndDropComponent);
 app.component("quiz-drag", QuizDragComponent);
 app.component("quiz-drop", QuizDropComponent);
+app.component("admin-editor", AdminEditorComponent);
 
 app.mount("#app");
 
 // Monaco editor
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 globalThis.MonacoEnvironment = {
     getWorker(workerId, label) {
         switch (label) {

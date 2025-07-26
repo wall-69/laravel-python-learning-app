@@ -1,18 +1,19 @@
 <template>
     <div>
-        <h2>
+        <h2 v-if="slots.header">
             <slot name="header"></slot>
         </h2>
-        <p>
+        <p v-if="slots.description">
             <slot name="description"></slot>
         </p>
 
         <div
             ref="codeBlockContainer"
-            class="border flex-grow-1"
+            class="border"
             style="width: calc(100% - 14px); height: 300px"
         ></div>
 
+        <!-- Value slot -->
         <pre
             ref="codeBlockValue"
             class="d-none"
@@ -23,7 +24,10 @@
 <script setup>
 import axios from "axios";
 import * as monaco from "monaco-editor";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, useSlots } from "vue";
+
+// Composables
+const slots = useSlots();
 
 // Lifecycle
 onMounted(() => {
