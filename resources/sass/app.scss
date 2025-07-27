@@ -42,15 +42,17 @@
 }
 
 // Editorjs
-.editor-code-runner-header:empty::before {
-    content: "Enter heading...";
+.editor-code-runner-header:empty::before,
+.editor-code-block-header:empty::before {
+    content: "Zadajte nadpis...";
     color: #aaa;
     pointer-events: none;
     user-select: none;
 }
 
-.editor-code-runner-description:empty::before {
-    content: "Enter description...";
+.editor-code-runner-description:empty::before,
+.editor-code-block-description:empty::before {
+    content: "Zadajte popis...";
     color: #aaa;
     pointer-events: none;
     user-select: none;

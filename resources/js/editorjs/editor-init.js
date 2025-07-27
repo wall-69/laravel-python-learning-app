@@ -1,7 +1,8 @@
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 
-import CodeRunnerBlock from "./tools/CodeRunnerBlock.js";
+import CodeRunnerTool from "./tools/CodeRunnerTool.js";
+import CodeBlockTool from "./tools/CodeBlockTool.js";
 
 export default function useEditor(holderId, data = {}) {
     return new EditorJS({
@@ -20,7 +21,14 @@ export default function useEditor(holderId, data = {}) {
             },
 
             // Custom
-            codeRunner: CodeRunnerBlock,
+            codeRunner: {
+                class: CodeRunnerTool,
+                inlineToolbar: true,
+            },
+            codeBlock: {
+                class: CodeBlockTool,
+                inlineToolbar: true,
+            },
         },
 
         data: data,

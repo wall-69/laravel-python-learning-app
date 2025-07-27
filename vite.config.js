@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
 import monacoEditorEsmPlugin from "vite-plugin-monaco-editor-esm";
+import string from "vite-plugin-string";
 
 export default defineConfig({
     plugins: [
@@ -13,7 +14,9 @@ export default defineConfig({
         monacoEditorEsmPlugin({
             languageWorkers: ["editorWorkerService"],
         }),
-
+        string({
+            include: "**/*.html",
+        }),
         // Monaco editor Vite-Laravel proxy
         (() => {
             return {
