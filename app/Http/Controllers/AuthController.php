@@ -36,7 +36,7 @@ class AuthController extends Controller
 
         session()->regenerate();
 
-        return redirect(route("index"));
+        return redirect()->intended(route("index"));
     }
 
     public function logout()
