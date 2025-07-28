@@ -3,8 +3,8 @@
         <header class="border-bottom">
             <h2 class="fw-bold">Kvíz: over svoje vedomosti!</h2>
             <p>
-                Ak získaš aspoň 90%, dostaneš
-                <span class="text-success fw-bold">+20 BODOV</span>. Kvíz môžeš
+                Ak získaš aspoň 90%, dostaneš &nbsp;
+                <span class="text-success fw-bold">+25 BODOV</span>. Kvíz môžeš
                 zopakovať koľkokrát len chceš.
             </p>
         </header>

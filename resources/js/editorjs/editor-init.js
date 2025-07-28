@@ -3,6 +3,7 @@ import Header from "@editorjs/header";
 
 import CodeRunnerTool from "./tools/CodeRunnerTool.js";
 import CodeBlockTool from "./tools/CodeBlockTool.js";
+import QuizTool from "./tools/QuizTool.js";
 
 export default function useEditor(holderId, data = {}) {
     return new EditorJS({
@@ -27,6 +28,10 @@ export default function useEditor(holderId, data = {}) {
             },
             codeBlock: {
                 class: CodeBlockTool,
+                inlineToolbar: true,
+            },
+            quiz: {
+                class: QuizTool,
                 inlineToolbar: true,
             },
         },

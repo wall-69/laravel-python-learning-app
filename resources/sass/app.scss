@@ -57,3 +57,9 @@
     pointer-events: none;
     user-select: none;
 }
+
+.editor-editable {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
