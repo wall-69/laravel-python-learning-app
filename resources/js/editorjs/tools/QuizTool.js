@@ -1,6 +1,8 @@
 import templateHTML from "./html/QuizTool.html";
+
 import EditorJS from "@editorjs/editorjs";
 import QuizChoiceTool from "./QuizChoiceTool";
+import QuizDragAndDropTool from "./QuizDragAndDropTool";
 
 export default class QuizTool {
     static get toolbox() {
@@ -36,10 +38,13 @@ export default class QuizTool {
                     class: QuizChoiceTool,
                     inlineToolbar: true,
                 },
+                quizDragAndDrop: {
+                    class: QuizDragAndDropTool,
+                    inlineToolbar: false,
+                },
             },
 
-            // TODO: idfk
-            // data: data,
+            data: this.data.questions,
         });
 
         return wrapper;
@@ -49,7 +54,7 @@ export default class QuizTool {
         const questions = await this.innerEditor.save();
 
         return {
-            questions: questions.blocks,
+            questions: questions,
         };
     }
 }

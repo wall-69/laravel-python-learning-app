@@ -58,6 +58,22 @@
     user-select: none;
 }
 
+.editor-quiz-choice-question:empty::before,
+.editor-quiz-dnd-question:empty::before {
+    content: "Zadajte otázku...";
+    color: #aaa;
+    pointer-events: none;
+    user-select: none;
+}
+
+.editor-quiz-choice-explanation:empty::before,
+.editor-quiz-dnd-explanation:empty::before {
+    content: "Zadajte vysvetlenie...";
+    color: #aaa;
+    pointer-events: none;
+    user-select: none;
+}
+
 .editor-editable {
     word-break: break-word;
     overflow-wrap: break-word;

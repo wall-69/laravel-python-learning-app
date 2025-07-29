@@ -25,7 +25,7 @@
             }"
         >
             <span class="fw-bold">
-                {{ correct ? "Správne!" : "Nesprávne!" }} <br />
+                {{ correct ? "Správne!" : "Nesprávne!" }}
             </span>
             <a
                 v-if="!correct"

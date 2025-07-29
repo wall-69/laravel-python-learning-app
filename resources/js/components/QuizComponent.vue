@@ -3,7 +3,7 @@
         <header class="border-bottom">
             <h2 class="fw-bold">Kvíz: over svoje vedomosti!</h2>
             <p>
-                Ak získaš aspoň 90%, dostaneš &nbsp;
+                Ak získaš aspoň 90%, dostaneš
                 <span class="text-success fw-bold">+25 BODOV</span>. Kvíz môžeš
                 zopakovať koľkokrát len chceš.
             </p>
@@ -41,7 +41,7 @@
                     <template v-if="correctPercent >= 90">
                         Super! Ide ti to veľmi dobre a za tvoju snahu ti bolo
                         pripočítaných
-                        <span class="fw-bold">+20 BODOV</span>. Len tak ďalej!
+                        <span class="fw-bold">+25 BODOV</span>. Len tak ďalej!
                     </template>
                     <template v-else-if="correctPercent >= 60">
                         Škoda, ale nie je to úplne márne. Skús si lekciu
