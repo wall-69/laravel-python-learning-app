@@ -16,9 +16,6 @@ export default function useEditor(holderId, data = {}) {
             header: {
                 class: Header,
                 inlineToolbar: true,
-                config: {
-                    defaultLevel: 1,
-                },
             },
 
             // Custom

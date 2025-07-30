@@ -9,7 +9,7 @@
     </div>
 </template>
 <script setup>
-import useEditor from "../editorjs/editor-init";
+import useEditor from "../editorjs/editorInit";
 import { onMounted, ref } from "vue";
 
 // Lifecycle

@@ -1,11 +1,12 @@
 import templateHTML from "./html/QuizChoiceTool.html";
 import quizChoiceAnswerHTML from "./html/QuizChoiceAnswer.html";
+import createAddButton from "./utils/addButton";
 
 export default class QuizChoiceTool {
     static get toolbox() {
         return {
             title: "Choice",
-            icon: "",
+            icon: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h10m-10 7h10m-10 7h10"></path><rect width="4" height="4" x="3" y="3" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="1"></rect><rect width="4" height="4" x="3" y="10" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="1"></rect><rect width="4" height="4" x="3" y="17" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="1"></rect></g></svg>',
         };
     }
 
@@ -50,8 +51,7 @@ export default class QuizChoiceTool {
         }
 
         // Button for adding answers to question
-        const addBtn = document.createElement("button");
-        addBtn.innerText = "+";
+        const addBtn = createAddButton();
         addBtn.addEventListener("click", (e) => {
             const answer = document.createElement("div");
             answer.innerHTML = quizChoiceAnswerHTML.trim();
@@ -63,6 +63,7 @@ export default class QuizChoiceTool {
             deleteBtn.addEventListener("click", (e) => {
                 answer.remove();
             });
+
             this.answersContainer.appendChild(answer);
 
             // Move the add button to the bottom of the DOM
@@ -80,8 +81,11 @@ export default class QuizChoiceTool {
         for (let i = 0; i < this.answersContainer.childElementCount - 1; i++) {
             const answer = this.answersContainer.children[i];
             answers.push({
-                answer: answer.querySelector(".form-check-label").innerText,
-                correct: answer.querySelector(".form-check-input").checked,
+                answer: answer.querySelector(".editor-quiz-choice-answer-text")
+                    .innerText,
+                correct: answer.querySelector(
+                    ".editor-quiz-choice-answer-correct"
+                ).checked,
             });
         }
 
