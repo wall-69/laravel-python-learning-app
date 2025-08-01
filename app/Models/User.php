@@ -61,4 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
             "password" => "hashed",
         ];
     }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
 }

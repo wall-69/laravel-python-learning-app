@@ -41,6 +41,16 @@
     max-width: 500px;
 }
 
+// Admin sidebar
+.admin-sidebar {
+    min-width: 60px;
+}
+@media (min-width: 768px) {
+    .admin-sidebar {
+        width: 240px;
+    }
+}
+
 // Editorjs
 .editor-code-runner-header:empty::before,
 .editor-code-block-header:empty::before {

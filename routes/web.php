@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
@@ -51,4 +52,11 @@ Route::controller(UserController::class)->name("users.")->group(function () {
 // CodeRunner
 Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])->group(function () {
     Route::post("/code-runner", "runCode")->name("code-runner.run");
+});
+
+// Admin
+Route::controller(AdminController::class)->middleware("admin")->name("admin.")->prefix("/admin")->group(function () {
+    Route::get("", "dashboard")->name("dashboard");
+    Route::get("/lectures", "lectures")->name("lectures");
+    Route::get("/categories", "categories")->name("categories");
 });
