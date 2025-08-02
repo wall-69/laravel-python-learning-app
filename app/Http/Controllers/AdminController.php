@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    // GET
+
     public function dashboard()
     {
         return view("admin.dashboard");
@@ -14,10 +16,5 @@ class AdminController extends Controller
     public function lectures()
     {
         return view("admin.lectures");
-    }
-
-    public function categories()
-    {
-        return view("admin.categories");
     }
 }

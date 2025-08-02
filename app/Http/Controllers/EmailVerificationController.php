@@ -8,10 +8,14 @@ use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
+    // GET
+
     public function notice()
     {
         return view("auth.verify-email");
     }
+
+    // POST
 
     public function verify(EmailVerificationRequest $request)
     {

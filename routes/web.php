@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\UserController;
@@ -55,8 +56,19 @@ Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])
 });
 
 // Admin
-Route::controller(AdminController::class)->middleware("admin")->name("admin.")->prefix("/admin")->group(function () {
-    Route::get("", "dashboard")->name("dashboard");
-    Route::get("/lectures", "lectures")->name("lectures");
-    Route::get("/categories", "categories")->name("categories");
+Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () {
+    Route::controller(AdminController::class)->group(function () {
+        Route::get("", "dashboard")->name("dashboard");
+        Route::get("/lectures", "lectures")->name("lectures");
+    });
+
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get("/categories", "index")->name("categories");
+        Route::get("/categories/create", "create")->name("categories.create");
+        Route::get("/categories/{category}/edit", "edit")->name("categories.edit");
+
+        Route::post("/categories", "store")->name("categories.store");
+        Route::patch("/categories/{category}", "update")->name("categories.update");
+        Route::delete("/categories/{category}", "destroy")->name("categories.destroy");
+    });
 });

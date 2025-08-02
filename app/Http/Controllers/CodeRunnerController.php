@@ -8,6 +8,8 @@ use Symfony\Component\Process\Process;
 
 class CodeRunnerController extends Controller
 {
+    // POST
+
     public function runCode(Request $request)
     {
         $request->validate([

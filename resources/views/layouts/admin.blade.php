@@ -17,8 +17,8 @@
         {{-- Alerts --}}
         <x-alerts />
 
-        <main class="flex-grow-1 row g-0">
-            <aside class="admin-sidebar p-0 p-md-3 col-auto border-end">
+        <main class="flex-grow-1 d-flex g-0">
+            <aside class="admin-sidebar p-0 p-md-3 border-end mh-100">
                 <div class="d-flex flex-column">
                     <h3 class="d-none d-md-inline mb-0">
                         <a href="{{ route('index') }}" class="text-decoration-none">PyTutor</a>
@@ -50,7 +50,7 @@
                         </li>
                     </ul>
 
-                    <ul class="d-flex d-md-none nav nav-pills nav-fill flex-column" style="margin-top: 64px">
+                    <ul class="d-flex d-md-none nav nav-pills nav-fill flex-column" style="margin-top: 60px">
                         <li class="nav-item">
                             <a href="{{ route('admin.dashboard') }}"
                                 class="@active('admin.dashboard') nav-link py-3 border-top border-bottom rounded-0 d-flex justify-content-center align-items-center gap-2">
@@ -72,7 +72,7 @@
                     </ul>
                 </div>
             </aside>
-            <div class="col container py-3">
+            <div class="container py-3">
                 @yield('content')
             </div>
         </main>

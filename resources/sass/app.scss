@@ -41,13 +41,20 @@
     max-width: 500px;
 }
 
-// Admin sidebar
-.admin-sidebar {
-    min-width: 60px;
+// Admin
+.admin-table-cell-line-limit {
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+// Admin sidebar
 @media (min-width: 768px) {
     .admin-sidebar {
-        width: 240px;
+        min-width: 240px;
     }
 }
 

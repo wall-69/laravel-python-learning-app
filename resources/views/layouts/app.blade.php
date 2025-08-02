@@ -31,9 +31,10 @@
                             <li class="nav-item"><a href="#" class="nav-link">Kvízy</a></li>
                         </ul>
 
-                        <div class="ms-auto">
+                        <div
+                            class="ms-auto d-flex gap-3 justify-content-start justify-content-md-center align-items-center">
                             @guest
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Prihlásiť sa</a>
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary">Prihlásiť sa</a>
 
                                 <a href="{{ route('register') }}" class="btn btn-primary">
                                     Registrovať sa
@@ -46,6 +47,9 @@
 
                                     <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
                                 </form>
+                                @if (auth()->user()->admin)
+                                    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
+                                @endif
                             @endauth
                         </div>
                     </div>

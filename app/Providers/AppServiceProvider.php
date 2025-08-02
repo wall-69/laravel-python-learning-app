@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Blade;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useBootstrapFive();
+
         Blade::directive("active", function ($route) {
             return "<?php echo request()->routeIs($route) ? 'active' : ''; ?>";
         });

@@ -36,6 +36,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $last_name
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastName($value)
+ * @property-read \App\Models\Admin|null $admin
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmail
