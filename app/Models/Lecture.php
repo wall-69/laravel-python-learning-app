@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -42,6 +44,12 @@ class Lecture extends Model
         "status",
         "blocks"
     ];
+
+    #[Scope]
+    protected function search(Builder $query, string $value)
+    {
+        $query->where("title", "LIKE", "%$value%");
+    }
 
     public function categories()
     {

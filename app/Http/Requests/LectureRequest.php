@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\LectureStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Str;
 
-class CategoryRequest extends FormRequest
+class LectureRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +24,14 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $category = $this->route("category");
+        $lecture = $this->route("lecture");
 
         return [
             "title" => "required|max:255",
             "description" => "required|max:255",
-            "slug" => ["required", "max:255", Rule::unique("categories", "slug")->ignore($category?->id)],
+            "slug" => ["required", "max:255", Rule::unique("lectures", "slug")->ignore($lecture?->id)],
+            "status" => ["required", Rule::enum(LectureStatus::class)],
+            "blocks" => "required|json"
         ];
     }
 

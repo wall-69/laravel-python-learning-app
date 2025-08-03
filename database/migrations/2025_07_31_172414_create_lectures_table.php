@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("title");
             $table->string("description");
             $table->string("slug")->unique();
-            $table->unsignedInteger("views");
+            $table->unsignedInteger("views")->default(0);
             $table->enum("status", LectureStatus::values());
             $table->json("blocks");
             $table->timestamps();

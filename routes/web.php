@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\LectureController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,7 +60,6 @@ Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])
 Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () {
     Route::controller(AdminController::class)->group(function () {
         Route::get("", "dashboard")->name("dashboard");
-        Route::get("/lectures", "lectures")->name("lectures");
     });
 
     Route::controller(CategoryController::class)->group(function () {
@@ -70,5 +70,15 @@ Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () 
         Route::post("/categories", "store")->name("categories.store");
         Route::patch("/categories/{category}", "update")->name("categories.update");
         Route::delete("/categories/{category}", "destroy")->name("categories.destroy");
+    });
+
+    Route::controller(LectureController::class)->group(function () {
+        Route::get("/lectures", "index")->name("lectures");
+        Route::get("/lectures/create", "create")->name("lectures.create");
+        Route::get("/lectures/{lecture}/edit", "edit")->name("lectures.edit");
+
+        Route::post("/lectures", "store")->name("lectures.store");
+        Route::patch("/lectures/{lecture}", "update")->name("lectures.update");
+        Route::delete("/lectures/{lecture}", "destroy")->name("lectures.destroy");
     });
 });

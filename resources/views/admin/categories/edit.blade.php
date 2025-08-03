@@ -12,9 +12,9 @@
 
             {{-- Title --}}
             <div class="mb-3">
-                <label for="titleInput" class="form-label">Nadpis</label>
+                <label for="titleInput" class="form-label">Názov</label>
                 <input type="text" name="title" id="titleInput" class="form-control @error('title') is-invalid @enderror"
-                    placeholder="Python základy" value="{{ $category->title }}" required>
+                    placeholder="Python základy" value="{{ old('title', $category->title) }}" required>
 
                 @error('title')
                     <span class="text-danger mt-1">
@@ -27,7 +27,7 @@
             <div class="mb-3">
                 <label for="descriptionInput" class="form-label">Popis</label>
                 <textarea name="description" id="descriptionInput" class="form-control @error('title') is-invalid @enderror"
-                    rows="3" required>{{ $category->description }}</textarea>
+                    rows="3" required>{{ old('description', $category->description) }}</textarea>
 
                 @error('description')
                     <span class="text-danger mt-1">
@@ -36,8 +36,8 @@
                 @enderror
             </div>
 
-            {{-- Create --}}
-            <div class="">
+            {{-- Update --}}
+            <div>
                 <button type="submit" class="btn btn-primary btn-sm py-2">
                     Upraviť
                 </button>

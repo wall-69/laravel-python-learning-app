@@ -4,57 +4,62 @@
     <div>
         <nav class="navbar navbar-expand-md mb-3">
             <div class="container-fluid">
-                <span class="navbar-brand">Kategórie</span>
+                <span class="navbar-brand">Lekcie</span>
                 <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
                     <i class="navbar-toggler-icon"></i>
                 </button>
                 <div id="nav" class="collapse navbar-collapse justify-content-center">
                     <div
                         class="ms-auto d-flex gap-3 flex-column flex-md-row mt-3 mt-md-0 justify-content-center align-items-start align-items-md-center">
-                        <form action="{{ route('admin.categories') }}" method="GET" class="d-flex" role="search">
+                        <form action="{{ route('admin.lectures') }}" method="GET" class="d-flex" role="search">
                             <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Názov kategórie"
+                                <input type="text" name="search" class="form-control" placeholder="Názov lekcie"
                                     value="{{ request('search') }}">
                                 <button class="btn btn-secondary" type="submit">Hľadať</button>
                             </div>
                         </form>
-                        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">Vytvoriť</a>
+                        <a href="{{ route('admin.lectures.create') }}" class="btn btn-primary">Vytvoriť</a>
                     </div>
                 </div>
             </div>
         </nav>
 
         <div class="container-fluid d-flex flex-column gap-3">
-            @if ($categories->isEmpty())
-                <p>Neboli nájdené žiadne kategórie.</p>
+            @if ($lectures->isEmpty())
+                <p>Neboli nájdené žiadne lekcie.</p>
             @else
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Názov</th>
                             <th class="d-none d-sm-table-cell">Popis</th>
+                            <th>Videnia</th>
+                            <th class="d-none d-sm-table-cell">Status</th>
                             <th>Akcie</th>
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        @foreach ($categories as $category)
+                        @foreach ($lectures as $lecture)
                             <tr>
-                                <td>{{ $category->title }}</td>
+                                <td>{{ $lecture->title }}</td>
                                 <td class="d-none d-sm-table-cell">
                                     <div class="admin-table-cell-line-limit">
-                                        {{ $category->description }}
+                                        {{ $lecture->description }}
                                     </div>
+                                </td>
+                                <td>{{ $lecture->views }}</td>
+                                <td class="d-none d-sm-table-cell">
+                                    {{ __('status.' . $lecture->status) }}
                                 </td>
 
                                 <td>
                                     <div class="d-flex
                                         gap-2">
-                                        <a href="{{ route('admin.categories.edit', $category) }}"
+                                        <a href="{{ route('admin.lectures.edit', $lecture) }}"
                                             class="btn btn-secondary d-flex align-items-center">
                                             <i class="bx bxs-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.categories.destroy', $category->id) }}"
-                                            method="POST">
+                                        <form action="{{ route('admin.lectures.destroy', $lecture->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
 
@@ -69,7 +74,7 @@
                     </tbody>
                 </table>
 
-                {{ $categories->links() }}
+                {{ $lectures->links() }}
             @endif
         </div>
     </div>

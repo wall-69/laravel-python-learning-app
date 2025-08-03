@@ -44,7 +44,7 @@ class CategoryController extends Controller
             ->with("success", "Kategória bola úspešne vytvorená.");
     }
 
-    public function update(Category $category, CategoryRequest $request)
+    public function update(CategoryRequest $request, Category $category)
     {
         $data = $request->validated();
 
@@ -54,7 +54,7 @@ class CategoryController extends Controller
             ->with("success", "Kategória bola úspešne upravená.");
     }
 
-    public function destroy(Category $category, Request $request)
+    public function destroy(Request $request, Category $category)
     {
         $category->delete();
 
