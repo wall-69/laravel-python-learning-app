@@ -7,6 +7,7 @@ use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\UserController;
+use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 
 // Proxy
@@ -49,6 +50,11 @@ Route::controller(UserController::class)->name("users.")->group(function () {
     Route::middleware("guest")->group(function () {
         Route::post("/users", "store")->name("store");
     });
+});
+
+// Lecture
+Route::controller(LectureController::class)->name("lectures.")->group(function () {
+    Route::get("/lekcia/{lecture:slug}", "show")->name("show");
 });
 
 // CodeRunner

@@ -35,6 +35,13 @@ class LectureController extends Controller
         ]);
     }
 
+    public function show(Lecture $lecture)
+    {
+        return view("lecture", [
+            "lecture" => $lecture
+        ]);
+    }
+
     // POST
 
     public function store(LectureRequest $request)

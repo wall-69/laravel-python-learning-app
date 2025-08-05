@@ -91,7 +91,12 @@ function checkQuiz(event) {
 
     for (let question of questions.value.children) {
         let allCorrect = true;
+
         let answersContainer = question.querySelector(".answers");
+        // This can be non quiz element such as a paragraph
+        if (!answersContainer) {
+            continue;
+        }
         for (let answer of answersContainer.children) {
             if (answer.classList.contains("answer")) {
                 const input = answer.querySelector("input");

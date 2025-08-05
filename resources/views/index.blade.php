@@ -2,8 +2,10 @@
 
 @section('content')
     <h1>
-        Čo je to Python?
+        PyTutor
     </h1>
+
+    <a href="{{ route('lectures.show', 'zaklady') }}">Lekcia</a>
 
     <quiz class="mb-5">
         <!-- One choice -->
