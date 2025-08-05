@@ -39,8 +39,8 @@
                     <tbody class="table-group-divider">
                         @foreach ($categories as $category)
                             <tr>
-                                <td>{{ $category->title }}</td>
-                                <td class="d-none d-sm-table-cell">
+                                <td class="text-break">{{ $category->title }}</td>
+                                <td class="text-break d-none d-sm-table-cell">
                                     <div class="admin-table-cell-line-limit">
                                         {{ $category->description }}
                                     </div>

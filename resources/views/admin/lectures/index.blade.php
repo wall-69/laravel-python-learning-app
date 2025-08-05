@@ -41,8 +41,8 @@
                     <tbody class="table-group-divider">
                         @foreach ($lectures as $lecture)
                             <tr>
-                                <td>{{ $lecture->title }}</td>
-                                <td class="d-none d-sm-table-cell">
+                                <td class="text-break">{{ $lecture->title }}</td>
+                                <td class="text-break d-none d-sm-table-cell">
                                     <div class="admin-table-cell-line-limit">
                                         {{ $lecture->description }}
                                     </div>

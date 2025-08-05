@@ -33,7 +33,8 @@ export default class CodeRunnerBlock {
         this.description.innerText = this.data.description || "";
 
         // Fake code submit
-        runButton.addEventListener("click", () => {
+        runButton.addEventListener("click", (e) => {
+            e.preventDefault();
             output.value = "Test: [výstup]";
         });
 

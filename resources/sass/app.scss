@@ -42,6 +42,17 @@
 }
 
 // Admin
+@media (min-width: 992px) {
+    .admin-editor {
+        min-width: 700px;
+    }
+}
+@media (min-width: 1200px) {
+    .admin-editor {
+        min-width: 900px;
+    }
+}
+
 .admin-table-cell-line-limit {
     display: -webkit-box;
     line-clamp: 3;
