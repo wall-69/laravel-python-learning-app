@@ -87,7 +87,7 @@ const correctPercent = computed(() =>
 function checkQuiz(event) {
     event.preventDefault();
 
-    let qNum = 1;
+    let qNum = 0;
 
     for (let question of questions.value.children) {
         let allCorrect = true;

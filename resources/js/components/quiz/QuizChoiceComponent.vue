@@ -1,5 +1,5 @@
 <template>
-    <li :data-type="type">
+    <li>
         <p
             class="mb-0 fw-bold d-flex align-items-center gap-1"
             :class="{
@@ -33,6 +33,7 @@
                 data-bs-toggle="collapse"
                 :href="'#explanation_' + questionNumber"
             >
+                <br />
                 Zobraziť vysvetlenie
             </a>
 
@@ -53,7 +54,6 @@ import { computed, inject, provide } from "vue";
 
 // Define
 const props = defineProps({
-    type: String,
     questionNumber: Number,
 });
 
