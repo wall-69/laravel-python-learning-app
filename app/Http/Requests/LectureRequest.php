@@ -37,6 +37,7 @@ class LectureRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
+        // Create slug
         if ($this->has("title")) {
             $this->merge([
                 "slug" => Str::slug($this->input("title"))

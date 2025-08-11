@@ -6,6 +6,7 @@ use App\Enums\LectureStatus;
 use App\Http\Requests\LectureRequest;
 use App\Models\Lecture;
 use Illuminate\Http\Request;
+use Str;
 
 class LectureController extends Controller
 {
@@ -48,7 +49,14 @@ class LectureController extends Controller
     {
         $data = $request->validated();
 
-        Lecture::create($data);
+        $lecture = Lecture::create($data);
+
+        // Set global block IDs
+        $blocks = json_decode($data["blocks"], true);
+        foreach ($blocks["blocks"] as &$block) {
+            $block["id"] = "lecture_" . $lecture->id . "-" . Str::uuid();
+        }
+        $lecture->update(["blocks" => json_encode($blocks)]);
 
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne vytvorená.");
@@ -57,6 +65,16 @@ class LectureController extends Controller
     public function update(LectureRequest $request, Lecture $lecture)
     {
         $data = $request->validated();
+
+        // Set global block IDs
+        $blocks = json_decode($data["blocks"], true);
+        $prefix = "lecture_" . $lecture->id . "-";
+        foreach ($blocks["blocks"] as &$block) {
+            if (!str_starts_with($block["id"], $prefix)) {
+                $block["id"] = $prefix . Str::uuid();
+            }
+        }
+        $data["blocks"] = json_encode($blocks);
 
         $lecture->update($data);
 

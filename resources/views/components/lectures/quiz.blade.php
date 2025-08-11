@@ -1,6 +1,6 @@
-@props(['quizData'])
+@props(['quizId', 'quizData'])
 
-<quiz>
+<quiz id="{{ $quizId }}">
     @foreach ($quizData['blocks'] as $index => $quizBlock)
         @php
             $type = $quizBlock['type'];

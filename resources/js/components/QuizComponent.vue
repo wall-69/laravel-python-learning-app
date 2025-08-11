@@ -64,6 +64,11 @@
 <script setup>
 import { computed, provide, reactive, ref } from "vue";
 
+// Define
+const props = defineProps({
+    id: String,
+});
+
 // Variables
 const questions = ref(null);
 const results = ref(null);
@@ -131,5 +136,10 @@ function checkQuiz(event) {
         results.value.scrollIntoView();
     }
     reveal.value = true;
+
+    if (correctPercent.value >= 90) {
+        // TODO: send quiz completion request
+        console.log(props.id);
+    }
 }
 </script>
