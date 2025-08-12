@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('category_lecture', function (Blueprint $table) {
             $table->foreignIdFor(Category::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Lecture::class)->constrained()->cascadeOnDelete();
+            $table->string("lecture_id", 6);
             $table->unsignedSmallInteger("order")->nullable();
             $table->timestamps();
 
             $table->primary(["category_id", "lecture_id"]);
+            $table->foreign("lecture_id")->references("id")->on("lectures")->cascadeOnDelete();
         });
     }
 

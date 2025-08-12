@@ -54,7 +54,7 @@ Route::controller(UserController::class)->name("users.")->group(function () {
 
 // Lecture
 Route::controller(LectureController::class)->name("lectures.")->group(function () {
-    Route::get("/lekcia/{lecture:slug}", "show")->name("show");
+    Route::get("/lekcia/{lecture}/{slug?}", "show")->name("show");
 });
 
 // CodeRunner

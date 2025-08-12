@@ -31,6 +31,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th class="d-none d-xl-table-cell">ID</th>
                             <th>Názov</th>
                             <th class="d-none d-sm-table-cell">Popis</th>
                             <th>Videnia</th>
@@ -41,6 +42,7 @@
                     <tbody class="table-group-divider">
                         @foreach ($lectures as $lecture)
                             <tr>
+                                <td class="text-break d-none d-xl-table-cell">{{ $lecture->id }}</td>
                                 <td class="text-break">{{ $lecture->title }}</td>
                                 <td class="text-break d-none d-sm-table-cell">
                                     <div class="admin-table-cell-line-limit">

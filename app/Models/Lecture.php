@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Sqids\Sqids;
 
 /**
  * 
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Lecture extends Model
 {
+    public $incrementing = false;
+    protected $keyType = "string";
+
     protected $fillable = [
         "title",
         "description",
@@ -44,6 +48,18 @@ class Lecture extends Model
         "status",
         "blocks"
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($lecture) {
+            if (!$lecture->id) {
+                $sqids = new Sqids(minLength: 6);
+                $lecture->id = $sqids->encode([random_int(1, 999999)]);
+            }
+        });
+    }
 
     #[Scope]
     protected function search(Builder $query, string $value)

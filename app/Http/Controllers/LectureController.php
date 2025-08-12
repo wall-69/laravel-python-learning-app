@@ -36,8 +36,13 @@ class LectureController extends Controller
         ]);
     }
 
-    public function show(Lecture $lecture)
+    public function show(Lecture $lecture, ?string $slug = null)
     {
+        // If the slug is not correct we redirect to the correct one
+        if (!$slug || $lecture->slug != $slug) {
+            return redirect()->route('lectures.show', [$lecture, $lecture->slug]);
+        }
+
         return view("lecture", [
             "lecture" => $lecture
         ]);
