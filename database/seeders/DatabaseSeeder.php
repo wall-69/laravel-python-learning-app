@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\UserProgress;
 use Hash;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,10 @@ class DatabaseSeeder extends Seeder
             "last_name" => "Doe",
             "email" => "john@doe.com",
             "password" => Hash::make("doedoe")
+        ]);
+
+        UserProgress::create([
+            "user_id" => $adminUser->id
         ]);
 
         Admin::create([

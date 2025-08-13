@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserProgress;
 use Auth;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -26,6 +27,9 @@ class UserController extends Controller
         Auth::login($user);
 
         event(new Registered($user));
+
+        // Create UserProgress
+        UserProgress::create(["user_id" => $request->user()->id]);
 
         return redirect(route("verification.notice"))
             ->with("success", "Váš účet bol úspešne vytvorený. Aktivujte si ho cez overovací e-mail.");

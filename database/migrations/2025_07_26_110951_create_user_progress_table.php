@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('user_progress', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->unique();
-            $table->unsignedTinyInteger("level");
-            $table->unsignedInteger("points");
+            $table->unsignedTinyInteger("level")->default(1);
+            $table->unsignedInteger("points")->default(0);
             $table->timestamps();
         });
     }

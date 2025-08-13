@@ -7,6 +7,7 @@ use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProgressController;
 use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,12 @@ Route::controller(UserController::class)->name("users.")->group(function () {
     Route::middleware("guest")->group(function () {
         Route::post("/users", "store")->name("store");
     });
+});
+
+// UserProgress
+Route::controller(UserProgressController::class)->middleware("auth")->name("user-progress.")->group(function () {
+    Route::post("/user/progress/complete/quiz/{quizId}", "completeQuiz")->name("complete-quiz");
+    Route::post("/user/progress/complete/exercise/{exerciseId}", "completeExercise")->name("complete-exercise");
 });
 
 // Lecture
