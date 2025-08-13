@@ -1,7 +1,7 @@
 import "./bootstrap";
 
 // Vue
-import { createApp } from "vue";
+import { createApp, reactive } from "vue";
 import CodeRunnerComponent from "./components/CodeRunnerComponent.vue";
 import CodeBlockComponent from "./components/CodeBlockComponent.vue";
 import QuizComponent from "./components/QuizComponent.vue";
@@ -25,6 +25,9 @@ app.component("quiz-drag-and-drop", QuizDragAndDropComponent);
 app.component("quiz-drag", QuizDragComponent);
 app.component("quiz-drop", QuizDropComponent);
 app.component("admin-editor", AdminEditorComponent);
+
+const completedQuizzes = reactive(window.completedQuizzes || []);
+app.provide("completedQuizzes", completedQuizzes);
 
 app.mount("#app");
 

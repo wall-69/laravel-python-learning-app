@@ -2,10 +2,14 @@
     <form @submit="checkQuiz" class="border p-3 d-grid gap-3">
         <header class="border-bottom">
             <h2 class="fw-bold">Kvíz: over svoje vedomosti!</h2>
-            <p>
+            <p v-if="!quizIsComplete">
                 Ak získaš aspoň 90%, dostaneš
                 <span class="text-success fw-bold">+25 BODOV</span>. Kvíz môžeš
                 zopakovať koľkokrát len chceš.
+            </p>
+            <p v-else class="fst-italic">
+                Tento kvíz si už úspešne vyriešil! Ak sa ti chce, tak si ho
+                kľudne môžeš zopakovať.
             </p>
         </header>
 
@@ -39,9 +43,15 @@
                     <br />
 
                     <template v-if="correctPercent >= 90">
-                        Super! Ide ti to veľmi dobre a za tvoju snahu ti bolo
-                        pripočítaných
-                        <span class="fw-bold">+25 BODOV</span>. Len tak ďalej!
+                        <template v-if="!quizIsComplete">
+                            Super! Ide ti to veľmi dobre a za tvoju snahu ti
+                            bolo pripočítaných
+                            <span class="fw-bold">+25 BODOV</span>. Len tak
+                            ďalej!
+                        </template>
+                        <template v-else>
+                            Super! Ide ti to veľmi dobre. Len tak ďalej!
+                        </template>
                     </template>
                     <template v-else-if="correctPercent >= 60">
                         Škoda, ale nie je to úplne márne. Skús si lekciu
@@ -62,7 +72,8 @@
     </form>
 </template>
 <script setup>
-import { computed, provide, reactive, ref } from "vue";
+import axios from "axios";
+import { computed, inject, provide, reactive, ref } from "vue";
 
 // Define
 const props = defineProps({
@@ -76,6 +87,8 @@ const results = ref(null);
 const reveal = ref(false);
 const questionMap = reactive({});
 
+const completedQuizzes = inject("completedQuizzes");
+
 provide("reveal", reveal);
 provide("questionMap", questionMap);
 
@@ -87,9 +100,10 @@ const total = computed(() => Object.values(questionMap).length);
 const correctPercent = computed(() =>
     Math.round((correct.value / total.value) * 100)
 );
+const quizIsComplete = computed(() => completedQuizzes.includes(props.id));
 
 // Functions
-function checkQuiz(event) {
+async function checkQuiz(event) {
     event.preventDefault();
 
     let qNum = 0;
@@ -137,9 +151,18 @@ function checkQuiz(event) {
     }
     reveal.value = true;
 
-    if (correctPercent.value >= 90) {
-        // TODO: send quiz completion request
-        console.log(props.id);
+    if (correctPercent.value >= 90 && !quizIsComplete.value) {
+        try {
+            const response = await axios.post(
+                "/user/progress/complete/quiz/" + props.id
+            );
+
+            if (response.status === 200) {
+                completedQuizzes.push(props.id);
+            }
+        } catch (error) {
+            console.error("Marking quiz as complete failed: " + error);
+        }
     }
 }
 </script>

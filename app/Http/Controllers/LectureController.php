@@ -36,15 +36,18 @@ class LectureController extends Controller
         ]);
     }
 
-    public function show(Lecture $lecture, ?string $slug = null)
+    public function show(Request $request, Lecture $lecture, ?string $slug = null)
     {
         // If the slug is not correct we redirect to the correct one
         if (!$slug || $lecture->slug != $slug) {
             return redirect()->route('lectures.show', [$lecture, $lecture->slug]);
         }
 
+        $user = $request->user();
+
         return view("lecture", [
-            "lecture" => $lecture
+            "lecture" => $lecture,
+            "completedQuizzes" => $user->completedQuizzes->pluck("quiz_id"),
         ]);
     }
 

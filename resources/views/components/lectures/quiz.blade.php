@@ -1,4 +1,4 @@
-@props(['quizId', 'quizData'])
+@props(['quizId', 'quizData', 'isComplete'])
 
 <quiz id="{{ $quizId }}">
     @foreach ($quizData['blocks'] as $index => $quizBlock)

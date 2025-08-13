@@ -77,6 +77,14 @@
             </div>
         </main>
     </div>
+
+
+    {{-- Completed quizzes --}}
+    @if ($completedQuizzes)
+        <script>
+            window.completedQuizzes = @json($completedQuizzes);
+        </script>
+    @endif
 </body>
 
 </html>
