@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\LectureStatus;
 use App\Http\Requests\LectureRequest;
+use App\Models\Category;
 use App\Models\Lecture;
+use DB;
 use Illuminate\Http\Request;
 use Str;
 
@@ -24,6 +26,7 @@ class LectureController extends Controller
     public function create()
     {
         return view("admin.lectures.create", [
+            "categories" => Category::all(),
             "lectureStatuses" => LectureStatus::values()
         ]);
     }
@@ -32,6 +35,7 @@ class LectureController extends Controller
     {
         return view("admin.lectures.edit", [
             "lecture" => $lecture,
+            "categories" => Category::all(),
             "lectureStatuses" => LectureStatus::values()
         ]);
     }
@@ -65,6 +69,30 @@ class LectureController extends Controller
             $block["id"] = "lecture_" . $lecture->id . "-" . Str::uuid();
         }
         $lecture->update(["blocks" => json_encode($blocks)]);
+
+        // Category order
+        DB::transaction(function () use ($data, $lecture) {
+            $desiredOrder = $data["category_order"];
+            $categoryId = $data["category_id"];
+
+            // Recursive function to push conflicts
+            $pushConflict = function ($order) use ($categoryId, &$pushConflict, $lecture) {
+                $conflict = Lecture::where("category_id", $categoryId)
+                    ->where("category_order", $order)
+                    ->where("id", "!=", $lecture->id)
+                    ->first();
+
+                if ($conflict) {
+                    $pushConflict($order + 1); // go deeper first
+                    $conflict->update(["category_order" => $order + 1]); // update on return
+                }
+            };
+
+            $pushConflict($desiredOrder);
+
+            // Set the new lecture to the original desired order
+            $lecture->update(["category_order" => $desiredOrder]);
+        });
 
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne vytvorená.");

@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress whereUserId($value)
+ * @property-read \App\Models\User $user
  * @mixin \Eloquent
  */
 class UserProgress extends Model

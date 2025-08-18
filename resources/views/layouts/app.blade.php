@@ -80,11 +80,11 @@
 
 
     {{-- Completed quizzes --}}
-    @if ($completedQuizzes)
+    @isset($completedQuizzes)
         <script>
             window.completedQuizzes = @json($completedQuizzes);
         </script>
-    @endif
+    @endisset
 </body>
 
 </html>

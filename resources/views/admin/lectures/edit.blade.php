@@ -54,6 +54,26 @@
                 @enderror
             </div>
 
+            {{-- Category --}}
+            <div class="mb-3">
+                <label for="categoryIdInput" class="form-label">Kategória:</label>
+                <select class="form-select @error('category_id') is-invalid @enderror" name="category_id"
+                    id="categoryIdInput">
+                    <option selected disabled>Vyberte kategóriu</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @selected($category->id == $lecture->category_id)>{{ $category->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Category order --}}
+            <div class="mb-3">
+                <label for="categoryOrderInput" class="form-label">Poradie v kategórii:</label>
+                <input type="number" name="category_order" id="categoryOrderInput"
+                    class="form-control @error('category_order') is-invalid @enderror" value="{{ old('category_order') }}"
+                    min="1" max="100" value="{{ old('category_order', $lecture->category_order) }}" required>
+            </div>
+
             {{-- Status --}}
             <div class="mb-3">
                 <label for="statusInput" class="form-label">Status</label>

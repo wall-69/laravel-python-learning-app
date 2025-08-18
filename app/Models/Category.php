@@ -44,8 +44,6 @@ class Category extends Model
 
     public function lectures()
     {
-        return $this->belongsToMany(Lecture::class, "category_lecture")
-            ->withPivot("order")
-            ->orderByRaw("pivot_order IS NULL, pivot_order ASC");
+        return $this->hasMany(Lecture::class);
     }
 }

@@ -41,6 +41,8 @@ class Lecture extends Model
     protected $keyType = "string";
 
     protected $fillable = [
+        "category_id",
+        "category_order",
         "title",
         "description",
         "slug",
@@ -67,9 +69,8 @@ class Lecture extends Model
         $query->where("title", "LIKE", "%$value%");
     }
 
-    public function categories()
+    public function category()
     {
-        return $this->belongsToMany(Category::class, "category_lecture")
-            ->withPivot("order");
+        return $this->belongsTo(Category::class);
     }
 }

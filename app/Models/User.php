@@ -37,6 +37,11 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastName($value)
  * @property-read \App\Models\Admin|null $admin
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ExerciseCompletion> $completedExercises
+ * @property-read int|null $completed_exercises_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizCompletion> $completedQuizzes
+ * @property-read int|null $completed_quizzes_count
+ * @property-read \App\Models\UserProgress|null $progress
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements MustVerifyEmail
