@@ -44,14 +44,24 @@ class LectureController extends Controller
     {
         // If the slug is not correct we redirect to the correct one
         if (!$slug || $lecture->slug != $slug) {
-            return redirect()->route('lectures.show', [$lecture, $lecture->slug]);
+            return redirect()->route('lectures.show', [$lecture, $lecture->slug], 301);
+        }
+
+        // Count lecture views
+        $viewedLectures = session("viewed_lectures", []);
+        if (!isset($viewedLectures[$lecture->id])) {
+            $viewedLectures[$lecture->id] = true;
+            session(["viewed_lectures" => $viewedLectures]);
+
+            $lecture->increment("views");
         }
 
         $user = $request->user();
+        $completedQuizzes = $user?->completedQuizzes->pluck("quiz_id") ?? collect();
 
         return view("lecture", [
             "lecture" => $lecture,
-            "completedQuizzes" => $user->completedQuizzes->pluck("quiz_id"),
+            "completedQuizzes" => $completedQuizzes,
         ]);
     }
 
