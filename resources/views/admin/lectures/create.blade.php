@@ -64,6 +64,12 @@
                         <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>{{ $category->title }}</option>
                     @endforeach
                 </select>
+
+                @error('category_id')
+                    <span class="text-danger mt-1">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
 
             {{-- Category order --}}
@@ -72,6 +78,12 @@
                 <input type="number" name="category_order" id="categoryOrderInput"
                     class="form-control @error('category_order') is-invalid @enderror" value="{{ old('category_order') }}"
                     min="1" max="100" placeholder="1" required>
+
+                @error('category_order')
+                    <span class="text-danger mt-1">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
 
             {{-- Status --}}

@@ -112,7 +112,34 @@ class LectureController extends Controller
         }
         $data["blocks"] = json_encode($blocks);
 
-        $lecture->update($data);
+        DB::transaction(function () use ($data, $lecture) {
+            $desiredOrder = $data["category_order"];
+            $categoryId = $data["category_id"];
+
+            // Only run conflict shifting if order or category changed
+            if ($lecture->category_order != $desiredOrder || $lecture->category_id != $categoryId) {
+                $pushConflict = function ($order) use ($categoryId, &$pushConflict, $lecture) {
+                    $conflict = Lecture::where("category_id", $categoryId)
+                        ->where("category_order", $order)
+                        ->where("id", "!=", $lecture->id)
+                        ->first();
+
+                    if ($conflict) {
+                        $pushConflict($order + 1);
+                        $conflict->update(["category_order" => $order + 1]);
+                    }
+                };
+
+                $pushConflict($desiredOrder);
+                $lecture->update([
+                    "category_order" => $desiredOrder,
+                    "category_id" => $categoryId,
+                ]);
+            }
+
+            // Update other fields
+            $lecture->update(collect($data)->except(["category_order", "category_id"])->toArray());
+        });
 
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne upravená.");

@@ -64,14 +64,26 @@
                         <option value="{{ $category->id }}" @selected($category->id == $lecture->category_id)>{{ $category->title }}</option>
                     @endforeach
                 </select>
+
+                @error('category_id')
+                    <span class="text-danger mt-1">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
 
             {{-- Category order --}}
             <div class="mb-3">
                 <label for="categoryOrderInput" class="form-label">Poradie v kategórii:</label>
                 <input type="number" name="category_order" id="categoryOrderInput"
-                    class="form-control @error('category_order') is-invalid @enderror" value="{{ old('category_order') }}"
-                    min="1" max="100" value="{{ old('category_order', $lecture->category_order) }}" required>
+                    class="form-control @error('category_order') is-invalid @enderror"
+                    value="{{ old('category_order', $lecture->category_order) }}" min="1" max="100" required>
+
+                @error('category_order')
+                    <span class="text-danger mt-1">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
 
             {{-- Status --}}
