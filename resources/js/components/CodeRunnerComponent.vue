@@ -23,11 +23,9 @@
         ></textarea>
 
         <!-- Value slot -->
-        <pre
-            ref="editorValue"
-            class="d-none"
-            style="white-space: pre"
-        ><slot name="code"></slot></pre>
+        <div ref="editorValue" class="d-none" style="white-space: pre">
+            <slot name="code"></slot>
+        </div>
     </div>
 </template>
 <script setup>

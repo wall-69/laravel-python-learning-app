@@ -14,11 +14,9 @@
         ></div>
 
         <!-- Value slot -->
-        <pre
-            ref="codeBlockValue"
-            class="d-none"
-            style="white-space: pre"
-        ><slot name="code"></slot></pre>
+        <div ref="codeBlockValue" class="d-none" style="white-space: pre">
+            <slot name="code"></slot>
+        </div>
     </div>
 </template>
 <script setup>
