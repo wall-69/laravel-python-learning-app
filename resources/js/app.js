@@ -4,6 +4,7 @@ import "./bootstrap";
 import { createApp, reactive } from "vue";
 import CodeRunnerComponent from "./components/CodeRunnerComponent.vue";
 import CodeBlockComponent from "./components/CodeBlockComponent.vue";
+import ExerciseComponent from "./components/ExerciseComponent.vue";
 import QuizComponent from "./components/QuizComponent.vue";
 import QuizChoiceComponent from "./components/quiz/QuizChoiceComponent.vue";
 import QuizAnswerComponent from "./components/quiz/QuizAnswerComponent.vue";
@@ -18,6 +19,7 @@ app.config.compilerOptions.whitespace = "preserve";
 
 app.component("code-runner", CodeRunnerComponent);
 app.component("code-block", CodeBlockComponent);
+app.component("exercise", ExerciseComponent);
 app.component("quiz", QuizComponent);
 app.component("quiz-choice", QuizChoiceComponent);
 app.component("quiz-answer", QuizAnswerComponent);
@@ -33,6 +35,7 @@ app.mount("#app");
 
 // Monaco editor
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+
 globalThis.MonacoEnvironment = {
     getWorker(workerId, label) {
         switch (label) {
