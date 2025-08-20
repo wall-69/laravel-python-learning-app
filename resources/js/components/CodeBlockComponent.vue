@@ -10,7 +10,7 @@
         <div
             ref="codeBlockContainer"
             class="border"
-            style="width: calc(100% - 14px); height: 300px"
+            style="height: 300px"
         ></div>
 
         <!-- Value slot -->

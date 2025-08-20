@@ -7,18 +7,14 @@
             <slot name="description"></slot>
         </p>
 
-        <div
-            ref="editorContainer"
-            class="border"
-            style="width: calc(100% - 14px); height: 300px"
-        ></div>
+        <div ref="editorContainer" class="border" style="height: 300px"></div>
         <button @click="runCode" class="mt-1 btn btn-primary">Spustiť</button>
 
         <h3 class="mt-3">Výstup</h3>
         <textarea
             ref="editorOutput"
             class="form-control"
-            style="width: calc(100% - 14px); height: 200px"
+            style="height: 200px"
             readonly
         ></textarea>
 
