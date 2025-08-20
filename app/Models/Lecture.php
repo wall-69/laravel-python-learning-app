@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Sqids\Sqids;
 
 /**
  * 
  *
- * @property int $id
+ * @property string $id
+ * @property int|null $category_id
+ * @property int $category_order
  * @property string $title
  * @property string $description
  * @property string $slug
@@ -19,24 +22,28 @@ use Sqids\Sqids;
  * @property string $blocks
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
- * @property-read int|null $categories_count
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereBlocks($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Lecture whereViews($value)
+ * @property-read \App\Models\Category|null $category
+ * @method static \Database\Factories\LectureFactory factory($count = null, $state = [])
+ * @method static Builder<static>|Lecture newModelQuery()
+ * @method static Builder<static>|Lecture newQuery()
+ * @method static Builder<static>|Lecture query()
+ * @method static Builder<static>|Lecture whereBlocks($value)
+ * @method static Builder<static>|Lecture whereCategoryId($value)
+ * @method static Builder<static>|Lecture whereCategoryOrder($value)
+ * @method static Builder<static>|Lecture whereCreatedAt($value)
+ * @method static Builder<static>|Lecture whereDescription($value)
+ * @method static Builder<static>|Lecture whereId($value)
+ * @method static Builder<static>|Lecture whereSlug($value)
+ * @method static Builder<static>|Lecture whereStatus($value)
+ * @method static Builder<static>|Lecture whereTitle($value)
+ * @method static Builder<static>|Lecture whereUpdatedAt($value)
+ * @method static Builder<static>|Lecture whereViews($value)
  * @mixin \Eloquent
  */
 class Lecture extends Model
 {
+    use HasFactory;
+
     public $incrementing = false;
     protected $keyType = "string";
 

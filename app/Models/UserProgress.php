@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $points
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress query()
@@ -22,7 +23,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProgress whereUserId($value)
- * @property-read \App\Models\User $user
  * @mixin \Eloquent
  */
 class UserProgress extends Model
