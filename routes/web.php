@@ -55,8 +55,8 @@ Route::controller(UserController::class)->name("users.")->group(function () {
 
 // UserProgress
 Route::controller(UserProgressController::class)->middleware("auth")->name("user-progress.")->group(function () {
-    Route::post("/user/progress/complete/quiz/{quizId}", "completeQuiz")->name("complete-quiz");
-    Route::post("/user/progress/complete/exercise/{exerciseId}", "completeExercise")->name("complete-exercise");
+    Route::post("/user/progress/complete/quiz/{quiz}", "completeQuiz")->name("complete-quiz");
+    Route::post("/user/progress/complete/exercise/{exercise}", "completeExercise")->name("complete-exercise");
 });
 
 // Lecture

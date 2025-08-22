@@ -2,53 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lecture;
+use App\Models\Exercise;
+use App\Models\ExerciseCompletion;
+use App\Models\Quiz;
 use App\Models\QuizCompletion;
 use Illuminate\Http\Request;
 
 class UserProgressController extends Controller
 {
-    public function completeQuiz(Request $request, string $quizId)
+    public function completeQuiz(Request $request, Quiz $quiz)
     {
         $user = $request->user();
 
         // Check if quiz was already completed
-        $alreadyCompleted = $user->completedQuizzes()->where("quiz_id", $quizId)->exists();
+        $alreadyCompleted = $user->completedQuizzes()->where("quiz_id", $quiz->id)->exists();
 
         if ($alreadyCompleted) {
             abort(403, "You already completed this quiz for points.");
         }
 
-        // Get the lecture id from the quiz id & get the lecture
-        preg_match('/^lecture_([^-]+)/', $quizId, $matches);
-        $lectureId = $matches[1] ?? null;
-        $lecture = Lecture::find($lectureId);
-        if (!$lecture) {
-            abort(403, "Invalid lecture id.");
-        }
-
-        // Check if this quiz is the lecture
-        $blocks = json_decode($lecture->blocks, true)["blocks"];
-        $quizExists = collect($blocks)->contains(function ($block) use ($quizId) {
-            return $block["type"] == "quiz" && $block["id"] == $quizId;
-        });
-
-        if (!$quizExists) {
-            abort(403, "Invalid lecture quiz id.");
-        }
-
         // Add points to the user & mark quiz as complete
-        $user->progress->addPoints(20);
+        $user->progress->addPoints(25);
 
         QuizCompletion::create([
             "user_id" => $user->id,
-            "quiz_id" => $quizId
+            "quiz_id" => $quiz->id
         ]);
 
         return response()->json([
-            "message" => "Quiz marked as completed."
+            "message" => "Quiz was marked as complete."
         ]);
     }
 
-    public function completeExercise(Request $request, string $exerciseId) {}
+    public function completeExercise(Request $request, Exercise $exercise)
+    {
+        $user = $request->user();
+
+        // Check if exercise was already completed
+        $alreadyCompleted = $user->completedExercises()->where("exercise_id", $exercise->id)->exists();
+
+        if ($alreadyCompleted) {
+            abort(403, "You already completed this exercise for points.");
+        }
+
+        // Add points to the user & mark exercise as complete
+        $user->progress->addPoints(35);
+
+        ExerciseCompletion::create([
+            "user_id" => $user->id,
+            "exercise_id" => $exercise->id
+        ]);
+
+        return response()->json([
+            "message" => "Exercise was marked as complete."
+        ]);
+    }
 }

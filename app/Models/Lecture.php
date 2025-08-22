@@ -23,6 +23,10 @@ use Sqids\Sqids;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Category|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Exercise> $exercises
+ * @property-read int|null $exercises_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Quiz> $quizzes
+ * @property-read int|null $quizzes_count
  * @method static \Database\Factories\LectureFactory factory($count = null, $state = [])
  * @method static Builder<static>|Lecture newModelQuery()
  * @method static Builder<static>|Lecture newQuery()
@@ -79,5 +83,15 @@ class Lecture extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, "lecture_id", "id");
+    }
+
+    public function exercises()
+    {
+        return $this->hasMany(Exercise::class, "lecture_id", "id");
     }
 }

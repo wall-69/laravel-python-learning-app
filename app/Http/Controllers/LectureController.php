@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\LectureStatus;
 use App\Http\Requests\LectureRequest;
 use App\Models\Category;
+use App\Models\Exercise;
 use App\Models\Lecture;
+use App\Models\Quiz;
 use DB;
 use Illuminate\Http\Request;
 use Str;
@@ -73,10 +75,27 @@ class LectureController extends Controller
 
         $lecture = Lecture::create($data);
 
-        // Set global block IDs
+        // Set global block IDs to quizzes and exercises
+        // Also creates/updates the respective model
         $blocks = json_decode($data["blocks"], true);
         foreach ($blocks["blocks"] as &$block) {
-            $block["id"] = "lecture_" . $lecture->id . "-" . Str::uuid();
+            // Create Quiz model
+            if ($block["type"] == "quiz") {
+                $quiz = Quiz::create([
+                    "lecture_id" => $lecture->id
+                ]);
+
+                $block["id"] = $quiz->id;
+            }
+            // Create Exercise model
+            else if ($block["type"] == "exercise") {
+                $exercise = Exercise::create([
+                    "lecture_id" => $lecture->id,
+                    "tests" => $block["data"]["tests"]
+                ]);
+
+                $block["id"] = $exercise->id;
+            }
         }
         $lecture->update(["blocks" => json_encode($blocks)]);
 
@@ -112,23 +131,43 @@ class LectureController extends Controller
     {
         $data = $request->validated();
 
-        // Set global block IDs
+        // Set global block IDs to quizzes and exercises
+        // Also creates/updates the respective model
         $blocks = json_decode($data["blocks"], true);
-        $prefix = "lecture_" . $lecture->id . "-";
         foreach ($blocks["blocks"] as &$block) {
-            if (!str_starts_with($block["id"], $prefix)) {
-                $block["id"] = $prefix . Str::uuid();
+            if ($block["type"] == "quiz") {
+                if (!Str::isUuid($block["id"])) {
+                    $quiz = Quiz::create([
+                        "lecture_id" => $lecture->id
+                    ]);
+
+                    $block["id"] = $quiz->id;
+                }
+            } else if ($block["type"] == "exercise") {
+                if (!Str::isUuid($block["id"])) {
+                    $exercise = Exercise::create([
+                        "lecture_id" => $lecture->id,
+                        "tests" => $block["data"]["tests"]
+                    ]);
+
+                    $block["id"] = $exercise->id;
+                } else {
+                    $exercise = Exercise::find($block["id"]);
+                    $exercise->update([
+                        "tests" => $block["data"]["tests"]
+                    ]);
+                }
             }
         }
         $data["blocks"] = json_encode($blocks);
 
-        DB::transaction(function () use ($data, $lecture) {
+        DB::transaction(function () use ($data, $lecture, $blocks) {
             $desiredOrder = $data["category_order"];
             $categoryId = $data["category_id"];
 
             // Only run conflict shifting if order or category changed
             if ($lecture->category_order != $desiredOrder || $lecture->category_id != $categoryId) {
-                $pushConflict = function ($order) use ($categoryId, &$pushConflict, $lecture) {
+                $pushConflict = function ($order) use (&$pushConflict, $categoryId, $lecture) {
                     $conflict = Lecture::where("category_id", $categoryId)
                         ->where("category_order", $order)
                         ->where("id", "!=", $lecture->id)
@@ -141,6 +180,7 @@ class LectureController extends Controller
                 };
 
                 $pushConflict($desiredOrder);
+
                 $lecture->update([
                     "category_order" => $desiredOrder,
                     "category_id" => $categoryId,
@@ -149,7 +189,28 @@ class LectureController extends Controller
 
             // Update other fields
             $lecture->update(collect($data)->except(["category_order", "category_id"])->toArray());
+
+            // Delete removed quizzes
+            $quizIds = collect($blocks["blocks"])->where("type", "quiz")->pluck("id");
+            if ($quizIds->isEmpty()) {
+                Quiz::where("lecture_id", $lecture->id)->delete();
+            } else {
+                Quiz::where("lecture_id", $lecture->id)
+                    ->whereNotIn("id", $quizIds)
+                    ->delete();
+            }
+
+            // Delete removed exercises
+            $exerciseIds = collect($blocks["blocks"])->where("type", "exercise")->pluck("id");
+            if ($exerciseIds->isEmpty()) {
+                Exercise::where("lecture_id", $lecture->id)->delete();
+            } else {
+                Exercise::where("lecture_id", $lecture->id)
+                    ->whereNotIn("id", $exerciseIds)
+                    ->delete();
+            }
         });
+
 
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne upravená.");

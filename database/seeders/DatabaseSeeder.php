@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Category;
 use App\Models\User;
 use App\Models\UserProgress;
 use Hash;
@@ -30,5 +31,7 @@ class DatabaseSeeder extends Seeder
         Admin::create([
             "user_id" => $adminUser->id
         ]);
+
+        Category::factory()->create();
     }
 }

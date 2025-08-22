@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('quiz_completions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->string("quiz_id");
+            $table->uuid("quiz_id");
             $table->timestamps();
 
             $table->unique(["user_id", "quiz_id"]);
+            $table->foreign("quiz_id")->references("id")->on("quizzes")->cascadeOnDelete();
         });
     }
 
