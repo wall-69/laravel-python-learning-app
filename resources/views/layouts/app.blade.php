@@ -41,12 +41,19 @@
                                 </a>
                             @endguest
                             @auth
+                                {{-- My profile --}}
+                                <a href="{{ route('users.profile', auth()->user()) }}" class="text-decoration-none">Môj
+                                    profil</a>
+
+                                {{-- Log out --}}
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     @method('POST')
 
                                     <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
                                 </form>
+
+                                {{-- Admin panel --}}
                                 @if (auth()->user()->admin)
                                     <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
                                 @endif
@@ -79,12 +86,11 @@
     </div>
 
 
-    {{-- Completed quizzes --}}
-    @isset($completedQuizzes)
-        <script>
-            window.completedQuizzes = @json($completedQuizzes);
-        </script>
-    @endisset
+    {{-- Completed quizzes & exercises --}}
+    <script>
+        window.completedQuizzes = @json($completedQuizzes ?? []);
+        window.completedExercises = @json($completedExercises ?? []);
+    </script>
 </body>
 
 </html>

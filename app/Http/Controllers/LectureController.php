@@ -60,10 +60,12 @@ class LectureController extends Controller
 
         $user = $request->user();
         $completedQuizzes = $user?->completedQuizzes->pluck("quiz_id") ?? collect();
+        $completedExercises = $user?->completedExercises->pluck("exercise_id") ?? collect();
 
         return view("lecture", [
             "lecture" => $lecture,
             "completedQuizzes" => $completedQuizzes,
+            "completedExercises" => $completedExercises,
         ]);
     }
 
