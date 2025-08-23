@@ -107,3 +107,20 @@
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
+
+// User progress
+.user-progress {
+    width: 100%;
+}
+
+@media (min-width: 375px) {
+    .user-progress {
+        width: 50%;
+    }
+}
+
+@media (min-width: 768px) {
+    .user-progress {
+        width: 35%;
+    }
+}

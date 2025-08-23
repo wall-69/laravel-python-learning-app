@@ -48,6 +48,8 @@ Route::controller(EmailVerificationController::class)->middleware("auth")->name(
 
 // User
 Route::controller(UserController::class)->name("users.")->group(function () {
+    Route::get("/profil/{user}", "profile")->name("profile");
+
     Route::middleware("guest")->group(function () {
         Route::post("/users", "store")->name("store");
     });

@@ -10,6 +10,18 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    // GET
+
+    public function profile(Request $request, User $user)
+    {
+        $latestActivity = $user->completedQuizzes->merge($user->completedExercises)->sortByDesc('created_at')->take(5);
+
+        return view("user.profile", [
+            "user" => $user->load("progress"),
+            "latestActivity" => $latestActivity
+        ]);
+    }
+
     // POST
 
     public function store(Request $request)
