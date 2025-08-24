@@ -46,7 +46,7 @@ class LectureController extends Controller
     {
         // If the slug is not correct we redirect to the correct one
         if (!$slug || $lecture->slug != $slug) {
-            return redirect()->route('lectures.show', [$lecture, $lecture->slug], 301);
+            return redirect()->route("lectures.show", [$lecture, $lecture->slug], 301);
         }
 
         // Count lecture views

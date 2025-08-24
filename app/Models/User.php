@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -58,12 +59,39 @@ class User extends Authenticatable implements MustVerifyEmail
         "remember_token",
     ];
 
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::creating(function ($user) {
+            if (app()->isLocal()) {
+                $user->email_verified_at = now();
+            }
+        });
+    }
+
     protected function casts(): array
     {
         return [
             "email_verified_at" => "datetime",
             "password" => "hashed",
         ];
+    }
+
+    public function getProfileUrlAttribute(): string
+    {
+        return route("users.profile", [
+            "first_name" => strtolower($this->first_name),
+            "last_name" => strtolower($this->last_name),
+            "user" => $this->id,
+        ]);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        if (app()->isProduction()) {
+            $this->notify(new VerifyEmail);
+        }
     }
 
     public function admin()

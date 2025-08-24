@@ -21,18 +21,19 @@
             {{ $user->first_name }} {{ $user->last_name }}
         </h1>
     </div>
-
     <p>
         Pripojil sa {{ $user->created_at->locale('sk')->isoFormat('D. MMMM, YYYY') }}. <br>
     </p>
+
     <div class="progress user-progress" style="height: 24px">
-        <div class="progress-bar fw-bold" style="width: {{ $user->progress->points }}%">
+        <div class="progress-bar fw-bold" style="min-width: 5em; width: {{ $user->progress->points }}%">
             Level {{ $user->progress->level }}
         </div>
     </div>
 
+
     {{-- Latest activity --}}
-    <h2 class="mb-0 mt-2">
+    <h2 class="mb-0 mt-3">
         Posledná aktivita
     </h2>
 

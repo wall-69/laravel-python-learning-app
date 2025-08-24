@@ -42,8 +42,10 @@
                             @endguest
                             @auth
                                 {{-- My profile --}}
-                                <a href="{{ route('users.profile', auth()->user()) }}" class="text-decoration-none">Môj
-                                    profil</a>
+                                <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none">
+                                    Môj profil
+                                </a>
+
 
                                 {{-- Log out --}}
                                 <form action="{{ route('logout') }}" method="POST">

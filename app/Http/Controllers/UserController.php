@@ -12,8 +12,16 @@ class UserController extends Controller
 {
     // GET
 
-    public function profile(Request $request, User $user)
+    public function profile(Request $request, string $firstName, string $lastName, User $user)
     {
+        $expectedFirstName = strtolower($user->first_name);
+        $expectedLastName = strtolower($user->last_name);
+
+        // If the first or last name is not correct we redirect to the correct one
+        if (!$firstName || !$lastName || $expectedFirstName != $firstName || $expectedLastName != $lastName) {
+            return redirect($user->profile_url);
+        }
+
         $latestActivity = $user->completedQuizzes->merge($user->completedExercises)->sortByDesc('created_at')->take(5);
 
         return view("user.profile", [
