@@ -6,20 +6,57 @@
         <p v-if="slots.description">
             <slot name="description"></slot>
         </p>
+        <p>
+            Ak úspešne vyriešiš toto cvičenie, tak dostaneš
+            <span class="text-success fw-bold">+35 BODOV</span>. Tvoje riešenie
+            bude otestované. Pre úspech musí prejsť všetkými testami. Neúspešné
+            testy sa zobrazia nižšie. Cvičenie si môžeš zopakovať koľkokrát len
+            chceš.
+        </p>
         <p class="border bg-info text-bg-info px-3 py-1">
             <span class="fw-bold">ZADANIE</span>
             <br />
 
             <slot name="assignment"></slot>
         </p>
-        <p>
-            Ak úspešne vyriešiš toto cvičenie, tak dostaneš
-            <span class="text-success fw-bold">+35 BODOV</span>. Cvičenie si
-            môžeš zopakovať koľkokrát len chceš.
-        </p>
 
+        <h3 class="mt-2 mb-0">Riešenie</h3>
         <div ref="editorContainer" class="border" style="height: 300px"></div>
-        <button @click="runCode" class="mt-1 btn btn-primary">Odovzdať</button>
+        <button
+            @click="runCode"
+            class="mt-1 btn btn-primary"
+            :disabled="loading"
+        >
+            Odovzdať
+            <i v-show="loading" class="spinner-border spinner-border-sm"></i>
+        </button>
+
+        <h3 class="mt-2 mb-0">Kontrola</h3>
+        <div v-if="testResults.length > 0 && !error" class="d-flex flex-column">
+            <p
+                v-for="test in testResults"
+                class="mb-0 px-2 py-1 border"
+                :class="{
+                    'text-bg-success': test.success,
+                    'text-bg-danger': !test.success,
+                }"
+            >
+                <span class="fw-bold"
+                    >{{ test.success ? "Úspešný" : "Neúspešný" }} test:</span
+                >
+                {{ test.message }}
+            </p>
+        </div>
+        <textarea
+            v-else-if="error"
+            class="form-control"
+            style="height: 200px"
+            readonly
+            :value="error"
+        ></textarea>
+        <p v-else class="mb-0">
+            Keď svoje riešenie odovzdáš, tak bude skontrolované, či je správne.
+        </p>
 
         <!-- Value slot -->
         <div ref="editorValue" class="d-none" style="white-space: pre">
@@ -35,7 +72,12 @@
 <script setup>
 import axios from "axios";
 import * as monaco from "monaco-editor";
-import { onMounted, ref, useSlots } from "vue";
+import { computed, onMounted, ref, useSlots } from "vue";
+
+// Define
+const props = defineProps({
+    id: String,
+});
 
 // Composables
 const slots = useSlots();
@@ -58,16 +100,39 @@ onMounted(() => {
 let editor = null;
 const editorContainer = ref(null);
 const editorValue = ref(null);
+const testResults = ref([]);
+const error = ref("");
+const loading = ref(false);
 
 // Functions
 async function runCode() {
+    if (loading.value) {
+        return;
+    }
+
     const code = getEditorText();
+    if (!code) {
+        return;
+    }
+
+    loading.value = true;
 
     try {
-        const response = await axios.post("/exercise", { code });
+        const response = await axios.post("/exercise/" + props.id + "/submit", {
+            code,
+        });
 
         if (response.status === 200) {
-            // TODO: handle OK response
+            console.log(response.data);
+
+            if (response.data.error) {
+                error.value = response.data.error;
+                testResults.value = [];
+                return;
+            }
+
+            error.value = "";
+            testResults.value = response.data.test_results;
         }
     } catch (error) {
         // Server responded with a status outside 2xx
@@ -96,6 +161,8 @@ async function runCode() {
         else {
             // TODO: handle other errors
         }
+    } finally {
+        loading.value = false;
     }
 }
 

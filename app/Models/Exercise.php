@@ -29,7 +29,7 @@ class Exercise extends Model
     public $incrementing = false;
     protected $keyType = "string";
 
-    protected $fillable = ["lecture_id"];
+    protected $fillable = ["lecture_id", "tests"];
 
     public static function boot()
     {

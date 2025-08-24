@@ -61,6 +61,23 @@
                 <x-lectures.quiz :quiz-id="$block['id']" :quiz-data="$blockData['questions']"></x-lectures.quiz>
             @break
 
+            {{-- Exercise --}}
+            @case('exercise')
+                <exercise id="{{ $block['id'] }}">
+                    <template #header>
+                        {{ $blockData['header'] }}
+                    </template>
+
+                    <template #description>
+                        {{ $blockData['description'] }}
+                    </template>
+
+                    <template #assignment>
+                        {{ $blockData['assignment'] }}
+                    </template>
+                </exercise>
+            @break
+
             @default
         @endswitch
     @endforeach

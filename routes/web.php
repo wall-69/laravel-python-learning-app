@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProgressController;
@@ -69,6 +70,11 @@ Route::controller(LectureController::class)->name("lectures.")->group(function (
 // CodeRunner
 Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])->group(function () {
     Route::post("/code-runner", "runCode")->name("code-runner.run");
+});
+
+// Exercise
+Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->group(function () {
+    Route::post("/exercise/{exercise}/submit", "submitSolution")->name("exercise.submit");
 });
 
 // Admin

@@ -71,7 +71,8 @@
 
 // Editorjs
 .editor-code-runner-header:empty::before,
-.editor-code-block-header:empty::before {
+.editor-code-block-header:empty::before,
+.editor-exercise-header:empty::before {
     content: "Zadajte nadpis...";
     color: #aaa;
     pointer-events: none;
@@ -79,7 +80,8 @@
 }
 
 .editor-code-runner-description:empty::before,
-.editor-code-block-description:empty::before {
+.editor-code-block-description:empty::before,
+.editor-exercise-description:empty::before {
     content: "Zadajte popis...";
     color: #aaa;
     pointer-events: none;
@@ -98,6 +100,13 @@
 .editor-quiz-dnd-explanation:empty::before {
     content: "Zadajte vysvetlenie...";
     color: #aaa;
+    pointer-events: none;
+    user-select: none;
+}
+
+.editor-exercise-assignment:empty::before {
+    content: "Zadajte zadanie...";
+    color: #fff;
     pointer-events: none;
     user-select: none;
 }

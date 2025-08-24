@@ -93,7 +93,7 @@ class LectureController extends Controller
             else if ($block["type"] == "exercise") {
                 $exercise = Exercise::create([
                     "lecture_id" => $lecture->id,
-                    "tests" => $block["data"]["tests"]
+                    "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                 ]);
 
                 $block["id"] = $exercise->id;
@@ -138,7 +138,7 @@ class LectureController extends Controller
         $blocks = json_decode($data["blocks"], true);
         foreach ($blocks["blocks"] as &$block) {
             if ($block["type"] == "quiz") {
-                if (!Str::isUuid($block["id"])) {
+                if (!Str::isUuid($block["id"]) || !Quiz::find($block["id"])) {
                     $quiz = Quiz::create([
                         "lecture_id" => $lecture->id
                     ]);
@@ -146,17 +146,17 @@ class LectureController extends Controller
                     $block["id"] = $quiz->id;
                 }
             } else if ($block["type"] == "exercise") {
-                if (!Str::isUuid($block["id"])) {
+                if (!Str::isUuid($block["id"]) || !Exercise::find($block["id"])) {
                     $exercise = Exercise::create([
                         "lecture_id" => $lecture->id,
-                        "tests" => $block["data"]["tests"]
+                        "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                     ]);
 
                     $block["id"] = $exercise->id;
                 } else {
                     $exercise = Exercise::find($block["id"]);
                     $exercise->update([
-                        "tests" => $block["data"]["tests"]
+                        "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                     ]);
                 }
             }

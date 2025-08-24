@@ -17,6 +17,7 @@ import Header from "@editorjs/header";
 import CodeRunnerTool from "../editorjs/tools/CodeRunnerTool.js";
 import CodeBlockTool from "../editorjs/tools/CodeBlockTool.js";
 import QuizTool from "../editorjs/tools/QuizTool.js";
+import ExerciseTool from "..//editorjs/tools/ExerciseTool.js";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
@@ -78,6 +79,10 @@ function initEditor() {
             },
             quiz: {
                 class: QuizTool,
+                inlineToolbar: true,
+            },
+            exercise: {
+                class: ExerciseTool,
                 inlineToolbar: true,
             },
         },
