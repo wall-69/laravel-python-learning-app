@@ -8,7 +8,14 @@
         </p>
 
         <div ref="editorContainer" class="border" style="height: 300px"></div>
-        <button @click="runCode" class="mt-1 btn btn-primary">Spustiť</button>
+        <button
+            @click="runCode"
+            class="mt-1 btn btn-primary"
+            :disabled="loading"
+        >
+            Spustiť
+            <i v-show="loading" class="spinner-border spinner-border-sm"></i>
+        </button>
 
         <h3 class="mt-3">Výstup</h3>
         <textarea
@@ -51,10 +58,17 @@ let editor = null;
 const editorContainer = ref(null);
 const editorOutput = ref(null);
 const editorValue = ref(null);
+const loading = ref(false);
 
 // Functions
 async function runCode() {
+    if (loading.value) {
+        return;
+    }
+
     const code = getEditorText();
+
+    loading.value = true;
 
     try {
         const response = await axios.post("/code-runner", { code });
@@ -92,6 +106,8 @@ async function runCode() {
         else {
             editorOutput.value.value = "Error: " + error.message;
         }
+    } finally {
+        loading.value = false;
     }
 }
 
