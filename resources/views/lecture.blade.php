@@ -15,23 +15,23 @@
             {{-- Header --}}
             @case('header')
                 <x-lectures.header :level="$blockData['level']">
-                    {{ $blockData['text'] }}
+                    {!! $blockData['text'] !!}
                 </x-lectures.header>
             @break
 
             {{-- Paragraph --}}
             @case('paragraph')
-                <p>{{ $blockData['text'] }}</p>
+                <p>{!! $blockData['text'] !!}</p>
             @break
 
             {{-- Code runner --}}
             @case('codeRunner')
                 <code-runner>
                     <template #header>
-                        {{ $blockData['header'] }}
+                        {!! $blockData['header'] !!}
                     </template>
                     <template #description>
-                        {{ $blockData['description'] }}
+                        {!! $blockData['description'] !!}
                     </template>
 
                     <template #code>
@@ -44,10 +44,10 @@
             @case('codeBlock')
                 <code-block>
                     <template #header>
-                        {{ $blockData['header'] }}
+                        {!! $blockData['header'] !!}
                     </template>
                     <template #description>
-                        {{ $blockData['description'] }}
+                        {!! $blockData['description'] !!}
                     </template>
 
                     <template #code>
@@ -65,15 +65,15 @@
             @case('exercise')
                 <exercise id="{{ $block['id'] }}">
                     <template #header>
-                        {{ $blockData['header'] }}
+                        {!! $blockData['header'] !!}
                     </template>
 
                     <template #description>
-                        {{ $blockData['description'] }}
+                        {!! $blockData['description'] !!}
                     </template>
 
                     <template #assignment>
-                        {{ $blockData['assignment'] }}
+                        {!! $blockData['assignment'] !!}
                     </template>
                 </exercise>
             @break

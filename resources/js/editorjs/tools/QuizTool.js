@@ -40,7 +40,7 @@ export default class QuizTool {
                 },
                 quizDragAndDrop: {
                     class: QuizDragAndDropTool,
-                    inlineToolbar: false,
+                    inlineToolbar: true,
                 },
             },
 

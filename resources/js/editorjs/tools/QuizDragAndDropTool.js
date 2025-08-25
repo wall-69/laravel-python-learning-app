@@ -31,7 +31,7 @@ export default class QuizDragAndDropTool {
             ".editor-quiz-dnd-explanation"
         );
 
-        this.question.innerText = this.data.question || "";
+        this.question.innerHTML = this.data.question || "";
         this.explanation.innerHTML = this.data.explanation || "";
 
         // Answers container
@@ -113,13 +113,13 @@ export default class QuizDragAndDropTool {
             const drag = row.querySelector(".editor-quiz-dnd-drag");
 
             pairs.push({
-                drop: drop.innerText || "",
-                drag: drag.innerText || "",
+                drop: drop.innerHTML || "",
+                drag: drag.innerHTML || "",
             });
         }
 
         return {
-            question: this.question.innerText,
+            question: this.question.innerHTML,
             explanation: this.explanation.innerHTML,
             pairs: pairs,
         };

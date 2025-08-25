@@ -27,8 +27,8 @@ export default class CodeBlockTool {
             ".editor-code-block-description"
         );
 
-        this.header.innerText = this.data.header || "";
-        this.description.innerText = this.data.description || "";
+        this.header.innerHTML = this.data.header || "";
+        this.description.innerHTML = this.data.description || "";
 
         this.editor = monaco.editor.create(editorContainer, {
             value: this.data.code || 'print("Ahoj, svet!")',
@@ -42,8 +42,8 @@ export default class CodeBlockTool {
 
     save(blockContent) {
         return {
-            header: this.header.innerText.trim(),
-            description: this.description.innerText.trim(),
+            header: this.header.innerHTML.trim(),
+            description: this.description.innerHTML.trim(),
             code: this.editor.getValue(),
         };
     }

@@ -28,7 +28,7 @@ export default class QuizChoiceTool {
             ".editor-quiz-choice-explanation"
         );
 
-        this.question.innerText = this.data.question || "";
+        this.question.innerHTML = this.data.question || "";
         this.explanation.innerHTML = this.data.explanation || "";
 
         // Answers container
@@ -42,7 +42,7 @@ export default class QuizChoiceTool {
                 const answer = document.createElement("div");
                 answer.innerHTML = quizChoiceAnswerHTML.trim();
 
-                answer.querySelector(".form-check-label").innerText =
+                answer.querySelector(".form-check-label").innerHTML =
                     savedAnswer.answer;
                 answer.querySelector(".form-check-input").checked =
                     savedAnswer.correct;
@@ -82,7 +82,7 @@ export default class QuizChoiceTool {
             const answer = this.answersContainer.children[i];
             answers.push({
                 answer: answer.querySelector(".editor-quiz-choice-answer-text")
-                    .innerText,
+                    .innerHTML,
                 correct: answer.querySelector(
                     ".editor-quiz-choice-answer-correct"
                 ).checked,
@@ -90,7 +90,7 @@ export default class QuizChoiceTool {
         }
 
         return {
-            question: this.question.innerText,
+            question: this.question.innerHTML,
             explanation: this.explanation.innerHTML,
             answers: answers,
         };

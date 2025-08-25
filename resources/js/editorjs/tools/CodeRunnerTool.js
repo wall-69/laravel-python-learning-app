@@ -29,8 +29,8 @@ export default class CodeRunnerBlock {
             ".editor-code-runner-description"
         );
 
-        this.header.innerText = this.data.header || "";
-        this.description.innerText = this.data.description || "";
+        this.header.innerHTML = this.data.header || "";
+        this.description.innerHTML = this.data.description || "";
 
         // Fake code submit
         runButton.addEventListener("click", (e) => {
@@ -50,8 +50,8 @@ export default class CodeRunnerBlock {
 
     save(blockContent) {
         return {
-            header: this.header.innerText.trim(),
-            description: this.description.innerText.trim(),
+            header: this.header.innerHTML.trim(),
+            description: this.description.innerHTML.trim(),
             code: this.editor.getValue(),
         };
     }

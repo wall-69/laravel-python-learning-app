@@ -33,9 +33,9 @@ export default class ExerciseBlock {
         this.assignment = wrapper.querySelector(".editor-exercise-assignment");
         this.testsContainer = wrapper.querySelector(".editor-exercise-tests");
 
-        this.header.innerText = this.data.header || "";
-        this.description.innerText = this.data.description || "";
-        this.assignment.innerText = this.data.assignment || "";
+        this.header.innerHTML = this.data.header || "";
+        this.description.innerHTML = this.data.description || "";
+        this.assignment.innerHTML = this.data.assignment || "";
 
         // Load saved tests
         if (this.data.tests) {
@@ -80,9 +80,9 @@ export default class ExerciseBlock {
         }
 
         return {
-            header: this.header.innerText.trim(),
-            description: this.description.innerText.trim(),
-            assignment: this.assignment.innerText.trim(),
+            header: this.header.innerHTML.trim(),
+            description: this.description.innerHTML.trim(),
+            assignment: this.assignment.innerHTML.trim(),
             tests: JSON.stringify(tests),
             code: this.editor.getValue(),
         };
