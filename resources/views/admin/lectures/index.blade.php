@@ -34,6 +34,7 @@
                             <th class="d-none d-xl-table-cell">ID</th>
                             <th>Názov</th>
                             <th class="d-none d-sm-table-cell">Popis</th>
+                            <th class="d-none d-lg-table-cell">Kategória</th>
                             <th>Videnia</th>
                             <th class="d-none d-sm-table-cell">Status</th>
                             <th>Akcie</th>
@@ -48,6 +49,11 @@
                                     <div class="admin-table-cell-line-limit">
                                         {{ $lecture->description }}
                                     </div>
+                                </td>
+                                <td class="text-break d-none d-lg-table-cell">
+                                    <a href="{{ route('admin.categories') }}?search={{ $lecture->category->title }}">
+                                        {{ $lecture->category->title }}
+                                    </a>
                                 </td>
                                 <td>{{ $lecture->views }}</td>
                                 <td class="d-none d-sm-table-cell">

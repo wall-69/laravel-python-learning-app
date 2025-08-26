@@ -18,7 +18,7 @@ class LectureController extends Controller
 
     public function index(Request $request)
     {
-        $paginator = Lecture::search($request->get("search") ?? "")->paginate(10);
+        $paginator = Lecture::search($request->get("search") ?? "")->with("category")->paginate(10);
 
         return view("admin.lectures.index", [
             "lectures" => $paginator,
