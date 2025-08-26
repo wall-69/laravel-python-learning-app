@@ -32,15 +32,16 @@ class ExerciseController extends Controller
                     $checks[] = ["type" => "variable", "name" => $test["variable"]];
                     break;
                 case "function":
-                    // TODO: args
+                    $args = implode(", ", $test["args"]);
+
                     $testCases[] = [
                         "type" => "function",
                         "name" => $test["name"],
                         "args" => $test["args"],
                         "expected" => $test["expected"],
-                        "test" => "print({$test["name"]}() == {$test["expected"]})",
+                        "test" => "print({$test["name"]}({$args}) == {$test["expected"]})",
                     ];
-                    $checks[] = ["type" => "function", "name" => $test["name"]];
+                    $checks[] = ["type" => "function", "name" => $test["name"], "args" => $test["args"]];
                     break;
                 case "print":
                     $testCases[] = [
@@ -75,12 +76,18 @@ class ExerciseController extends Controller
         GIVE;
 
         $code .= "print('CHECKS')\n";
+        $code .= "import inspect\n";
 
         foreach ($checks as $check) {
             if ($check["type"] == "variable") {
                 $code .= "print('{$check["name"]}' in locals())" . "\n";
             } else if ($check["type"] == "function") {
-                $code .= "print('{$check["name"]}' in locals() and callable(locals()['{$check["name"]}']))" . "\n";
+                $argCount = count($check['args']);
+
+                $code .= "print('{$check["name"]}' in locals()"
+                    . " and callable(locals()['{$check["name"]}']) "
+                    . " and len(inspect.signature(locals()['{$check["name"]}']).parameters) == $argCount)"
+                    . "\n";
             }
         }
 
@@ -129,9 +136,9 @@ class ExerciseController extends Controller
                 $check = $checks[$i];
 
                 if ($check["type"] == "variable") {
-                    $error = "Premenná " . $check["name"] . " nie je definovaná.";
+                    $error = "Premenná <b>{$check["name"]}</b> nie je definovaná.";
                 } else if ($check["type"] == "function") {
-                    $error = "Funkcia " . $check["name"] . " nie je definovaná.";
+                    $error = "Funkcia <b>{$check["name"]}</b> nie je definovaná alebo je definovaná nesprávne.";
                 }
             }
         }
@@ -145,11 +152,11 @@ class ExerciseController extends Controller
 
             if ($line == "False") {
                 if ($testCase["type"] == "variable") {
-                    $message = "Premenná " . $testCase["name"] . " nie je správna.";
+                    $message = "Premenná <b>{$testCase["name"]}</b> nie je správna.";
                 } else if ($testCase["type"] == "function") {
-                    $message = "Funkcia " . $testCase["name"] . " nevracia správnu hodnotu.";
+                    $message = "Funkcia <b>{$testCase["name"]}</b> nevracia správnu hodnotu.";
                 } else if ($testCase["type"] == "print") {
-                    $message = $testCase["expected"] . " nebolo vypísané do konzole.";
+                    $message = "<b>{$testCase["expected"]}</b> nebolo vypísané do konzole.";
                 }
 
                 $testResults[] = [
@@ -158,11 +165,11 @@ class ExerciseController extends Controller
                 ];
             } else {
                 if ($testCase["type"] == "variable") {
-                    $message = "Premenná " . $testCase["name"] . " je správna.";
+                    $message = "Premenná <b>{$testCase["name"]}</b> je správna.";
                 } else if ($testCase["type"] == "function") {
-                    $message = "Funkcia " . $testCase["name"] . " vracia správnu hodnotu.";
+                    $message = "Funkcia <b>{$testCase["name"]}</b> vracia správnu hodnotu.";
                 } else if ($testCase["type"] == "print") {
-                    $message = $testCase["expected"] . " bolo vypísané do konzole.";
+                    $message = "<b>{$testCase["expected"]}</b> bolo vypísané do konzole.";
                 }
 
                 $testResults[] = [

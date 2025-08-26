@@ -33,19 +33,26 @@
 
         <h3 class="mt-2 mb-0">Kontrola</h3>
         <div v-if="testResults.length > 0 && !error" class="d-flex flex-column">
-            <p
+            <div
                 v-for="test in testResults"
-                class="mb-0 px-2 py-1 border"
+                class="px-2 py-1 border d-flex flex-column flex-md-row gap-1"
                 :class="{
                     'text-bg-success': test.success,
                     'text-bg-danger': !test.success,
                 }"
             >
-                <span class="fw-bold"
-                    >{{ test.success ? "Úspešný" : "Neúspešný" }} test:</span
-                >
-                {{ test.message }}
-            </p>
+                <span class="fw-bold d-flex align-items-center">
+                    <i
+                        class="me-1"
+                        :class="{
+                            'bx bx-check fw-bold': test.success,
+                            'bx bx-x fw-bold': !test.success,
+                        }"
+                    ></i>
+                    {{ test.success ? "Úspešný" : "Neúspešný" }} test:
+                </span>
+                <p class="mb-0" v-html="test.message"></p>
+            </div>
         </div>
         <textarea
             v-else-if="error"
@@ -123,8 +130,6 @@ async function runCode() {
         });
 
         if (response.status === 200) {
-            console.log(response.data);
-
             if (response.data.error) {
                 error.value = response.data.error;
                 testResults.value = [];

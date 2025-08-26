@@ -126,7 +126,7 @@ export default class ExerciseBlock {
             }
 
             let variable = testCase.slice(0, idx).trim();
-            let expected = testCase.slice(idx + op.length).trim();
+            let expected = parseValue(testCase.slice(idx + op.length).trim());
 
             return {
                 type: "variable",
@@ -146,7 +146,7 @@ export default class ExerciseBlock {
                 .slice(nameEnd + 1, callPart.lastIndexOf(")"))
                 .trim();
             let args = argsString
-                ? argsString.split(",").map((a) => a.trim())
+                ? argsString.split(",").map((a) => parseValue(a.trim()))
                 : [];
 
             return {
@@ -154,7 +154,7 @@ export default class ExerciseBlock {
                 raw: testCase,
                 name: name,
                 args: args,
-                expected: expectedPart.trim(),
+                expected: parseValue(expectedPart.trim()),
             };
         }
 
@@ -173,5 +173,27 @@ export default class ExerciseBlock {
             type: "unknown",
             raw: testCase,
         };
+    }
+
+    parseValue(val) {
+        // Try number
+        if (!isNaN(val) && val.trim() !== "") {
+            return Number(val);
+        }
+
+        // Boolean
+        if (val.toLowerCase() === "true") return true;
+        if (val.toLowerCase() === "false") return false;
+
+        // Quoted string (strip quotes, keep inner)
+        if (
+            (val.startsWith('"') && val.endsWith('"')) ||
+            (val.startsWith("'") && val.endsWith("'"))
+        ) {
+            return val.slice(1, -1);
+        }
+
+        // Otherwise leave as string
+        return val;
     }
 }
