@@ -6,12 +6,16 @@
         <p v-if="slots.description">
             <slot name="description"></slot>
         </p>
-        <p>
+        <p v-if="!exerciseIsComplete">
             Ak úspešne vyriešiš toto cvičenie, tak dostaneš
             <span class="text-success fw-bold">+35 BODOV</span>. Tvoje riešenie
             bude otestované. Pre úspech musí prejsť všetkými testami. Neúspešné
             testy sa zobrazia nižšie. Cvičenie si môžeš zopakovať koľkokrát len
             chceš.
+        </p>
+        <p v-else class="fst-italic">
+            Toto cvičenie si už úspešne vyriešil! Nižšie je tvoj kód tvojho
+            úspešného riešenia. Ak sa ti chce, tak si ho kľudne môžeš zopakovať.
         </p>
         <p class="border bg-info text-bg-info px-3 py-1">
             <span class="fw-bold">ZADANIE</span>
@@ -79,7 +83,7 @@
 <script setup>
 import axios from "axios";
 import * as monaco from "monaco-editor";
-import { computed, onMounted, ref, useSlots } from "vue";
+import { computed, inject, onMounted, ref, useSlots } from "vue";
 
 // Define
 const props = defineProps({
@@ -110,6 +114,13 @@ const editorValue = ref(null);
 const testResults = ref([]);
 const error = ref("");
 const loading = ref(false);
+
+const completedExercises = inject("completedExercises");
+
+// Computed
+const exerciseIsComplete = computed(() =>
+    completedExercises.includes(props.id)
+);
 
 // Functions
 async function runCode() {
@@ -168,6 +179,24 @@ async function runCode() {
         }
     } finally {
         loading.value = false;
+    }
+
+    if (
+        testResults.value.every((test) => test.success) &&
+        !exerciseIsComplete.value
+    ) {
+        try {
+            const response = await axios.post(
+                "/user/progress/complete/exercise/" + props.id,
+                { code: getEditorText() }
+            );
+
+            if (response.status === 200) {
+                completedExercises.push(props.id);
+            }
+        } catch (error) {
+            console.error("Marking exercise as complete failed: " + error);
+        }
     }
 }
 

@@ -50,6 +50,14 @@ class ExerciseController extends Controller
                         "test" => "print({$test["expected"]} in __user_output)"
                     ];
                     break;
+
+                case "type":
+                    $checks[] = [
+                        "type" => "type",
+                        "name" => $test["name"],
+                        "expected" => $test["expected"]
+                    ];
+                    break;
             }
         }
 
@@ -85,9 +93,11 @@ class ExerciseController extends Controller
                 $argCount = count($check['args']);
 
                 $code .= "print('{$check["name"]}' in locals()"
-                    . " and callable(locals()['{$check["name"]}']) "
+                    . " and callable(locals()['{$check["name"]}'])"
                     . " and len(inspect.signature(locals()['{$check["name"]}']).parameters) == $argCount)"
                     . "\n";
+            } else if ($check["type"] == "type") {
+                $code .= "print(type({$check["name"]}) is {$check["expected"]})\n";
             }
         }
 
@@ -136,9 +146,11 @@ class ExerciseController extends Controller
                 $check = $checks[$i];
 
                 if ($check["type"] == "variable") {
-                    $error = "Premenná <b>{$check["name"]}</b> nie je definovaná.";
+                    $error = "Premenná {$check["name"]} nie je definovaná.";
                 } else if ($check["type"] == "function") {
-                    $error = "Funkcia <b>{$check["name"]}</b> nie je definovaná alebo je definovaná nesprávne.";
+                    $error = "Funkcia {$check["name"]} nie je definovaná alebo je nesprávne definovaná.";
+                } else if ($check["type"] == "type") {
+                    $error = "Premenná {$check["name"]} má nesprávny dátový typ: očakávali sme {$check["expected"]}.";
                 }
             }
         }

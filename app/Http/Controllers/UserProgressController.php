@@ -36,6 +36,10 @@ class UserProgressController extends Controller
 
     public function completeExercise(Request $request, Exercise $exercise)
     {
+        $request->validate([
+            "code" => "required"
+        ]);
+
         $user = $request->user();
 
         // Check if exercise was already completed
@@ -50,7 +54,8 @@ class UserProgressController extends Controller
 
         ExerciseCompletion::create([
             "user_id" => $user->id,
-            "exercise_id" => $exercise->id
+            "exercise_id" => $exercise->id,
+            "code" => $request->code
         ]);
 
         return response()->json([

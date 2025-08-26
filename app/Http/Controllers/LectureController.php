@@ -59,6 +59,24 @@ class LectureController extends Controller
         }
 
         $user = $request->user();
+
+        // Fill in the users code for completed exercises
+        if ($user) {
+            $completedExercises = $user->completedExercises->keyBy("exercise_id");
+            $blocks = json_decode($lecture->blocks, true);
+            foreach ($blocks["blocks"] as &$block) {
+                if ($block["type"] == "exercise") {
+                    $exerciseId = $block["id"];
+
+                    if ($completedExercises->has($exerciseId)) {
+                        $block["data"]["code"] = $completedExercises[$exerciseId]["code"];
+                    }
+                }
+            }
+
+            $lecture->blocks = json_encode($blocks);
+        }
+
         $completedQuizzes = $user?->completedQuizzes->pluck("quiz_id") ?? collect();
         $completedExercises = $user?->completedExercises->pluck("exercise_id") ?? collect();
 

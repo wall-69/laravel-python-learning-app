@@ -75,6 +75,10 @@
                     <template #assignment>
                         {!! $blockData['assignment'] !!}
                     </template>
+
+                    <template #code>
+                        <pre>{{ $blockData['code'] }}</pre>
+                    </template>
                 </exercise>
             @break
 

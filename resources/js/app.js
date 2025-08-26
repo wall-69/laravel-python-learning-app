@@ -29,7 +29,9 @@ app.component("quiz-drop", QuizDropComponent);
 app.component("admin-editor", AdminEditorComponent);
 
 const completedQuizzes = reactive(window.completedQuizzes || []);
+const completedExercises = reactive(window.completedExercises || []);
 app.provide("completedQuizzes", completedQuizzes);
+app.provide("completedExercises", completedExercises);
 
 app.mount("#app");
 

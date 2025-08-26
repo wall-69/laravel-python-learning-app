@@ -41,6 +41,11 @@ class UserProgress extends Model
     public function addPoints(int $points)
     {
         $this->points += $points;
+
+        $levelUps = intdiv($this->points, 100); // Number of full levels gained
+        $this->level += $levelUps;
+        $this->points %= 100; // Remainder points
+
         $this->save();
     }
 }
