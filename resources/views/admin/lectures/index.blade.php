@@ -43,7 +43,11 @@
                     <tbody class="table-group-divider">
                         @foreach ($lectures as $lecture)
                             <tr>
-                                <td class="text-break d-none d-xl-table-cell">{{ $lecture->id }}</td>
+                                <td class="text-break d-none d-xl-table-cell">
+                                    <a href="{{ route('lectures.show', [$lecture->id, $lecture->slug]) }}" target="_blank">
+                                        {{ $lecture->id }}
+                                    </a>
+                                </td>
                                 <td class="text-break">{{ $lecture->title }}</td>
                                 <td class="text-break d-none d-sm-table-cell">
                                     <div class="admin-table-cell-line-limit">
