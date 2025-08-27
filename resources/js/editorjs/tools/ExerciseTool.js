@@ -93,7 +93,8 @@ export default class ExerciseBlock {
         testContainer.classList.add(
             "d-flex",
             "justify-content-between",
-            "align-items-center"
+            "align-items-center",
+            "mb-1"
         );
 
         let testCase = document.createElement("div");
@@ -101,15 +102,54 @@ export default class ExerciseBlock {
         testCase.contentEditable = true;
         testCase.innerHTML = test || "Zadajte test";
 
+        // Control buttons wrapper
+        let controls = document.createElement("div");
+        controls.classList.add("d-flex", "gap-1");
+
+        // Up button
+        let upBtn = document.createElement("button");
+        upBtn.classList.add("btn", "btn-secondary", "btn-sm");
+        upBtn.innerHTML =
+            "<i class='bx bx-arrow-up fst-normal d-flex align-items-center'></i>";
+        upBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            let prev = testContainer.previousElementSibling;
+            if (prev) {
+                this.testsContainer.insertBefore(testContainer, prev);
+            }
+        });
+
+        // Down button
+        let downBtn = document.createElement("button");
+        downBtn.classList.add("btn", "btn-secondary", "btn-sm");
+        downBtn.innerHTML =
+            "<i class='bx bx-arrow-down fst-normal d-flex align-items-center'></i>";
+        downBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            let next = testContainer.nextElementSibling;
+            if (next) {
+                this.testsContainer.insertBefore(next, testContainer);
+            }
+        });
+
+        // Delete button
         let deleteBtn = document.createElement("button");
         deleteBtn.classList.add("btn", "btn-danger", "btn-sm");
         deleteBtn.innerHTML = "X";
-        deleteBtn.addEventListener("click", () => {
+        deleteBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
             testContainer.remove();
         });
 
+        controls.appendChild(upBtn);
+        controls.appendChild(downBtn);
+        controls.appendChild(deleteBtn);
+
         testContainer.appendChild(testCase);
-        testContainer.appendChild(deleteBtn);
+        testContainer.appendChild(controls);
 
         this.testsContainer.appendChild(testContainer);
     }

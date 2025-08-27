@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exercise;
+use App\Models\ExerciseCompletion;
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 
@@ -16,21 +17,24 @@ class ExerciseController extends Controller
             "code" => "required"
         ]);
 
-        // Parse tests
+        $user = $request->user();
+
+        // Parse tests, create test cases & checks
         $tests = json_decode($exercise->tests, true);
-        $checks = [];
+        $checks = collect();
         $testCases = [];
+
         foreach ($tests as $test) {
-            $testType = $test["type"];
-            switch ($testType) {
+            switch ($test["type"]) {
                 case "variable":
                     $testCases[] = [
                         "type" => "variable",
                         "name" => $test["variable"],
                         "test" => "print({$test["raw"]})"
                     ];
-                    $checks[] = ["type" => "variable", "name" => $test["variable"]];
+                    $checks->push(["type" => "variable", "name" => $test["variable"]]);
                     break;
+
                 case "function":
                     $args = implode(", ", $test["args"]);
 
@@ -41,8 +45,9 @@ class ExerciseController extends Controller
                         "expected" => $test["expected"],
                         "test" => "print({$test["name"]}({$args}) == {$test["expected"]})",
                     ];
-                    $checks[] = ["type" => "function", "name" => $test["name"], "args" => $test["args"]];
+                    $checks->push(["type" => "function", "name" => $test["name"], "args" => $test["args"]]);
                     break;
+
                 case "print":
                     $testCases[] = [
                         "type" => "print",
@@ -52,18 +57,30 @@ class ExerciseController extends Controller
                     break;
 
                 case "type":
-                    $checks[] = [
+                    $checks->push([
                         "type" => "type",
                         "name" => $test["name"],
                         "expected" => $test["expected"]
-                    ];
+                    ]);
                     break;
             }
         }
 
+        // Put type checks at the end (so variable checks are first)
+        $checks = collect($checks)
+            ->sortBy(function ($check) {
+                return $check["type"] === "type";
+            })
+            ->values()
+            ->toArray();
+
         // Temp file
         $tempFile = storage_path("app/exercise_" . uniqid() . ".py");
 
+        // Markers
+        $CHECKS_MARKER = "CHECKS";
+        $TESTS_MARKER = "TESTS";
+        $TESTS_END_MARKER = "TESTS END";
 
         // Take over stdout
         $code = <<<TAKEOVER
@@ -83,32 +100,41 @@ class ExerciseController extends Controller
         __user_output = __buffer.getvalue().splitlines()\n
         GIVE;
 
-        $code .= "print('CHECKS')\n";
+        // Checks
+        $code .= "print('$CHECKS_MARKER')\n";
         $code .= "import inspect\n";
 
         foreach ($checks as $check) {
-            if ($check["type"] == "variable") {
-                $code .= "print('{$check["name"]}' in locals())" . "\n";
-            } else if ($check["type"] == "function") {
-                $argCount = count($check['args']);
+            switch ($check["type"]) {
+                case "variable":
+                    $code .= "print('{$check["name"]}' in locals())" . "\n";
+                    break;
 
-                $code .= "print('{$check["name"]}' in locals()"
-                    . " and callable(locals()['{$check["name"]}'])"
-                    . " and len(inspect.signature(locals()['{$check["name"]}']).parameters) == $argCount)"
-                    . "\n";
-            } else if ($check["type"] == "type") {
-                $code .= "print(type({$check["name"]}) is {$check["expected"]})\n";
+                case "function":
+                    $argCount = count($check['args']);
+
+                    $code .= "print('{$check["name"]}' in locals()"
+                        . " and callable(locals()['{$check["name"]}'])"
+                        . " and len(inspect.signature(locals()['{$check["name"]}']).parameters) == $argCount)"
+                        . "\n";
+                    break;
+
+                case "type":
+                    $code .= "print('{$check["name"]}' in locals() and type({$check["name"]}) is {$check["expected"]})\n";
+                    break;
             }
         }
 
-        $code .= "print('TESTS')\n";
+        // Tests
+        $code .= "print('$TESTS_MARKER')\n";
 
         foreach ($testCases as $testCase) {
             $code .= $testCase["test"] . "\n";
         }
 
-        $code .= "print('TESTS END')\n";
+        $code .= "print('$TESTS_END_MARKER')\n";
 
+        // Put the users code & tests into the temp file
         file_put_contents($tempFile, $code);
 
         // Run inside docker
@@ -136,59 +162,90 @@ class ExerciseController extends Controller
         // Delete temp file
         unlink($tempFile);
 
+        // Error message for checks
         $error = mb_convert_encoding($process->getErrorOutput(), "UTF-8", "auto");
-
+        // The output (in lines) of checks & tests
         $outputLines = explode("\n", $process->getOutput());
-        $checksStart = array_search("CHECKS", $outputLines);
-        $checksEnd = array_search("TESTS", $outputLines);
+
+        // Go through all checks
+        $checksStart = array_search($CHECKS_MARKER, $outputLines);
+        $checksEnd = array_search($TESTS_MARKER, $outputLines);
         foreach (array_slice($outputLines, $checksStart + 1, $checksEnd - $checksStart - 1) as $i => $line) {
             if ($line == "False") {
                 $check = $checks[$i];
 
-                if ($check["type"] == "variable") {
-                    $error = "Premenná {$check["name"]} nie je definovaná.";
-                } else if ($check["type"] == "function") {
-                    $error = "Funkcia {$check["name"]} nie je definovaná alebo je nesprávne definovaná.";
-                } else if ($check["type"] == "type") {
-                    $error = "Premenná {$check["name"]} má nesprávny dátový typ: očakávali sme {$check["expected"]}.";
+                switch ($check["type"]) {
+                    case "variable":
+                        $error = "Premenná {$check["name"]} nie je definovaná.";
+                        break;
+
+                    case "function":
+                        $error = "Funkcia {$check["name"]} nie je definovaná alebo je nesprávne definovaná.";
+                        break;
+
+                    case "type":
+                        $error = "Premenná {$check["name"]} má nesprávny dátový typ: očakávali sme {$check["expected"]}.";
+                        break;
                 }
+
+                break;
             }
         }
 
-        $testResults = [];
-        $testsStart = array_search("TESTS", $outputLines);
-        $testsEnd = array_search("TESTS END", $outputLines);
+        // Go through all tests & keep track of the test results
+        $testResults = collect();
+
+        $testsStart = array_search($TESTS_MARKER, $outputLines);
+        $testsEnd = array_search($TESTS_END_MARKER, $outputLines);
         foreach (array_slice($outputLines, $testsStart + 1, $testsEnd - $testsStart - 1) as $i => $line) {
             $testCase = $testCases[$i];
-            $message = "";
 
             if ($line == "False") {
-                if ($testCase["type"] == "variable") {
-                    $message = "Premenná <b>{$testCase["name"]}</b> nie je správna.";
-                } else if ($testCase["type"] == "function") {
-                    $message = "Funkcia <b>{$testCase["name"]}</b> nevracia správnu hodnotu.";
-                } else if ($testCase["type"] == "print") {
-                    $message = "<b>{$testCase["expected"]}</b> nebolo vypísané do konzole.";
+                switch ($testCase["type"]) {
+                    case "variable":
+                        $message = "Premenná <b>{$testCase["name"]}</b> nie je správna.";
+                        break;
+
+                    case "function":
+                        $message = "Funkcia <b>{$testCase["name"]}</b> nevracia správnu hodnotu.";
+                        break;
+
+                    case "print":
+                        $message = "<b>{$testCase["expected"]}</b> nebolo vypísané do konzole.";
+                        break;
                 }
 
-                $testResults[] = [
-                    "success" => false,
-                    "message" => $message
-                ];
+                $success = false;
             } else {
-                if ($testCase["type"] == "variable") {
-                    $message = "Premenná <b>{$testCase["name"]}</b> je správna.";
-                } else if ($testCase["type"] == "function") {
-                    $message = "Funkcia <b>{$testCase["name"]}</b> vracia správnu hodnotu.";
-                } else if ($testCase["type"] == "print") {
-                    $message = "<b>{$testCase["expected"]}</b> bolo vypísané do konzole.";
+                switch ($testCase["type"]) {
+                    case "variable":
+                        $message = "Premenná <b>{$testCase["name"]}</b> je správna.";
+                        break;
+
+                    case "function":
+                        $message = "Funkcia <b>{$testCase["name"]}</b> vracia správnu hodnotu.";
+                        break;
+
+                    case "print":
+                        $message = "<b>{$testCase["expected"]}</b> bolo vypísané do konzole.";
+                        break;
                 }
 
-                $testResults[] = [
-                    "success" => true,
-                    "message" => $message
-                ];
+                $success = true;
             }
+
+            $testResults->push([
+                "success" => $success,
+                "message" => $message
+            ]);
+        }
+
+        // If this exercise was already completed and everything is okay, we resave the users submitted code
+        $allTestsPassed = $testResults->every(fn($testResult) => $testResult["success"]);
+        if (!$error && $allTestsPassed && $user->completedExercises->contains("exercise_id", $exercise->id)) {
+            ExerciseCompletion::where("user_id", $user->id)->where("exercise_id", $exercise->id)->update([
+                "code" => $request->code
+            ]);
         }
 
         return response()->json([

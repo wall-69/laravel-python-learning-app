@@ -44,6 +44,7 @@
                     'text-bg-success': test.success,
                     'text-bg-danger': !test.success,
                 }"
+                style="transition: background-color 0.5s"
             >
                 <span class="fw-bold d-flex align-items-center">
                     <i
@@ -84,6 +85,7 @@
 import axios from "axios";
 import * as monaco from "monaco-editor";
 import { computed, inject, onMounted, ref, useSlots } from "vue";
+import { normalizeIndentation } from "../helpers";
 
 // Define
 const props = defineProps({
@@ -111,9 +113,10 @@ onMounted(() => {
 let editor = null;
 const editorContainer = ref(null);
 const editorValue = ref(null);
+
+const loading = ref(false);
 const testResults = ref([]);
 const error = ref("");
-const loading = ref(false);
 
 const completedExercises = inject("completedExercises");
 
@@ -165,17 +168,21 @@ async function runCode() {
                 return;
             }
 
-            // TODO: handle error response
+            error.value = "Error: " + error.response.statusText;
+            testResults.value = [];
         }
 
         // No response
         else if (error.request) {
-            // TODO: handle no response
+            error.value =
+                "Error: Server neodpovedal. Skúste znova alebo neskôr.";
+            testResults.value = [];
         }
 
         // Other errors
         else {
-            // TODO: handle other errors
+            error.value = "Error: " + error.message;
+            testResults.value = [];
         }
     } finally {
         loading.value = false;
@@ -206,22 +213,5 @@ function getEditorText() {
     }
 
     return "";
-}
-
-function normalizeIndentation(text) {
-    const lines = text.split("\n");
-
-    // Remove empty leading and trailing lines
-    while (lines.length && lines[0].trim() === "") lines.shift();
-    while (lines.length && lines[lines.length - 1].trim() === "") lines.pop();
-
-    // Find minimum indentation
-    const indentLengths = lines
-        .filter((line) => line.trim() !== "")
-        .map((line) => line.match(/^ */)[0].length);
-    const minIndent = Math.min(...indentLengths);
-
-    // Remove common indentation
-    return lines.map((line) => line.slice(minIndent)).join("\n");
 }
 </script>
