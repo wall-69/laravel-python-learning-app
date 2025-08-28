@@ -74,6 +74,7 @@
 <script setup>
 import axios from "axios";
 import { computed, inject, provide, reactive, ref } from "vue";
+import { addAlert } from "../helpers";
 
 // Define
 const props = defineProps({
@@ -159,6 +160,15 @@ async function checkQuiz(event) {
 
             if (response.status === 200) {
                 completedQuizzes.push(props.id);
+
+                addAlert(
+                    "celebrate",
+                    "Super! Tento kvíz si úspešne vyriešil. Gratulujeme!"
+                );
+
+                if (response.data.level_up) {
+                    addAlert("level-up", response.data.level_up);
+                }
             }
         } catch (error) {
             console.error("Marking quiz as complete failed: " + error);

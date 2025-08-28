@@ -1,3 +1,5 @@
+import { reactive } from "vue";
+
 export function normalizeIndentation(text) {
     const lines = text.split("\n");
 
@@ -13,4 +15,9 @@ export function normalizeIndentation(text) {
 
     // Remove common indentation
     return lines.map((line) => line.slice(minIndent)).join("\n");
+}
+
+export const alerts = reactive([]);
+export function addAlert(type, message) {
+    alerts.push({ type, message });
 }

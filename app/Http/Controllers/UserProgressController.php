@@ -22,6 +22,7 @@ class UserProgressController extends Controller
         }
 
         // Add points to the user & mark quiz as complete
+        $oldLevel = $user->progress->level;
         $user->progress->addPoints(25);
 
         QuizCompletion::create([
@@ -30,7 +31,8 @@ class UserProgressController extends Controller
         ]);
 
         return response()->json([
-            "message" => "Quiz was marked as complete."
+            "message" => "Quiz was marked as complete.",
+            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz ste level {$user->progress->level}!"] : [])
         ]);
     }
 
@@ -50,6 +52,7 @@ class UserProgressController extends Controller
         }
 
         // Add points to the user & mark exercise as complete
+        $oldLevel = $user->progress->level;
         $user->progress->addPoints(35);
 
         ExerciseCompletion::create([
@@ -59,7 +62,8 @@ class UserProgressController extends Controller
         ]);
 
         return response()->json([
-            "message" => "Exercise was marked as complete."
+            "message" => "Exercise was marked as complete.",
+            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz ste level {$user->progress->level}!"] : [])
         ]);
     }
 }

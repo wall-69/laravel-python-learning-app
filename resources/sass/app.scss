@@ -32,7 +32,7 @@
 
     transform: translateX(-50%);
 
-    @extend .position-absolute;
+    @extend .position-fixed;
     @extend .z-3;
 }
 

@@ -12,6 +12,8 @@ import QuizDragAndDropComponent from "./components/quiz/QuizDragAndDropComponent
 import QuizDragComponent from "./components/quiz/QuizDragComponent.vue";
 import QuizDropComponent from "./components/quiz/QuizDropComponent.vue";
 import AdminEditorComponent from "./components/AdminEditorComponent.vue";
+import AlertComponent from "./components/AlertComponent.vue";
+import AlertsContainerComponent from "./components/AlertsContainerComponent.vue";
 
 const app = createApp({});
 
@@ -27,6 +29,8 @@ app.component("quiz-drag-and-drop", QuizDragAndDropComponent);
 app.component("quiz-drag", QuizDragComponent);
 app.component("quiz-drop", QuizDropComponent);
 app.component("admin-editor", AdminEditorComponent);
+app.component("alert", AlertComponent);
+app.component("alerts-container", AlertsContainerComponent);
 
 const completedQuizzes = reactive(window.completedQuizzes || []);
 const completedExercises = reactive(window.completedExercises || []);

@@ -250,7 +250,8 @@ class ExerciseController extends Controller
 
         return response()->json([
             "test_results" => $testResults,
-            "error" => $error
+            "error" => $error,
+            "celebrate" => "Skvele! Cvičenie si úspešne zvládol, len tak ďalej!"
         ]);
     }
 }

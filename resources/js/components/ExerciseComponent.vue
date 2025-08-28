@@ -85,7 +85,7 @@
 import axios from "axios";
 import * as monaco from "monaco-editor";
 import { computed, inject, onMounted, ref, useSlots } from "vue";
-import { normalizeIndentation } from "../helpers";
+import { addAlert, normalizeIndentation } from "../helpers";
 
 // Define
 const props = defineProps({
@@ -150,6 +150,10 @@ async function runCode() {
                 return;
             }
 
+            if (response.data.celebrate && !exerciseIsComplete.value) {
+                addAlert("celebrate", response.data.celebrate);
+            }
+
             error.value = "";
             testResults.value = response.data.test_results;
         }
@@ -200,6 +204,10 @@ async function runCode() {
 
             if (response.status === 200) {
                 completedExercises.push(props.id);
+
+                if (response.data.level_up) {
+                    addAlert("level-up", response.data.level_up);
+                }
             }
         } catch (error) {
             console.error("Marking exercise as complete failed: " + error);
