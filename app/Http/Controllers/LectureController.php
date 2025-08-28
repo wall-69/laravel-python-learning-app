@@ -9,6 +9,7 @@ use App\Models\Exercise;
 use App\Models\Lecture;
 use App\Models\Quiz;
 use DB;
+use Gate;
 use Illuminate\Http\Request;
 use Str;
 
@@ -44,6 +45,8 @@ class LectureController extends Controller
 
     public function show(Request $request, Lecture $lecture, ?string $slug = null)
     {
+        Gate::authorize("show", [$lecture]);
+
         // If the slug is not correct we redirect to the correct one
         if (!$slug || $lecture->slug != $slug) {
             return redirect()->route("lectures.show", [$lecture, $lecture->slug], 301);
