@@ -9,13 +9,13 @@
 
             @auth
                 @if ($user->id == auth()->user()->id)
-                    <a href="#" class="btn btn-secondary">Nastavenia</a>
+                    <a href="{{ route('users.settings') }}" class="btn btn-secondary">Nastavenia</a>
                 @endif
             @endauth
         </div>
     </div>
     <div class="d-flex flex-column d-md-none">
-        <a href="#" class="btn btn-secondary align-self-end">Nastavenia</a>
+        <a href="{{ route('users.settings') }}" class="btn btn-secondary align-self-end">Nastavenia</a>
 
         <h1 class="mb-0 mt-3">
             {{ $user->first_name }} {{ $user->last_name }}

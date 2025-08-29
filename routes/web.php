@@ -54,6 +54,14 @@ Route::controller(UserController::class)->name("users.")->group(function () {
     Route::middleware("guest")->group(function () {
         Route::post("/users", "store")->name("store");
     });
+
+    Route::middleware("auth")->group(function () {
+        Route::get("/profil/nastavenia", "settings")->name("settings");
+
+        Route::patch("/users/{user}", "changePassword")->name("change-password");
+
+        Route::delete("/users/{user}", "destroy")->name("destroy");
+    });
 });
 
 // UserProgress
