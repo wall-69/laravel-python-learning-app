@@ -19,6 +19,21 @@ class LectureController extends Controller
 
     public function index(Request $request)
     {
+        $categories = Category::with([
+            "lectures" => function ($query) {
+                $query->where("status", LectureStatus::PUBLIC->value)
+                    ->orderBy("category_order");
+            }
+        ])->get();
+
+        return view("lectures", [
+            "hideSidebar" => true,
+            "categories" => $categories,
+        ]);
+    }
+
+    public function adminIndex(Request $request)
+    {
         $paginator = Lecture::search($request->get("search") ?? "")->with("category")->paginate(10);
 
         return view("admin.lectures.index", [

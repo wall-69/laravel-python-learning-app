@@ -5,7 +5,7 @@
 @import "variables";
 
 // Bootstrap
-@import "bootstrap/scss/bootstrap";
+@import "/node_modules/bootstrap/scss/bootstrap";
 
 /*
     CUSTOM CLASSES
@@ -131,5 +131,17 @@
 @media (min-width: 768px) {
     .user-progress {
         width: 35%;
+    }
+}
+
+// Lectures
+.lecture-card {
+    width: 100%;
+    height: auto;
+}
+@media (min-width: 768px) {
+    .lecture-card {
+        width: 18rem;
+        height: 16rem;
     }
 }

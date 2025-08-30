@@ -72,6 +72,7 @@ Route::controller(UserProgressController::class)->middleware("auth")->name("user
 
 // Lecture
 Route::controller(LectureController::class)->name("lectures.")->group(function () {
+    Route::get("/lekcie", "index")->name("index");
     Route::get("/lekcia/{lecture}/{slug?}", "show")->name("show");
 });
 
@@ -102,7 +103,7 @@ Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () 
     });
 
     Route::controller(LectureController::class)->group(function () {
-        Route::get("/lectures", "index")->name("lectures");
+        Route::get("/lectures", "adminIndex")->name("lectures");
         Route::get("/lectures/create", "create")->name("lectures.create");
         Route::get("/lectures/{lecture}/edit", "edit")->name("lectures.edit");
 

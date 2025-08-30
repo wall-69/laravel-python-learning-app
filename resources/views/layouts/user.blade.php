@@ -26,7 +26,11 @@
                     </button>
                     <div id="nav" class="collapse navbar-collapse justify-content-center">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a href="#" class="nav-link">Lekcie</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('lectures.index') }}" class="nav-link">
+                                    Lekcie
+                                </a>
+                            </li>
                             <li class="nav-item"><a href="#" class="nav-link">Cvičenia</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Kvízy</a></li>
                         </ul>

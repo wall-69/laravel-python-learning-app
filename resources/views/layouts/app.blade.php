@@ -26,7 +26,11 @@
                     </button>
                     <div id="nav" class="collapse navbar-collapse justify-content-center">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a href="#" class="nav-link">Lekcie</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('lectures.index') }}" class="nav-link">
+                                    Lekcie
+                                </a>
+                            </li>
                             <li class="nav-item"><a href="#" class="nav-link">Cvičenia</a></li>
                             <li class="nav-item"><a href="#" class="nav-link">Kvízy</a></li>
                         </ul>
@@ -66,19 +70,21 @@
         </header>
 
         <main class="flex-grow-1 row g-0">
-            <aside class="d-none d-lg-block col-md-2 border-end pe-0">
-                <div class="list-group list-group-flush list-group-numbered">
-                    <a href="#" class="list-group-item border-bottom active px-2 py-1">
-                        Čo je to Python?
-                    </a>
-                    <a href="#" class="list-group-item border-bottom px-2 py-1">
-                        Základy
-                    </a>
-                    <a href="#" class="list-group-item border-bottom px-2 py-1">
-                        Premenné a dátové typy
-                    </a>
-                </div>
-            </aside>
+            @if (empty($hideSidebar))
+                <aside class="d-none d-lg-block col-md-2 border-end pe-0">
+                    <div class="list-group list-group-flush list-group-numbered">
+                        <a href="#" class="list-group-item border-bottom active px-2 py-1">
+                            Čo je to Python?
+                        </a>
+                        <a href="#" class="list-group-item border-bottom px-2 py-1">
+                            Základy
+                        </a>
+                        <a href="#" class="list-group-item border-bottom px-2 py-1">
+                            Premenné a dátové typy
+                        </a>
+                    </div>
+                </aside>
+            @endif
 
             <div class="col-12 col-lg-10 container py-3">
                 @yield('content')
