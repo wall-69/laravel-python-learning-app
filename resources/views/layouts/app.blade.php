@@ -78,18 +78,15 @@
         </header>
 
         <main class="flex-grow-1 row g-0">
-            @if (empty($hideSidebar))
+            @if (empty($hideSidebar) && isset($categoryLectures))
                 <aside class="d-none d-lg-block col-md-2 border-end pe-0">
                     <div class="list-group list-group-flush list-group-numbered">
-                        <a href="#" class="list-group-item border-bottom active px-2 py-1">
-                            Čo je to Python?
-                        </a>
-                        <a href="#" class="list-group-item border-bottom px-2 py-1">
-                            Základy
-                        </a>
-                        <a href="#" class="list-group-item border-bottom px-2 py-1">
-                            Premenné a dátové typy
-                        </a>
+                        @foreach ($categoryLectures as $categoryLecture)
+                            <a href="{{ route('lectures.show', [$categoryLecture, $categoryLecture->slug]) }}"
+                                class="list-group-item border-bottom px-2 py-1 @if ($lecture->id == $categoryLecture->id) active @endif">
+                                {{ $categoryLecture->title }}
+                            </a>
+                        @endforeach
                     </div>
                 </aside>
             @endif

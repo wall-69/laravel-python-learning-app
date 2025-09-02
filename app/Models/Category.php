@@ -48,6 +48,6 @@ class Category extends Model
 
     public function lectures()
     {
-        return $this->hasMany(Lecture::class);
+        return $this->hasMany(Lecture::class)->orderBy("category_order");
     }
 }

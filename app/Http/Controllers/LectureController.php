@@ -100,6 +100,7 @@ class LectureController extends Controller
 
         return view("lecture", [
             "lecture" => $lecture,
+            "categoryLectures" => $lecture->category->lectures,
             "completedQuizzes" => $completedQuizzes,
             "completedExercises" => $completedExercises,
         ]);
