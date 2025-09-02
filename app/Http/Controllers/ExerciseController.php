@@ -242,7 +242,8 @@ class ExerciseController extends Controller
 
         // If this exercise was already completed and everything is okay, we resave the users submitted code
         $allTestsPassed = $testResults->every(fn($testResult) => $testResult["success"]);
-        if (!$error && $allTestsPassed && $user->completedExercises->contains("exercise_id", $exercise->id)) {
+        $successfulCompletion = !$error && $allTestsPassed;
+        if ($successfulCompletion && $user->completedExercises->contains("exercise_id", $exercise->id)) {
             ExerciseCompletion::where("user_id", $user->id)->where("exercise_id", $exercise->id)->update([
                 "code" => $request->code
             ]);
@@ -251,7 +252,7 @@ class ExerciseController extends Controller
         return response()->json([
             "test_results" => $testResults,
             "error" => $error,
-            "celebrate" => "Skvele! Cvičenie si úspešne zvládol, len tak ďalej!"
+            ...($successfulCompletion ? ["celebrate" => "Skvele! Cvičenie si úspešne zvládol, len tak ďalej!"] : [])
         ]);
     }
 }

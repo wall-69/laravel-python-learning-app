@@ -32,7 +32,7 @@ class UserProgressController extends Controller
 
         return response()->json([
             "message" => "Quiz was marked as complete.",
-            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz ste level {$user->progress->level}!"] : [])
+            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz si level {$user->progress->level}!"] : [])
         ]);
     }
 
@@ -63,7 +63,7 @@ class UserProgressController extends Controller
 
         return response()->json([
             "message" => "Exercise was marked as complete.",
-            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz ste level {$user->progress->level}!"] : [])
+            ...($oldLevel < $user->progress->level ? ["level_up" => "Gratulujeme! Odteraz si level {$user->progress->level}!"] : [])
         ]);
     }
 }
