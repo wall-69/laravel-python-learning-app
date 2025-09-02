@@ -31,8 +31,16 @@
                                     Lekcie
                                 </a>
                             </li>
-                            <li class="nav-item"><a href="#" class="nav-link">Cvičenia</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link">Kvízy</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('exercises.index') }}" class="nav-link">
+                                    Cvičenia
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('quizzes.index') }}" class="nav-link">
+                                    Kvízy
+                                </a>
+                            </li>
                         </ul>
 
                         <div

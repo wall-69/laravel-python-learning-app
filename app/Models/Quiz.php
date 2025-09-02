@@ -10,12 +10,14 @@ use Str;
  *
  * @property string $id
  * @property string $lecture_id
+ * @property string $block
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Lecture $lecture
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz whereBlock($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Quiz whereLectureId($value)
@@ -27,7 +29,7 @@ class Quiz extends Model
     public $incrementing = false;
     protected $keyType = "string";
 
-    protected $fillable = ["lecture_id"];
+    protected $fillable = ["lecture_id", "block"];
 
     public static function boot()
     {

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $quiz_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Quiz $quiz
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizCompletion newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|QuizCompletion newQuery()

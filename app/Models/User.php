@@ -25,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
  * @property-read int|null $completed_exercises_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\QuizCompletion> $completedQuizzes
  * @property-read int|null $completed_quizzes_count
+ * @property-read string $profile_url
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\UserProgress|null $progress

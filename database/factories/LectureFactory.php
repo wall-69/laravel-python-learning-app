@@ -25,7 +25,9 @@ class LectureFactory extends Factory
             "category_order" => 1,
             "title" => $title,
             "description" => fake()->sentence(),
-            "slug" => Str::slug($title),
+            "slug" => function ($attributes) {
+                return Str::slug($attributes["title"]);
+            },
             "status" => LectureStatus::PUBLIC->value,
             "blocks" => json_encode([
                 "blocks" => []

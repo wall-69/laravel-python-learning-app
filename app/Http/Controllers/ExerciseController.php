@@ -9,6 +9,60 @@ use Symfony\Component\Process\Process;
 
 class ExerciseController extends Controller
 {
+    // GET
+
+    public function index(Request $request)
+    {
+        $exercises = Exercise::select("id", "lecture_id", "block")->with('lecture:id,title')->get();
+
+        // Group exercises by lecture id
+        $grouped = $exercises->groupBy(fn($exercise) => $exercise->lecture->id);
+
+        // Transform into a collection of lectures with exercises
+        $lectures = $grouped->map(function ($exercises) {
+            $lecture = $exercises->first()->lecture;
+
+            // Map exercises to include header from block
+            $exercisesWithHeader = $exercises->map(function ($exercise) {
+                $block = json_decode($exercise->block, true);
+                $header = $block["data"]["header"];
+                $exercise->header = $header;
+
+                return $exercise;
+            });
+
+            return (object)[
+                "id" => $lecture->id,
+                "title" => $lecture->title,
+                "exercises" => $exercisesWithHeader
+            ];
+        })->values();
+
+        return view("exercises.index", [
+            "hideSidebar" => true,
+            "lectures" => $lectures
+        ]);
+    }
+
+    public function show(Request $request, Exercise $exercise)
+    {
+        $user = $request->user();
+
+        if ($user) {
+            if ($user->completedExercises->contains("id", $exercise->id)) {
+                $exercise->block["data"]["code"] = $exercise->code;
+            }
+        }
+
+        $completedExercises = $user?->completedExercises->pluck("exercise_id") ?? collect();
+
+        return view("exercises.show", [
+            "hideSidebar" => true,
+            "completedExercises" => $completedExercises,
+            "block" => json_decode($exercise->block, true),
+        ]);
+    }
+
     // POST
 
     public function submitSolution(Request $request, Exercise $exercise)

@@ -7,6 +7,7 @@ use App\Http\Controllers\CodeRunnerController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\LectureController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProgressController;
 use App\Models\Lecture;
@@ -81,9 +82,18 @@ Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])
     Route::post("/code-runner", "runCode")->name("code-runner.run");
 });
 
+// Quiz
+Route::controller(QuizController::class)->middleware(["auth", "verified"])->name("quizzes.")->group(function () {
+    Route::get("/kvizy/", "index")->name("index");
+    Route::get("/kviz/{quiz}", "show")->name("show");
+});
+
 // Exercise
-Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->group(function () {
-    Route::post("/exercise/{exercise}/submit", "submitSolution")->name("exercise.submit");
+Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->name("exercises.")->group(function () {
+    Route::get("/cvicenia/", "index")->name("index");
+    Route::get("/cvicenie/{exercise}", "show")->name("show");
+
+    Route::post("/exercise/{exercise}/submit", "submitSolution")->name("submit");
 });
 
 // Admin

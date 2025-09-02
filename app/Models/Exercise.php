@@ -10,6 +10,7 @@ use Str;
  *
  * @property string $id
  * @property string $lecture_id
+ * @property string $block
  * @property string $tests
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -17,6 +18,7 @@ use Str;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise whereBlock($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Exercise whereLectureId($value)
@@ -29,7 +31,7 @@ class Exercise extends Model
     public $incrementing = false;
     protected $keyType = "string";
 
-    protected $fillable = ["lecture_id", "tests"];
+    protected $fillable = ["lecture_id", "block", "tests"];
 
     public static function boot()
     {

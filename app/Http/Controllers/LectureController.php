@@ -120,19 +120,29 @@ class LectureController extends Controller
             // Create Quiz model
             if ($block["type"] == "quiz") {
                 $quiz = Quiz::create([
-                    "lecture_id" => $lecture->id
+                    "lecture_id" => $lecture->id,
+                    "block" => json_encode($block)
                 ]);
 
                 $block["id"] = $quiz->id;
+
+                $quiz->update([
+                    "block" => json_encode($block)
+                ]);
             }
             // Create Exercise model
             else if ($block["type"] == "exercise") {
                 $exercise = Exercise::create([
                     "lecture_id" => $lecture->id,
+                    "block" => json_encode($block),
                     "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                 ]);
 
                 $block["id"] = $exercise->id;
+
+                $exercise->update([
+                    "block" => json_encode($block)
+                ]);
             }
         }
         $lecture->update(["blocks" => json_encode($blocks)]);
@@ -176,15 +186,23 @@ class LectureController extends Controller
             if ($block["type"] == "quiz") {
                 if (!Str::isUuid($block["id"]) || !Quiz::find($block["id"])) {
                     $quiz = Quiz::create([
-                        "lecture_id" => $lecture->id
+                        "lecture_id" => $lecture->id,
+                        "block" => json_encode($block)
                     ]);
 
                     $block["id"] = $quiz->id;
+                } else {
+                    $quiz = Quiz::find($block["id"]);
                 }
+
+                $quiz->update([
+                    "block" => json_encode($block)
+                ]);
             } else if ($block["type"] == "exercise") {
                 if (!Str::isUuid($block["id"]) || !Exercise::find($block["id"])) {
                     $exercise = Exercise::create([
                         "lecture_id" => $lecture->id,
+                        "block" => json_encode($block),
                         "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                     ]);
 
@@ -195,6 +213,10 @@ class LectureController extends Controller
                         "tests" => str_replace(["&gt;", "&lt;"], [">", "<"], $block["data"]["tests"])
                     ]);
                 }
+
+                $exercise->update([
+                    "block" => json_encode($block)
+                ]);
             }
         }
         $data["blocks"] = json_encode($blocks);

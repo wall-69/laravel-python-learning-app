@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('exercises', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("lecture_id", 6);
+            $table->json("block");
             $table->json("tests");
             $table->timestamps();
 

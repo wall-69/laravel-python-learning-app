@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('quizzes', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->string("lecture_id", 6);
+            $table->json("block");
             $table->timestamps();
 
             $table->foreign("lecture_id")->references("id")->on("lectures")->cascadeOnDelete();

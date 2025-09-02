@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Exercise $exercise
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ExerciseCompletion newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ExerciseCompletion newQuery()
