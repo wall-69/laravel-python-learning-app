@@ -118,6 +118,12 @@
     white-space: pre-wrap;
 }
 
+.ce-delimiter-line hr {
+    @extend .mx-auto;
+    color: #000 !important;
+    opacity: 0.75 !important;
+}
+
 // User progress
 .user-progress {
     width: 100%;
