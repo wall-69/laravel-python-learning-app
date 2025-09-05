@@ -43,8 +43,46 @@
                 </div>
             @break
 
+            {{-- List --}}
             @case('list')
                 <x-lectures.list :block-data="$blockData" />
+            @break
+
+            {{-- Image --}}
+            @case('image')
+                <img src="{{ $blockData['file']['url'] }}" alt="{{ $blockData['caption'] }}" class="lecture-image rounded-1">
+            @break
+
+            {{-- Table --}}
+            @case('table')
+                <div class="container table-responsive">
+                    <table class="table table-striped table-bordered">
+                        @if ($blockData['withHeadings'])
+                            <thead>
+                                <tr>
+                                    @foreach ($blockData['content'][0] as $headColumn)
+                                        <th>{{ $headColumn }}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+                        @endif
+                        <tbody class="table-group-divider">
+                            @php
+                                $content = $blockData['content'];
+                                if ($blockData['withHeadings']) {
+                                    array_shift($blockData['content']);
+                                }
+                            @endphp
+                            @foreach ($blockData['content'] as $rows)
+                                <tr>
+                                    @foreach ($rows as $column)
+                                        <td>{{ $column }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @break
 
             {{-- Code runner --}}

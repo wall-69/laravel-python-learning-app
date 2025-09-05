@@ -99,7 +99,9 @@ Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->
 // Admin
 Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () {
     Route::controller(AdminController::class)->group(function () {
-        Route::get("", "dashboard")->name("dashboard");
+        Route::get("/", "dashboard")->name("dashboard");
+
+        Route::post("/img/upload", "uploadImage")->name("upload-image");
     });
 
     Route::controller(CategoryController::class)->group(function () {

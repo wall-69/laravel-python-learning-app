@@ -124,6 +124,16 @@
     opacity: 0.75 !important;
 }
 
+.lecture-image {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .lecture-image {
+        width: 50%;
+    }
+}
+
 // User progress
 .user-progress {
     width: 100%;

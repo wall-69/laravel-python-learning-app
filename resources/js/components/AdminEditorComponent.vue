@@ -17,6 +17,8 @@ import _Delimiter from "@coolbytes/editorjs-delimiter";
 const Delimiter = _Delimiter?.default || _Delimiter;
 import Warning from "@editorjs/warning";
 import EditorjsList from "@editorjs/list";
+import ImageTool from "@editorjs/image";
+import Table from "@editorjs/table";
 
 import CodeRunnerTool from "../editorjs/tools/CodeRunnerTool.js";
 import CodeBlockTool from "../editorjs/tools/CodeBlockTool.js";
@@ -86,6 +88,29 @@ function initEditor() {
             list: {
                 class: EditorjsList,
                 inlineToolbar: true,
+            },
+            image: {
+                class: ImageTool,
+                config: {
+                    endpoints: {
+                        byFile: "http://127.0.0.1:8000/admin/img/upload",
+                    },
+                    additionalRequestHeaders: {
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                },
+            },
+            table: {
+                class: Table,
+                inlineToolbar: true,
+                config: {
+                    rows: 2,
+                    cols: 3,
+                    maxRows: 5,
+                    maxCols: 5,
+                },
             },
 
             // Custom
