@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import templateHTML from "./html/CodeBlockTool.html";
+import templateHTML from "./html/CodeBlockTool.html?raw";
 
 export default class CodeBlockTool {
     static get toolbox() {

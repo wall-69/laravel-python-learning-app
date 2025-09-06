@@ -1,4 +1,4 @@
-import templateHTML from "./html/QuizTool.html";
+import templateHTML from "./html/QuizTool.html?raw";
 
 import EditorJS from "@editorjs/editorjs";
 import QuizChoiceTool from "./QuizChoiceTool";

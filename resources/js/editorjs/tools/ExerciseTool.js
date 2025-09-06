@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import templateHTML from "./html/ExerciseTool.html";
+import templateHTML from "./html/ExerciseTool.html?raw";
 import createAddButton from "./utils/addButton";
 
 export default class ExerciseBlock {

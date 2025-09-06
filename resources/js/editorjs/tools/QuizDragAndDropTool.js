@@ -1,6 +1,6 @@
-import templateHTML from "./html/QuizDragAndDropTool.html";
-import dragTemplateHTML from "./html/QuizDragTool.html";
-import dropTemplateHTML from "./html/QuizDropTool.html";
+import templateHTML from "./html/QuizDragAndDropTool.html?raw";
+import dragTemplateHTML from "./html/QuizDragTool.html?raw";
+import dropTemplateHTML from "./html/QuizDropTool.html?raw";
 import createAddButton from "./utils/addButton";
 
 export default class QuizDragAndDropTool {

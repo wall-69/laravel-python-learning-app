@@ -1,5 +1,5 @@
-import templateHTML from "./html/QuizChoiceTool.html";
-import quizChoiceAnswerHTML from "./html/QuizChoiceAnswer.html";
+import templateHTML from "./html/QuizChoiceTool.html?raw";
+import quizChoiceAnswerHTML from "./html/QuizChoiceAnswer.html?raw";
 import createAddButton from "./utils/addButton";
 
 export default class QuizChoiceTool {

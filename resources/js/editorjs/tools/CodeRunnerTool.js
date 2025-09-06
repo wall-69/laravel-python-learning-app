@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import templateHTML from "./html/CodeRunnerTool.html";
+import templateHTML from "./html/CodeRunnerTool.html?raw";
 
 export default class CodeRunnerBlock {
     static get toolbox() {
