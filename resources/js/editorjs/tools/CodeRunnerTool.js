@@ -20,6 +20,7 @@ export default class CodeRunnerBlock {
     render() {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = templateHTML.trim();
+        wrapper.classList.add("mb-3");
 
         const editorContainer = wrapper.querySelector(".editor-code-runner");
         const output = wrapper.querySelector("textarea");

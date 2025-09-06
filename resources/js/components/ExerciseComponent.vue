@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="mb-3">
         <h2 v-if="slots.header">
             <slot name="header"></slot>
         </h2>
-        <p v-if="slots.description">
+        <p v-if="slots.description" class="mb-0">
             <slot name="description"></slot>
         </p>
         <p v-if="!exerciseIsComplete">
@@ -17,7 +17,7 @@
             Toto cvičenie si už úspešne vyriešil! Nižšie je tvoj kód tvojho
             úspešného riešenia. Ak sa ti chce, tak si ho kľudne môžeš zopakovať.
         </p>
-        <p class="border bg-info text-bg-info px-3 py-1">
+        <p class="border bg-info text-bg-info px-3 py-1 mb-0">
             <span class="fw-bold">ZADANIE</span>
             <br />
 

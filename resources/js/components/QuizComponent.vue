@@ -1,5 +1,5 @@
 <template>
-    <form @submit="checkQuiz" class="border p-3 d-grid gap-3">
+    <form @submit="checkQuiz" class="border p-3 mb-3 d-grid gap-3">
         <header class="border-bottom">
             <h2 class="fw-bold">Kvíz: over svoje vedomosti!</h2>
             <p v-if="!quizIsComplete">

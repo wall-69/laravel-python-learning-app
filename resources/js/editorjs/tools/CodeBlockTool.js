@@ -20,6 +20,7 @@ export default class CodeBlockTool {
     render() {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = templateHTML.trim();
+        wrapper.classList.add("mb-3");
 
         const editorContainer = wrapper.querySelector(".editor-code-block");
         this.header = wrapper.querySelector(".editor-code-block-header");

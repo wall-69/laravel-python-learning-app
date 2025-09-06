@@ -23,6 +23,7 @@ export default class ExerciseBlock {
     render() {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = templateHTML.trim();
+        wrapper.classList.add("mb-3");
 
         const editorContainer = wrapper.querySelector(".editor-exercise-code");
         const runButton = wrapper.querySelector("button");

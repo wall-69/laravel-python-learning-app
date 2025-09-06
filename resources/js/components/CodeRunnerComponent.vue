@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mb-3">
         <h2 v-if="slots.header">
             <slot name="header"></slot>
         </h2>

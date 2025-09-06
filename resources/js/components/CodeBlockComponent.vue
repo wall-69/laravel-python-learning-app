@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mb-3">
         <h2 v-if="slots.header">
             <slot name="header"></slot>
         </h2>
@@ -20,7 +20,6 @@
     </div>
 </template>
 <script setup>
-import axios from "axios";
 import * as monaco from "monaco-editor";
 import { onMounted, ref, useSlots } from "vue";
 import { normalizeIndentation } from "../helpers";

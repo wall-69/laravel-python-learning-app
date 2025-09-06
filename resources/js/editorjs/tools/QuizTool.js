@@ -21,6 +21,7 @@ export default class QuizTool {
     render() {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = templateHTML.trim();
+        wrapper.classList.add("mb-3");
 
         const form = wrapper.firstElementChild;
         form.addEventListener("submit", (e) => e.preventDefault());
