@@ -7,5 +7,8 @@
         <i class="bx bx-arrow-left bx-md"></i> Ísť späť
     </a>
 
-    <x-lectures.quiz :quiz-id="$block['id']" :quiz-data="$block['data']['questions']"></x-lectures.quiz>
+    @php
+        $quizData = json_decode($quiz->block, true);
+    @endphp
+    <x-lectures.quiz :quiz-id="$quiz->id" :quiz-data="$quizData['data']"></x-lectures.quiz>
 @endsection

@@ -9,7 +9,7 @@
         <ol>
             @foreach ($lecture->quizzes as $nth => $quiz)
                 <li>
-                    <a href="{{ route('quizzes.show', $quiz) }}">Kvíz č. {{ $nth + 1 }}</a>
+                    <a href="{{ route('quizzes.show', $quiz) }}">{{ $quiz->header }}</a>
                 </li>
             @endforeach
         </ol>

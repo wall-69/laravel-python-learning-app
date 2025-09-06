@@ -11,7 +11,7 @@ class QuizController extends Controller
 
     public function index(Request $request)
     {
-        $quizzes = Quiz::select("id", "lecture_id")->with('lecture:id,title')->get();
+        $quizzes = Quiz::select("id", "lecture_id", "block")->with('lecture:id,title')->get();
 
         // Group quizzes by lecture id
         $grouped = $quizzes->groupBy(fn($quiz) => $quiz->lecture->id);
@@ -19,10 +19,20 @@ class QuizController extends Controller
         // Transform into a collection of lectures with quizzes
         $lectures = $grouped->map(function ($quizzes) {
             $lecture = $quizzes->first()->lecture;
+
+            // Map quizzes to include header from block
+            $quizzesWithHeaders = $quizzes->map(function ($quiz) {
+                $block = json_decode($quiz->block, true);
+                $header = $block["data"]["header"];
+                $quiz->header = $header;
+
+                return $quiz;
+            });
+
             return (object)[
                 "id" => $lecture->id,
                 "title" => $lecture->title,
-                "quizzes" => $quizzes
+                "quizzes" => $quizzesWithHeaders
             ];
         })->values();
 
@@ -41,7 +51,7 @@ class QuizController extends Controller
         return view("quizzes.show", [
             "hideSidebar" => true,
             "completedQuizzes" => $completedQuizzes,
-            "block" => json_decode($quiz->block, true),
+            "quiz" => $quiz,
         ]);
     }
 }

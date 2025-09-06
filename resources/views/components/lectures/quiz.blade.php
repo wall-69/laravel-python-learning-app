@@ -1,7 +1,11 @@
 @props(['quizId', 'quizData', 'isComplete'])
 
 <quiz id="{{ $quizId }}">
-    @foreach ($quizData['blocks'] as $index => $quizBlock)
+    <template #header>
+        {!! $quizData['header'] !!}
+    </template>
+
+    @foreach ($quizData['questions']['blocks'] as $index => $quizBlock)
         @php
             $type = $quizBlock['type'];
             $data = $quizBlock['data'];

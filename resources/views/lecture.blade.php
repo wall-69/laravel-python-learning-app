@@ -119,7 +119,7 @@
 
             {{-- Quiz --}}
             @case('quiz')
-                <x-lectures.quiz :quiz-id="$block['id']" :quiz-data="$blockData['questions']"></x-lectures.quiz>
+                <x-lectures.quiz :quiz-id="$block['id']" :quiz-data="$blockData"></x-lectures.quiz>
             @break
 
             {{-- Exercise --}}

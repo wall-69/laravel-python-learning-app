@@ -73,7 +73,8 @@
 // Editorjs
 .editor-code-runner-header:empty::before,
 .editor-code-block-header:empty::before,
-.editor-exercise-header:empty::before {
+.editor-exercise-header:empty::before,
+.editor-quiz-header:empty::before {
     content: "Zadajte nadpis...";
     color: #aaa;
     pointer-events: none;

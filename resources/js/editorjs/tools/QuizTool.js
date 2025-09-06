@@ -16,6 +16,7 @@ export default class QuizTool {
         this.data = data || {};
 
         this.innerEditor = null;
+        this.header = null;
     }
 
     render() {
@@ -28,6 +29,10 @@ export default class QuizTool {
 
         const innerEditorContainer = wrapper.querySelector(".inner-editor");
         innerEditorContainer.id = "inner-editor-" + Date.now();
+        this.header = wrapper.querySelector(".editor-quiz-header");
+
+        // Load saved header
+        this.header.innerHTML = this.data.header || "";
 
         this.innerEditor = new EditorJS({
             holder: innerEditorContainer.id,
@@ -55,6 +60,7 @@ export default class QuizTool {
         const questions = await this.innerEditor.save();
 
         return {
+            header: this.header.innerHTML.trim(),
             questions: questions,
         };
     }

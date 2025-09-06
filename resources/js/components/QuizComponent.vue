@@ -1,7 +1,9 @@
 <template>
     <form @submit="checkQuiz" class="border p-3 mb-3 d-grid gap-3">
         <header class="border-bottom">
-            <h2 class="fw-bold">Kvíz: over svoje vedomosti!</h2>
+            <h2 v-if="slots.header" class="fw-bold">
+                <slot name="header"></slot>
+            </h2>
             <p v-if="!quizIsComplete">
                 Ak získaš aspoň 90%, dostaneš
                 <span class="text-success fw-bold">+25 BODOV</span>. Kvíz môžeš
@@ -73,13 +75,16 @@
 </template>
 <script setup>
 import axios from "axios";
-import { computed, inject, provide, reactive, ref } from "vue";
+import { computed, inject, provide, reactive, ref, useSlots } from "vue";
 import { addAlert } from "../helpers";
 
 // Define
 const props = defineProps({
     id: String,
 });
+
+// Composables
+const slots = useSlots();
 
 // Variables
 const questions = ref(null);
