@@ -118,6 +118,10 @@
     white-space: pre-wrap;
 }
 
+.codex-editor {
+    z-index: 0;
+}
+
 .ce-delimiter-line hr {
     @extend .mx-auto;
     color: #000 !important;
