@@ -47,7 +47,7 @@
                         <td>
                             {{ $activity->created_at->locale('sk')->isoFormat('D. MMMM, YYYY') }}
                             &nbsp; &nbsp;
-                            {{ $activity->quiz_id ? 'Splnil kvíz.' : 'Vyriešil cvičenie.' }}
+                            {{ $activity->quiz_id ? 'Úspešne vyriešil kvíz.' : 'Vyriešil cvičenie.' }}
                         </td>
                     </tr>
                 @endforeach
