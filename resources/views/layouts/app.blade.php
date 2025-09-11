@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>PyTutor - nauč sa Python dnes!</title>
+    <title>{{ env('APP_NAME') }}</title>
 
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     @vite(['resources/js/app.js'])
@@ -29,7 +29,7 @@
                         </button>
                     @endif
 
-                    <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">PyTutor</a>
+                    <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">{{ env('APP_NAME') }}</a>
                     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
                         <i class="navbar-toggler-icon"></i>
                     </button>
@@ -71,7 +71,7 @@
         <main class="flex-grow-1 row g-0">
             @if (empty($hideSidebar) && isset($categoryLectures))
                 {{-- Normal sidebar (md+) --}}
-                <aside class="d-none d-md-block col-md-2 border-end pe-0">
+                <aside class="d-none d-md-block col-md-2 border pe-0">
                     <div class="list-group list-group-flush list-group-numbered">
                         @foreach ($categoryLectures as $categoryLecture)
                             <a href="{{ route('lectures.show', [$categoryLecture, $categoryLecture->slug]) }}"

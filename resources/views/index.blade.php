@@ -2,6 +2,6 @@
 
 @section('content')
     <h1>
-        PyTutor
+        {{ env('APP_NAME') }}
     </h1>
 @endsection

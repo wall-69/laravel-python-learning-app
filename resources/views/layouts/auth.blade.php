@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>PyTutor - nauč sa Python dnes!</title>
+    <title>{{ env('APP_NAME') }}</title>
 
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     @vite(['resources/js/app.js'])
@@ -20,7 +20,7 @@
         <header class="sticky-top bg-light">
             <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
-                    <a href="{{ route('index') }}" class="navbar-brand">PyTutor</a>
+                    <a href="{{ route('index') }}" class="navbar-brand">{{ env('APP_NAME') }}</a>
                 </div>
             </nav>
         </header>
