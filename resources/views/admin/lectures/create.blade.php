@@ -2,7 +2,7 @@
 
 @section('content')
     <div>
-        <form action="{{ route('admin.lectures.store') }}" method="POST" class="mw-form p-3">
+        <form action="{{ route('admin.lectures.store') }}" method="POST" enctype="multipart/form-data" class="mw-form p-3">
             @csrf
             @method('POST')
 
@@ -98,6 +98,19 @@
                 </select>
 
                 @error('status')
+                    <span class="text-danger mt-1">
+                        {{ $message }}
+                    </span>
+                @enderror
+            </div>
+
+            {{-- Thumbnail --}}
+            <div class="mb-3">
+                <label for="thumbnailInput" class="form-label">Náhľadový obrázok:</label>
+                <input type="file" accept="image/*" name="thumbnail" id="thumbnailInput"
+                    class="form-control @error('thumbnail') is-invalid @enderror" value="{{ old('thumbnail') }}">
+
+                @error('thumbnail')
                     <span class="text-danger mt-1">
                         {{ $message }}
                     </span>

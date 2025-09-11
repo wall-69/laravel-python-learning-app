@@ -22,7 +22,7 @@ class AdminController extends Controller
             "image" => "required|image"
         ]);
 
-        $imagePath = $request->file("image")->store("img", "public");
+        $imagePath = $request->file("image")->store("img/lectures", "public");
 
         return response()->json([
             "success" => true,

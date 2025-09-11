@@ -11,6 +11,7 @@ use App\Models\Quiz;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
+use Storage;
 use Str;
 
 class LectureController extends Controller
@@ -112,6 +113,11 @@ class LectureController extends Controller
     {
         $data = $request->validated();
 
+        // Save thumbnail
+        if ($request->file("thumbnail")) {
+            $data["thumbnail"] = "storage/" . $request->file("thumbnail")->store("img/thumbnails", "public");
+        }
+
         $lecture = Lecture::create($data);
 
         // Set global block IDs to quizzes and exercises
@@ -179,6 +185,13 @@ class LectureController extends Controller
     public function update(LectureRequest $request, Lecture $lecture)
     {
         $data = $request->validated();
+
+        // Save thumbnail
+        if ($request->file("thumbnail")) {
+            Storage::delete(str_replace("storage/", "", $lecture->thumbnail));
+
+            $data["thumbnail"] = "storage/" . $request->file("thumbnail")->store("img/thumbnails", "public");
+        }
 
         // Set global block IDs to quizzes and exercises
         // Also creates/updates the respective model
@@ -272,13 +285,14 @@ class LectureController extends Controller
             }
         });
 
-
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne upravená.");
     }
 
     public function destroy(Request $request, Lecture $lecture)
     {
+        Storage::disk("public")->delete(str_replace("storage/", "", $lecture->thumbnail));
+
         $lecture->delete();
 
         return redirect(route("admin.lectures"))

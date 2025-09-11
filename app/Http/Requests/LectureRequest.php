@@ -30,6 +30,7 @@ class LectureRequest extends FormRequest
             "title" => "required|max:255",
             "description" => "required|max:255",
             "slug" => ["required", "max:255", Rule::unique("lectures", "slug")->ignore($lecture?->id)],
+            "thumbnail" => "sometimes|image",
             "status" => ["required", Rule::enum(LectureStatus::class)],
             "blocks" => "required|json",
             "category_id" => "required|exists:categories,id",

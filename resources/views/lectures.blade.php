@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-3 text-center">Zoznam lekcií</h1>
-
     @foreach ($categories as $category)
-        <h2 class="d-flex align-items-center gap-2">
+        <h2 class="d-flex flex-wrap align-items-center gap-2">
             @if ($category->created_at >= now()->subMonth())
                 <span class="badge text-bg-warning">NOVINKA</span>
             @endif
@@ -18,21 +16,21 @@
             @foreach ($category->lectures as $lecture)
                 <article class="card lecture-card">
                     <div class="card-body d-flex flex-column h-100">
+                        <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="d-block">
+                            <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}"
+                                class="rounded-3 mb-3 w-100"
+                                style="height: 16rem; object-fit: cover; object-position: top center;">
+                        </a>
                         <h5 class="card-title">
                             <span class="fw-bold">{{ $lecture->category_order }}.</span>
-                            <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="link link-primary">
+                            <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none">
                                 {{ $lecture->title }}
                             </a>
                         </h5>
 
-                        <p class="card-text overflow-y-scroll" style="flex:1 1 auto; overflow-y:auto;">
+                        <p class="card-text overflow-y-scroll" style="flex: 1 1 auto; overflow-y: auto;">
                             {{ $lecture->description }}
                         </p>
-
-                        <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}"
-                            class="mt-auto me-auto me-md-0 btn btn-primary">
-                            Otvoriť
-                        </a>
                     </div>
                 </article>
             @endforeach

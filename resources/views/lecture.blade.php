@@ -5,6 +5,11 @@
 @endphp
 
 @section('content')
+    {{-- Title --}}
+    <h1 class="text-center text-primary">
+        {{ $lecture->title }}
+    </h1>
+
     @foreach ($blocksData['blocks'] as $block)
         @php
             $blockType = $block['type'];

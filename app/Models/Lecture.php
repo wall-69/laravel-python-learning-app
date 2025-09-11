@@ -57,6 +57,7 @@ class Lecture extends Model
         "title",
         "description",
         "slug",
+        "thumbnail",
         "views",
         "status",
         "blocks"

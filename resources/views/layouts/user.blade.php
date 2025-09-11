@@ -27,19 +27,13 @@
                     <div id="nav" class="collapse navbar-collapse justify-content-center">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a href="{{ route('lectures.index') }}" class="nav-link">
-                                    Lekcie
-                                </a>
+                                <a href="{{ route('lectures.index') }}" class="nav-link @active('lectures.index')">Lekcie</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('exercises.index') }}" class="nav-link">
-                                    Cvičenia
-                                </a>
+                                <a href="{{ route('exercises.index') }}" class="nav-link @active('exercises.index')">Cvičenia</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('quizzes.index') }}" class="nav-link">
-                                    Kvízy
-                                </a>
+                                <a href="{{ route('quizzes.index') }}" class="nav-link @active('quizzes.index')">Kvízy</a>
                             </li>
                         </ul>
 
