@@ -78,8 +78,8 @@ function initEditor() {
                 config: {
                     styleOptions: ["line"],
                     defaultStyle: "line",
-                    lineWidthOptions: [8, 15, 25, 35, 50, 60, 75, 100],
-                    defaultLineWidth: 50,
+                    lineWidthOptions: [8, 15, 25, 35, 50, 60, 100],
+                    defaultLineWidth: 60,
                     lineThicknessOptions: [1, 2, 3, 4, 5, 6],
                     defaultLineThickness: 4,
                 },

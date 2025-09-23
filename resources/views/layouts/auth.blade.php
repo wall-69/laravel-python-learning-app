@@ -20,7 +20,9 @@
         <header class="sticky-top bg-light">
             <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
-                    <a href="{{ route('index') }}" class="navbar-brand">{{ env('APP_NAME') }}</a>
+                    <a href="{{ route('index') }}" class="navbar-brand">
+                        <x-logo />
+                    </a>
                 </div>
             </nav>
         </header>

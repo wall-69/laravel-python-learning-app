@@ -6,8 +6,8 @@
 
 @section('content')
     {{-- Title --}}
-    <h1 class="text-center text-primary">
-        {{ $lecture->title }}
+    <h1 class="text-center text-bg-primary p-1 rounded-3">
+        {{ $lecture->category_order }}. {{ $lecture->title }}
     </h1>
 
     @foreach ($blocksData['blocks'] as $block)
@@ -32,7 +32,7 @@
             {{-- Delimiter --}}
             @case('delimiter')
                 <hr class="mx-auto opacity-75 rounded-pill"
-                    style="width: {{ $blockData['lineWidth'] }}%; height: {{ $blockData['lineThickness'] }}px; border: none; color: #000; background-color: #000;">
+                    style="width: {{ $blockData['lineWidth'] }}%; height: {{ $blockData['lineThickness'] }}px; border: none; color: #333; background-color: #333;">
             @break
 
             {{-- Warning --}}
@@ -43,7 +43,7 @@
                     </span>
 
                     <p class="mb-0">
-                        {{ $blockData['message'] }}
+                        {!! $blockData['message'] !!}
                     </p>
                 </div>
             @break
@@ -55,7 +55,7 @@
 
             {{-- Image --}}
             @case('image')
-                <img src="{{ $blockData['file']['url'] }}" alt="{{ $blockData['caption'] }}" class="lecture-image rounded-1">
+                <img src="{{ $blockData['file']['url'] }}" alt="{{ $blockData['caption'] }}" class="lecture-image rounded-1 mb-3">
             @break
 
             {{-- Table --}}
@@ -66,7 +66,7 @@
                             <thead>
                                 <tr>
                                     @foreach ($blockData['content'][0] as $headColumn)
-                                        <th>{{ $headColumn }}</th>
+                                        <th>{!! $headColumn !!}</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -81,7 +81,7 @@
                             @foreach ($blockData['content'] as $rows)
                                 <tr>
                                     @foreach ($rows as $column)
-                                        <td>{{ $column }}</td>
+                                        <td>{!! $column !!}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

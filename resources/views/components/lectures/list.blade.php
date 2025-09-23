@@ -5,7 +5,7 @@
         <ul>
             @foreach ($blockData['items'] as $item)
                 <li>
-                    {{ $item['content'] }}
+                    {!! $item['content'] !!}
 
                     @if (!empty($item['items']))
                         <x-lectures.list :block-data="['style' => 'unordered', 'items' => $item['items']]" />
@@ -31,7 +31,7 @@
             style="list-style-type: {{ $listStyle }};">
             @foreach ($blockData['items'] as $item)
                 <li>
-                    {{ $item['content'] }}
+                    {!! $item['content'] !!}
 
                     @if (!empty($item['items']))
                         <x-lectures.list :block-data="['style' => 'ordered', 'items' => $item['items']]" />
@@ -46,7 +46,7 @@
             @foreach ($blockData['items'] as $item)
                 <li>
                     <input type="checkbox" disabled @if (!empty($item['meta']['checked'])) checked @endif>
-                    {{ $item['content'] }}
+                    {!! $item['content'] !!}
                     @if (!empty($item['items']))
                         <x-lectures.list :block-data="['style' => 'checklist', 'items' => $item['items']]" />
                     @endif

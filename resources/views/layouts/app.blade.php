@@ -29,7 +29,9 @@
                         </button>
                     @endif
 
-                    <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">{{ env('APP_NAME') }}</a>
+                    <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">
+                        <x-logo />
+                    </a>
                     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
                         <i class="navbar-toggler-icon"></i>
                     </button>
