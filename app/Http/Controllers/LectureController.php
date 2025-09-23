@@ -96,11 +96,14 @@ class LectureController extends Controller
             $lecture->blocks = json_encode($blocks);
         }
 
+        $nextLecture = $lecture->nextLecture();
+
         $completedQuizzes = $user?->completedQuizzes->pluck("quiz_id") ?? collect();
         $completedExercises = $user?->completedExercises->pluck("exercise_id") ?? collect();
 
         return view("lecture", [
             "lecture" => $lecture,
+            "nextLecture" => $nextLecture,
             "categoryLectures" => $lecture->category->lectures,
             "completedQuizzes" => $completedQuizzes,
             "completedExercises" => $completedExercises,

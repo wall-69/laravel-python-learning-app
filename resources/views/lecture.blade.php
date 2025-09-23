@@ -7,7 +7,7 @@
 @section('content')
     {{-- Title --}}
     <h1 class="text-center text-bg-primary p-1 rounded-3">
-        {{ $lecture->category_order }}. {{ $lecture->title }}
+        {{ $lecture->title }}
     </h1>
 
     @foreach ($blocksData['blocks'] as $block)
@@ -151,4 +151,13 @@
             @default
         @endswitch
     @endforeach
+
+    @if ($nextLecture)
+        <a href="{{ route('lectures.show', $nextLecture) }}"
+            class="btn btn-success d-flex align-items-center justify-content-center ms-auto mt-3 fw-bold"
+            style="width: fit-content">
+            {{ $nextLecture->category_order }}. {{ $nextLecture->title }}
+            <i class="bx bxs-arrow-right-stroke bx-lg"></i>
+        </a>
+    @endif
 @endsection

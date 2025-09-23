@@ -95,4 +95,9 @@ class Lecture extends Model
     {
         return $this->hasMany(Exercise::class, "lecture_id", "id");
     }
+
+    public function nextLecture()
+    {
+        return Lecture::where("category_order", ">", $this->category_order)->orderBy("category_order")->first();
+    }
 }
