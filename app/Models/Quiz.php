@@ -10,7 +10,7 @@ use Str;
  *
  * @property string $id
  * @property string $lecture_id
- * @property string $block
+ * @property object $block
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Lecture $lecture
@@ -30,6 +30,9 @@ class Quiz extends Model
     protected $keyType = "string";
 
     protected $fillable = ["lecture_id", "block"];
+    protected $casts = [
+        "block" => "object",
+    ];
 
     public static function boot()
     {

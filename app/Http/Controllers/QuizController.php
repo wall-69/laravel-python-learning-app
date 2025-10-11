@@ -22,8 +22,7 @@ class QuizController extends Controller
 
             // Map quizzes to include header from block
             $quizzesWithHeaders = $quizzes->map(function ($quiz) {
-                $block = json_decode($quiz->block, true);
-                $header = $block["data"]["header"];
+                $header = $quiz->block->data->header;
                 $quiz->header = $header;
 
                 return $quiz;

@@ -19,7 +19,7 @@ use Sqids\Sqids;
  * @property string $slug
  * @property int $views
  * @property string $status
- * @property string $blocks
+ * @property object $blocks
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Category|null $category
@@ -61,6 +61,9 @@ class Lecture extends Model
         "views",
         "status",
         "blocks"
+    ];
+    protected $casts = [
+        "blocks" => "object"
     ];
 
     public static function boot()

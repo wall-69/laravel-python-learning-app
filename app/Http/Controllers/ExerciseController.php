@@ -24,8 +24,7 @@ class ExerciseController extends Controller
 
             // Map exercises to include header from block
             $exercisesWithHeader = $exercises->map(function ($exercise) {
-                $block = json_decode($exercise->block, true);
-                $header = $block["data"]["header"];
+                $header = $exercise->block->data->header;
                 $exercise->header = $header;
 
                 return $exercise;
@@ -59,7 +58,7 @@ class ExerciseController extends Controller
         return view("exercises.show", [
             "hideSidebar" => true,
             "completedExercises" => $completedExercises,
-            "block" => json_decode($exercise->block, true),
+            "block" => $exercise->block,
         ]);
     }
 

@@ -7,21 +7,21 @@
         <i class="bx bx-arrow-left bx-md"></i> Ísť späť
     </a>
 
-    <exercise id="{{ $block['id'] }}">
+    <exercise id="{{ $block->id }}">
         <template #header>
-            {!! $block['data']['header'] !!}
+            {!! $block->data->header !!}
         </template>
 
         <template #description>
-            {!! $block['data']['description'] !!}
+            {!! $block->data->description !!}
         </template>
 
         <template #assignment>
-            {!! $block['data']['assignment'] !!}
+            {!! $block->data->assignment !!}
         </template>
 
         <template #code>
-            <pre>{{ $block['data']['code'] }}</pre>
+            <pre>{{ $block->data->code }}</pre>
         </template>
     </exercise>
 @endsection

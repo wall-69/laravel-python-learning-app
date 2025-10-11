@@ -10,7 +10,7 @@ use Str;
  *
  * @property string $id
  * @property string $lecture_id
- * @property string $block
+ * @property object $block
  * @property string $tests
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -32,6 +32,9 @@ class Exercise extends Model
     protected $keyType = "string";
 
     protected $fillable = ["lecture_id", "block", "tests"];
+    protected $casts = [
+        "block" => "object"
+    ];
 
     public static function boot()
     {
@@ -43,6 +46,7 @@ class Exercise extends Model
             }
         });
     }
+
 
     public function lecture()
     {

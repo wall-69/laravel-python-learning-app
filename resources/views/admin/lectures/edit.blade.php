@@ -45,7 +45,8 @@
             {{-- Blocks --}}
             <div class="mb-3">
                 <label for="blocksInput" class="form-label">Lekcia:</label>
-                <input type="hidden" name="blocks" id="blocksInput" value="{{ old('blocks', $lecture->blocks) }}" />
+                <input type="hidden" name="blocks" id="blocksInput"
+                    value="{{ old('blocks', json_encode($lecture->blocks)) }}" />
                 <admin-editor></admin-editor>
 
                 @error('blocks')

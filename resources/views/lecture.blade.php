@@ -1,49 +1,41 @@
 @extends('layouts.app')
-
-@php
-    $blocksData = json_decode($lecture->blocks, true);
-@endphp
-
 @section('content')
     {{-- Title --}}
     <h1 class="text-center text-bg-primary p-1 rounded-3">
         {{ $lecture->title }}
     </h1>
-
-    @foreach ($blocksData['blocks'] as $block)
+    @foreach ($lecture->blocks->blocks as $block)
         @php
-            $blockType = $block['type'];
-            $blockData = $block['data'];
+            $blockType = $block->type;
+            $blockData = $block->data;
         @endphp
-
         @switch($blockType)
             {{-- Header --}}
             @case('header')
-                <x-lectures.header :level="$blockData['level']">
-                    {!! $blockData['text'] !!}
+                <x-lectures.header :level="$blockData->level">
+                    {!! $blockData->text !!}
                 </x-lectures.header>
             @break
 
             {{-- Paragraph --}}
             @case('paragraph')
-                <p>{!! $blockData['text'] !!}</p>
+                <p>{!! $blockData->text !!}</p>
             @break
 
             {{-- Delimiter --}}
             @case('delimiter')
                 <hr class="mx-auto opacity-75 rounded-pill"
-                    style="width: {{ $blockData['lineWidth'] }}%; height: {{ $blockData['lineThickness'] }}px; border: none; color: #333; background-color: #333;">
+                    style="width: {{ $blockData->lineWidth }}%; height: {{ $blockData->lineThickness }}px; border: none; color: #333; background-color: #333;">
             @break
 
             {{-- Warning --}}
             @case('warning')
                 <div class="bg-warning rounded-3 px-3 py-2 w-50" style="">
                     <span class="fw-bold d-flex gap-2 mb-1">
-                        <i class="bx bx-alert-triangle bx-md align-self-start"></i> {{ $blockData['title'] }}
+                        <i class="bx bx-alert-triangle bx-md align-self-start"></i> {{ $blockData->title }}
                     </span>
-
                     <p class="mb-0">
-                        {!! $blockData['message'] !!}
+                        {!! $blockData->message !!}
                     </p>
                 </div>
             @break
@@ -55,17 +47,17 @@
 
             {{-- Image --}}
             @case('image')
-                <img src="{{ $blockData['file']['url'] }}" alt="{{ $blockData['caption'] }}" class="lecture-image rounded-1 mb-3">
+                <img src="{{ $blockData->file->url }}" alt="{{ $blockData->caption }}" class="lecture-image rounded-1 mb-3">
             @break
 
             {{-- Table --}}
             @case('table')
                 <div class="container table-responsive">
                     <table class="table table-striped table-bordered">
-                        @if ($blockData['withHeadings'])
+                        @if ($blockData->withHeadings)
                             <thead>
                                 <tr>
-                                    @foreach ($blockData['content'][0] as $headColumn)
+                                    @foreach ($blockData->content[0] as $headColumn)
                                         <th>{!! $headColumn !!}</th>
                                     @endforeach
                                 </tr>
@@ -73,18 +65,16 @@
                         @endif
                         <tbody class="table-group-divider">
                             @php
-                                $content = $blockData['content'];
-                                if ($blockData['withHeadings']) {
-                                    array_shift($blockData['content']);
-                                }
+                                $content = $blockData->content;
+                                $startIndex = $blockData->withHeadings ? 1 : 0;
                             @endphp
-                            @foreach ($blockData['content'] as $rows)
+                            @for ($i = $startIndex; $i < count($content); $i++)
                                 <tr>
-                                    @foreach ($rows as $column)
+                                    @foreach ($content[$i] as $column)
                                         <td>{!! $column !!}</td>
                                     @endforeach
                                 </tr>
-                            @endforeach
+                            @endfor
                         </tbody>
                     </table>
                 </div>
@@ -94,14 +84,13 @@
             @case('codeRunner')
                 <code-runner>
                     <template #header>
-                        {!! $blockData['header'] !!}
+                        {!! $blockData->header !!}
                     </template>
                     <template #description>
-                        {!! $blockData['description'] !!}
+                        {!! $blockData->description !!}
                     </template>
-
                     <template #code>
-                        <pre>{{ $blockData['code'] }}</pre>
+                        <pre>{{ $blockData->code }}</pre>
                     </template>
                 </code-runner>
             @break
@@ -110,40 +99,36 @@
             @case('codeBlock')
                 <code-block>
                     <template #header>
-                        {!! $blockData['header'] !!}
+                        {!! $blockData->header !!}
                     </template>
                     <template #description>
-                        {!! $blockData['description'] !!}
+                        {!! $blockData->description !!}
                     </template>
-
                     <template #code>
-                        <pre>{{ $blockData['code'] }}</pre>
+                        <pre>{{ $blockData->code }}</pre>
                     </template>
                 </code-block>
             @break
 
             {{-- Quiz --}}
             @case('quiz')
-                <x-lectures.quiz :quiz-id="$block['id']" :quiz-data="$blockData"></x-lectures.quiz>
+                <x-lectures.quiz :quiz-id="$block->id" :quiz-data="$blockData"></x-lectures.quiz>
             @break
 
             {{-- Exercise --}}
             @case('exercise')
-                <exercise id="{{ $block['id'] }}">
+                <exercise id="{{ $block->id }}">
                     <template #header>
-                        {!! $blockData['header'] !!}
+                        {!! $blockData->header !!}
                     </template>
-
                     <template #description>
-                        {!! $blockData['description'] !!}
+                        {!! $blockData->description !!}
                     </template>
-
                     <template #assignment>
-                        {!! $blockData['assignment'] !!}
+                        {!! $blockData->assignment !!}
                     </template>
-
                     <template #code>
-                        <pre>{{ $blockData['code'] }}</pre>
+                        <pre>{{ $blockData->code }}</pre>
                     </template>
                 </exercise>
             @break
@@ -151,7 +136,6 @@
             @default
         @endswitch
     @endforeach
-
     @if ($nextLecture)
         <a href="{{ route('lectures.show', $nextLecture) }}"
             class="btn btn-success d-flex align-items-center justify-content-center ms-auto mt-3 fw-bold"
