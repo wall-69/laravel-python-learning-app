@@ -22,7 +22,9 @@
             <aside class="admin-sidebar p-0 p-md-3 border-end mh-100">
                 <div class="d-flex flex-column">
                     <h3 class="d-none d-md-inline mb-0">
-                        <a href="{{ route('index') }}" class="text-decoration-none">{{ env('APP_NAME') }}</a>
+                        <a href="{{ route('index') }}" class="text-decoration-none d-flex justify-content-center">
+                            <x-logo />
+                        </a>
                     </h3>
 
                     <hr class="d-none d-md-block">
@@ -73,7 +75,7 @@
                     </ul>
                 </div>
             </aside>
-            <div class="container py-3">
+            <div class="container-fluid py-3">
                 @yield('content')
             </div>
         </main>

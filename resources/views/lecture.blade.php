@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('content')
+    <div id="isLecture" class="d-none"></div>
+
     {{-- Title --}}
-    <h1 class="text-center text-bg-primary p-1 rounded-3">
+    <h1 class="text-center text-primary p-1 rounded-3">
         {{ $lecture->title }}
     </h1>
     @foreach ($lecture->blocks->blocks as $block)

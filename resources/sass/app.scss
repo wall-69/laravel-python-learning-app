@@ -166,3 +166,15 @@
         width: 24rem;
     }
 }
+
+#lecture-side-button-container {
+    position: fixed;
+    left: 0;
+    transform: rotate(-90deg) translateX(-100%);
+    transform-origin: top left;
+    z-index: 1030;
+}
+
+#lecture-side-button-container .btn {
+    min-width: 120px;
+}

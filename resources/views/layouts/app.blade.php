@@ -10,6 +10,12 @@
 
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     @vite(['resources/js/app.js'])
+
+    <style>
+        .list-group-numbered>.list-group-item::before {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -20,9 +26,8 @@
         <header class="sticky-top bg-light">
             <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
-                    {{-- Category lectures offcanvas menu toggler (only visible < md) --}}
-                    @if (empty($hideSidebar) && isset($categoryLectures))
-                        <button class="d-flex justify-content-center align-items-center d-md-none navbar-toggler"
+                    @if (isset($categoryLectures))
+                        <button class="d-flex d-md-none justify-content-center align-items-center navbar-toggler"
                             type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryLecturesOffcanvas"
                             aria-controls="categoryLecturesOffcanvas">
                             <i class="bx bx-dock-right-arrow bx-md"></i>
@@ -70,22 +75,9 @@
             </nav>
         </header>
 
-        <main class="flex-grow-1 row g-0">
-            @if (empty($hideSidebar) && isset($categoryLectures))
-                {{-- Normal sidebar (md+) --}}
-                <aside class="d-none d-md-block col-md-2 border pe-0">
-                    <div class="list-group list-group-flush list-group-numbered">
-                        @foreach ($categoryLectures as $categoryLecture)
-                            <a href="{{ route('lectures.show', [$categoryLecture, $categoryLecture->slug]) }}"
-                                class="list-group-item border-bottom px-2 py-1 @if ($lecture->id == $categoryLecture->id) active @endif">
-                                {{ $categoryLecture->title }}
-                            </a>
-                        @endforeach
-                    </div>
-                </aside>
-
-                {{-- Offcanvas sidebar (< md) --}}
-                <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="categoryLecturesOffcanvas"
+        <main class="flex-grow-1">
+            @if (isset($categoryLectures))
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="categoryLecturesOffcanvas"
                     aria-labelledby="categoryLecturesOffcanvasLabel">
                     <div class="offcanvas-header">
                         <h5 id="categoryLecturesOffcanvasLabel">Lekcie</h5>
@@ -105,7 +97,23 @@
                 </div>
             @endif
 
-            <div class="col-12 col-md-10 container py-3">
+            {{-- Side buttons for desktop --}}
+            <div id="lecture-side-button-container" class="d-none d-md-flex">
+                <button id="lectureChaptersBtn" class="btn btn-secondary rounded-0" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#lectureChaptersOffcanvas"
+                    aria-controls="lectureChaptersOffcanvas">
+                    Kapitoly
+                </button>
+
+                @if (isset($categoryLectures))
+                    <button class="btn btn-success rounded-0" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#categoryLecturesOffcanvas" aria-controls="categoryLecturesOffcanvas">
+                        {{ $lecture->category->title }}
+                    </button>
+                @endif
+            </div>
+
+            <div class="container py-3">
                 @yield('content')
             </div>
         </main>
@@ -115,6 +123,61 @@
     <script>
         window.completedQuizzes = @json($completedQuizzes ?? []);
         window.completedExercises = @json($completedExercises ?? []);
+    </script>
+
+    {{-- Chapters --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (!document.querySelector("#isLecture")) {
+                document.querySelector("#lectureChaptersBtn").remove();
+                return;
+            }
+
+            const container = document.querySelector("main .container");
+            if (!container) return;
+
+            const offcanvas = document.createElement("div");
+            offcanvas.className = "offcanvas offcanvas-start";
+            offcanvas.id = "lectureChaptersOffcanvas";
+            offcanvas.tabIndex = -1;
+            offcanvas.setAttribute("aria-labelledby", "lectureChaptersOffcanvasLabel");
+
+            offcanvas.innerHTML = `
+                <div class="offcanvas-header">
+                    <h5 id="lectureChaptersOffcanvasLabel">Kapitoly</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+            `;
+
+            const body = document.createElement("div");
+            body.className = "offcanvas-body p-0";
+
+            const list = document.createElement("div");
+            list.className = "list-group list-group-flush list-group-numbered";
+
+            // Track h2 numbering only
+            let h2Counter = 0;
+            const headings = container.querySelectorAll("h2");
+
+            headings.forEach((heading, index) => {
+                if (!heading.id) heading.id = "heading-" + index;
+                heading.style.scrollMarginTop = "85px";
+
+                h2Counter++;
+                const title = `${h2Counter}. ${heading.textContent.trim()}`;
+
+                const a = document.createElement("a");
+                a.href = "#" + heading.id;
+                a.className = "list-group-item border-bottom px-2 py-1";
+                a.textContent = title;
+
+                list.appendChild(a);
+            });
+
+            body.appendChild(list);
+            offcanvas.appendChild(body);
+            document.body.appendChild(offcanvas);
+        });
     </script>
 </body>
 
