@@ -32,7 +32,7 @@
 
             {{-- Warning --}}
             @case('warning')
-                <div class="bg-warning rounded-3 px-3 py-2 w-50" style="">
+                <div class="lecture-warning bg-warning rounded-3 px-3 py-2">
                     <span class="fw-bold d-flex gap-2 mb-1">
                         <i class="bx bx-alert-triangle bx-md align-self-start"></i> {{ $blockData->title }}
                     </span>

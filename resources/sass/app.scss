@@ -178,3 +178,19 @@
 #lecture-side-button-container .btn {
     min-width: 120px;
 }
+
+.lecture-warning {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .lecture-warning {
+        width: 75%;
+    }
+}
+
+@media (min-width: 992px) {
+    .lecture-warning {
+        width: 50%;
+    }
+}
