@@ -101,6 +101,9 @@ class Lecture extends Model
 
     public function nextLecture()
     {
-        return Lecture::where("category_order", ">", $this->category_order)->orderBy("category_order")->first();
+        return Lecture::where("category_id", $this->category_id)
+            ->where("category_order", ">", $this->category_order)
+            ->orderBy("category_order")
+            ->first();
     }
 }
