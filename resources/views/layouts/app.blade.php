@@ -23,57 +23,61 @@
         {{-- Alerts --}}
         <x-alerts />
 
-        <header class="sticky-top bg-light">
-            <nav class="navbar navbar-expand-md border-bottom">
-                <div class="container">
-                    @if (isset($categoryLectures))
-                        <button class="d-flex d-md-none justify-content-center align-items-center navbar-toggler"
-                            type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryLecturesOffcanvas"
-                            aria-controls="categoryLecturesOffcanvas">
-                            <i class="bx bx-dock-right-arrow bx-md"></i>
+        @if (!isset($hideHeader) && !$hideHeader)
+            <header class="bg-light">
+                <nav class="navbar navbar-expand-md border-bottom">
+                    <div class="container">
+                        @if (isset($categoryLectures))
+                            <button class="d-flex d-md-none justify-content-center align-items-center navbar-toggler"
+                                type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryLecturesOffcanvas"
+                                aria-controls="categoryLecturesOffcanvas">
+                                <i class="bx bx-dock-right-arrow bx-md"></i>
+                            </button>
+                        @endif
+
+                        <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">
+                            <x-logo />
+                        </a>
+                        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+                            <i class="navbar-toggler-icon"></i>
                         </button>
-                    @endif
+                        <div id="nav" class="collapse navbar-collapse justify-content-center">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a href="{{ route('lectures.index') }}"
+                                        class="nav-link @active('lectures.index')">Lekcie</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('exercises.index') }}"
+                                        class="nav-link @active('exercises.index')">Cvičenia</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('quizzes.index') }}" class="nav-link @active('quizzes.index')">Kvízy</a>
+                                </li>
+                            </ul>
 
-                    <a href="{{ route('index') }}" class="navbar-brand me-0 me-md-3">
-                        <x-logo />
-                    </a>
-                    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
-                        <i class="navbar-toggler-icon"></i>
-                    </button>
-                    <div id="nav" class="collapse navbar-collapse justify-content-center">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a href="{{ route('lectures.index') }}" class="nav-link @active('lectures.index')">Lekcie</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('exercises.index') }}" class="nav-link @active('exercises.index')">Cvičenia</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('quizzes.index') }}" class="nav-link @active('quizzes.index')">Kvízy</a>
-                            </li>
-                        </ul>
-
-                        <div
-                            class="ms-auto d-flex gap-3 justify-content-start justify-content-md-center align-items-center">
-                            @guest
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary">Prihlásiť sa</a>
-                                <a href="{{ route('register') }}" class="btn btn-primary">Registrovať sa</a>
-                            @endguest
-                            @auth
-                                <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none">Môj profil</a>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
-                                </form>
-                                @if (auth()->user()->admin)
-                                    <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
-                                @endif
-                            @endauth
+                            <div
+                                class="ms-auto d-flex gap-3 justify-content-start justify-content-md-center align-items-center">
+                                @guest
+                                    <a href="{{ route('login') }}" class="btn btn-outline-primary">Prihlásiť sa</a>
+                                    <a href="{{ route('register') }}" class="btn btn-primary">Registrovať sa</a>
+                                @endguest
+                                @auth
+                                    <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none">Môj profil</a>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
+                                    </form>
+                                    @if (auth()->user()->admin)
+                                        <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
+                                    @endif
+                                @endauth
+                            </div>
                         </div>
                     </div>
-                </div>
-            </nav>
-        </header>
+                </nav>
+            </header>
+        @endif
 
         <main class="flex-grow-1">
             @if (isset($categoryLectures))
@@ -113,9 +117,9 @@
                 @endif
             </div>
 
-            <div class="container py-3">
-                @yield('content')
-            </div>
+            @yield('content')
+            {{-- <div class="container py-3">
+            </div> --}}
         </main>
     </div>
 

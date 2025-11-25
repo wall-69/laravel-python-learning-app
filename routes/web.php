@@ -19,7 +19,9 @@ if (!app()->isProduction()) {
 }
 
 Route::get("/", function () {
-    return view("index");
+    return view("index", [
+        "hideHeader" => true
+    ]);
 })->name("index");
 
 Route::get("/editor-test", function () {

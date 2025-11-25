@@ -194,3 +194,34 @@
         width: 50%;
     }
 }
+
+// Index
+.index-hero-section {
+    height: 100svh;
+}
+
+.hero-divider {
+    overflow: hidden;
+    position: relative;
+}
+.hero-divider::before {
+    content: "";
+    font-family: "shape divider from ShapeDividers.com";
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    bottom: -0.1vw;
+    left: -0.1vw;
+    right: -0.1vw;
+    top: -0.1vw;
+    background-size: 100% 149px;
+    background-position: 50% 100%;
+    background-image: url('data:image/svg+xml;charset=utf8, <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1007.63 112.41"><path fill="%2374c1fc" d="M1007.63 112.4v-11.5c-167.94-33.54-503.8 0-503.8-100.9 0 100.9-335.9 67.36-503.83 100.9v11.5z"/></svg>');
+}
+
+@media (min-width: 2100px) {
+    .hero-divider::before {
+        background-size: 100% calc(2vw + 149px);
+    }
+}
