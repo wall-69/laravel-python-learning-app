@@ -2,11 +2,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 // @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
+// Functions
+@import "bootstrap/scss/functions";
+
 // Variables
 @import "variables";
+@import "bootstrap/scss/variables";
+
+// Custom colors
+$theme-colors: map-merge(
+    $theme-colors,
+    (
+        "brand-blue": #74c1fc,
+        "brand-purple": #022f66,
+    )
+);
 
 // Bootstrap
-@import "bootstrap";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/bootstrap";
 
 /*
     CUSTOM CLASSES
@@ -196,32 +211,26 @@
 }
 
 // Index
-.index-hero-section {
-    height: 100svh;
-}
-
 .hero-divider {
-    overflow: hidden;
-    position: relative;
-}
-.hero-divider::before {
-    content: "";
-    font-family: "shape divider from ShapeDividers.com";
-    position: absolute;
-    z-index: 3;
-    pointer-events: none;
-    background-repeat: no-repeat;
-    bottom: -0.1vw;
-    left: -0.1vw;
-    right: -0.1vw;
-    top: -0.1vw;
-    background-size: 100% 149px;
-    background-position: 50% 100%;
+    width: 100%;
     background-image: url('data:image/svg+xml;charset=utf8, <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1007.63 112.41"><path fill="%2374c1fc" d="M1007.63 112.4v-11.5c-167.94-33.54-503.8 0-503.8-100.9 0 100.9-335.9 67.36-503.83 100.9v11.5z"/></svg>');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+
+    // Maintain aspect ratio
+    height: 0;
+    padding-top: 11.17%; // 112.41 / 1007.63 * 100%
 }
 
-@media (min-width: 2100px) {
-    .hero-divider::before {
-        background-size: 100% calc(2vw + 149px);
+#hero-carousel {
+    max-width: 600px;
+    max-height: 400px;
+    width: 100%;
+    height: auto;
+
+    @include media-breakpoint-up(xxl) {
+        max-width: 800px;
+        max-height: 600px;
     }
 }
