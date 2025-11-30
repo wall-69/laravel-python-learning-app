@@ -20,7 +20,7 @@ class LecturePolicy
     public function show(?User $user, Lecture $lecture)
     {
         // Anyone can see public lectures
-        if ($lecture->status == LectureStatus::PUBLIC->value) {
+        if ($lecture->isPublic()) {
             return true;
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LectureStatus;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,6 +85,18 @@ class Lecture extends Model
         $query->where("title", "LIKE", "%$value%");
     }
 
+    #[Scope]
+    protected function public(Builder $query)
+    {
+        $query->where("status", LectureStatus::PUBLIC);
+    }
+
+    #[Scope]
+    protected function draft(Builder $query)
+    {
+        $query->where("status", LectureStatus::DRAFT);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -105,5 +118,15 @@ class Lecture extends Model
             ->where("category_order", ">", $this->category_order)
             ->orderBy("category_order")
             ->first();
+    }
+
+    public function isPublic()
+    {
+        return $this->status == LectureStatus::PUBLIC->value;
+    }
+
+    public function isDraft()
+    {
+        return $this->status == LectureStatus::DRAFT->value;
     }
 }

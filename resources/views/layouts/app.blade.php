@@ -11,6 +11,9 @@
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     @vite(['resources/js/app.js'])
 
+    @if (request()->routeIs('index'))
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    @endif
     <style>
         .list-group-numbered>.list-group-item::before {
             display: none;

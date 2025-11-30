@@ -19,8 +19,11 @@ if (!app()->isProduction()) {
 }
 
 Route::get("/", function () {
+    $latestLectures = Lecture::public()->latest()->take(3)->get();
+
     return view("index", [
-        "hideHeader" => true
+        "hideHeader" => true,
+        "latestLectures" => $latestLectures
     ]);
 })->name("index");
 

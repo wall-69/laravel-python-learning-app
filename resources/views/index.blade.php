@@ -50,21 +50,38 @@
         {{-- Hero --}}
         <section class="p-5 d-flex flex-column flex-xl-row gap-5 justify-content-xl-between">
             {{-- Hero content --}}
-            <div class="" style="max-width: 670px;">
+            <div class="animate__animated animate__bounceInLeft d-flex flex-column gap-3" style="max-width: 670px;">
                 <img src="/img/logo-text.png" alt="" class="mb-3"
                     style="max-width: 320px; width: 100%; height: auto;">
-                <p>
-                    Nauč sa Python, krok za krokom.
-                </p>
-                <p>
-                    Interaktívna platforma, ktorá spája lekcie, príklady, spúšťanie kódu a cvičenia do jedného miesta.
-                </p>
-                <p>
-                    Nepotrebuješ inštalovať Python, všetko beží v prehliadači.
-                </p>
+
+                <div class="p-4 shadow-sm bg-light d-flex flex-column gap-3">
+                    <div class="d-flex">
+                        <i class="bx bxs-code-alt fs-3 text-primary me-3"></i>
+                        <p class="mb-0 align-self-center fw-bold">Nauč sa Python, krok za krokom.</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <i class="bx bxs-layers fs-3 text-primary me-3"></i>
+                        <p class="mb-0 align-self-center">Interaktívna platforma, ktorá spája lekcie, príklady, spúšťanie
+                            kódu a cvičenia do
+                            jedného miesta.</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <i class="bx bxs-cloud fs-3 text-primary me-3"></i>
+                        <p class="mb-0 align-self-center">Nepotrebuješ inštalovať Python, všetko beží v prehliadači.</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <i class="bx bxs-check-circle fs-3 text-primary me-3"></i>
+                        <p class="mb-0 align-self-center fw-bold">Prístup ku všetkým lekciam úplne zadarmo.</p>
+                    </div>
+                </div>
             </div>
 
-            <div id="hero-carousel" class="carousel slide align-self-center align-self-xl-auto">
+            {{-- Hero carousel --}}
+            <div id="hero-carousel"
+                class="animate__animated animate__zoomIn carousel slide align-self-center align-self-xl-auto">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"
                         aria-current="true" aria-label="Slide 1"></button>
@@ -109,8 +126,146 @@
 
         <div class="hero-divider"></div>
 
-        <section class="index-section bg-brand-blue" style="">
+        {{-- Features --}}
+        <section class="index-section bg-brand-blue py-5">
+            <div class="container">
+                <h2 class="text-center mb-5 fw-bold">Uč sa Python kedy chceš, kde chceš</h2>
 
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-book-open fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Lekcie</h5>
+                            <p class="text-muted mb-0">
+                                Stručné, jasné vysvetlenia s praktickými ukážkami kódu v každej téme.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-terminal fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Integrovaný editor</h5>
+                            <p class="text-muted mb-0">
+                                Spúšťaj Python priamo v prehliadači bez inštalácie a bez konfigurácie.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-edit fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Cvičenia</h5>
+                            <p class="text-muted mb-0">
+                                Písanie vlastného kódu s okamžitou spätnou väzbou a kontrolou riešení.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-check fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Kvízy</h5>
+                            <p class="text-muted mb-0">
+                                Krátke testy na overenie pochopenia tém a rýchle opakovanie.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-bar-chart fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">XP a levely</h5>
+                            <p class="text-muted mb-0">
+                                Získavaj XP za dokončené úlohy a sleduj svoj rast v reálnom čase.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-user fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Profil & Pokrok</h5>
+                            <p class="text-muted mb-0">
+                                Sleduj, čo si už zvládol, a pokračuj tam, kde si skončil.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="p-4 bg-light shadow-sm rounded h-100 text-center">
+                            <i class="bx bx-git-branch fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold mb-2">Postupné budovanie zručností</h5>
+                            <p class="text-muted mb-0">
+                                Každá ďalšia lekcia nadväzuje na predchádzajúcu, aby si nepremárnil čas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
+
+        <div class="features-divider"></div>
+
+        {{-- Latest lectures --}}
+        <section class="py-5 bg-light">
+            <div class="container">
+                <h2 class="fw-bold text-center mb-5">Najnovšie lekcie</h2>
+
+                <div class="row g-4">
+                    @foreach ($latestLectures as $lecture)
+                        <div class="col-md-4">
+                            <a href="{{ route('lectures.show', $lecture->id) }}" class="text-decoration-none text-dark">
+                                <div class="p-4 bg-white shadow-sm rounded h-100">
+                                    <h5 class="fw-bold">{{ $lecture->title }}</h5>
+                                    <p class="text-muted">{{ Str::limit($lecture->description, 120) }}</p>
+                                    <span class="text-primary fw-semibold">Čítať viac →</span>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        {{-- Footer --}}
+        <footer class="py-5 bg-dark text-white">
+            <div class="container d-flex flex-column flex-md-row justify-content-between">
+
+                <div>
+                    <h5 class="fw-bold">Pythonškola</h5>
+                    <p class="text-white-50">Interaktívna platforma na učenie Pythonu.</p>
+                </div>
+
+                <div>
+                    <h6 class="fw-bold">Obsah</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ route('lectures.index') }}" class="text-white-50">Lekcie</a></li>
+                        <li><a href="{{ route('exercises.index') }}" class="text-white-50">Cvičenia</a></li>
+                        <li><a href="{{ route('quizzes.index') }}" class="text-white-50">Kvízy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h6 class="fw-bold">Účet</h6>
+                    <ul class="list-unstyled">
+                        @guest
+                            <li><a href="{{ route('login') }}" class="text-white-50">Prihlásenie</a></li>
+                            <li><a href="{{ route('register') }}" class="text-white-50">Registrácia</a></li>
+                        @endguest
+                        @auth
+                            <li><a href="{{ auth()->user()->profile_url }}" class="text-white-50">Profil</a></li>
+                        @endauth
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="text-center text-white-50 mt-4">
+                © {{ date('Y') }} Pythonškola. Všetky práva vyhradené.
+            </div>
+        </footer>
     </div>
 @endsection
