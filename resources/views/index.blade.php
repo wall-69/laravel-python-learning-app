@@ -32,10 +32,11 @@
                                 <a href="{{ route('register') }}" class="btn btn-warning">Registrovať sa</a>
                             @endguest
                             @auth
-                                <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none">Môj profil</a>
+                                <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none text-white">Môj
+                                    profil</a>
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="nav-link link-primary">Odhlásiť sa</button>
+                                    <button type="submit" class="nav-link text-white">Odhlásiť sa</button>
                                 </form>
                                 @if (auth()->user()->admin)
                                     <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
@@ -81,7 +82,8 @@
 
             {{-- Hero carousel --}}
             <div id="hero-carousel"
-                class="animate__animated animate__zoomIn carousel slide align-self-center align-self-xl-auto">
+                class="animate__animated animate__zoomIn carousel slide align-self-center align-self-xl-auto"
+                data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"
                         aria-current="true" aria-label="Slide 1"></button>
@@ -214,17 +216,9 @@
             <div class="container">
                 <h2 class="fw-bold text-center mb-5">Najnovšie lekcie</h2>
 
-                <div class="row g-4">
+                <div class="d-flex gap-4 flex-wrap justify-content-center">
                     @foreach ($latestLectures as $lecture)
-                        <div class="col-md-4">
-                            <a href="{{ route('lectures.show', $lecture->id) }}" class="text-decoration-none text-dark">
-                                <div class="p-4 bg-white shadow-sm rounded h-100">
-                                    <h5 class="fw-bold">{{ $lecture->title }}</h5>
-                                    <p class="text-muted">{{ Str::limit($lecture->description, 120) }}</p>
-                                    <span class="text-primary fw-semibold">Čítať viac →</span>
-                                </div>
-                            </a>
-                        </div>
+                        <x-lecture-card :lecture="$lecture" />
                     @endforeach
                 </div>
             </div>
@@ -256,7 +250,7 @@
                             <li><a href="{{ route('register') }}" class="text-white-50">Registrácia</a></li>
                         @endguest
                         @auth
-                            <li><a href="{{ auth()->user()->profile_url }}" class="text-white-50">Profil</a></li>
+                            <li><a href="{{ auth()->user()->profile_url }}" class="text-white-50">Môj profil</a></li>
                         @endauth
                     </ul>
                 </div>
@@ -264,7 +258,7 @@
             </div>
 
             <div class="text-center text-white-50 mt-4">
-                © {{ date('Y') }} Pythonškola. Všetky práva vyhradené.
+                <span class="fw-bold">© {{ date('Y') }} {{ env('APP_NAME') }}.</span> Všetky práva vyhradené.
             </div>
         </footer>
     </div>
