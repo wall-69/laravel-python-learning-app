@@ -144,6 +144,15 @@ $theme-colors: map-merge(
     opacity: 0.75 !important;
 }
 
+.lecture-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lecture-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
+}
+
 .lecture-image {
     width: 100%;
 }

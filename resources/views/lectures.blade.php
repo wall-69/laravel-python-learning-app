@@ -1,43 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-    @foreach ($categories as $category)
-        <h2 class="d-flex flex-wrap align-items-center gap-2">
-            @if ($category->created_at >= now()->subMonth())
-                <span class="badge text-bg-warning">NOVINKA</span>
-            @endif
-            {{ $category->title }}
-        </h2>
-        <p>
-            {{ $category->description }}
-        </p>
+    <div class="container py-5">
+        @foreach ($categories as $category)
+            <section class="mb-5">
+                <h2 class="fw-bold mb-2 d-flex align-items-center gap-3">
+                    @if ($category->created_at >= now()->subMonth())
+                        <span class="badge bg-warning text-dark">NOVINKA</span>
+                    @endif
+                    {{ $category->title }}
+                </h2>
 
-        <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 g-0">
-            @foreach ($category->lectures as $lecture)
-                <article class="card lecture-card">
-                    <div class="card-body d-flex flex-column h-100">
-                        <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="d-block">
-                            <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}"
-                                class="rounded-3 mb-3 w-100"
-                                style="height: 16rem; object-fit: cover; object-position: top center;">
-                        </a>
-                        <h5 class="card-title">
-                            <span class="fw-bold">{{ $lecture->category_order }}.</span>
-                            <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none">
-                                {{ $lecture->title }}
-                            </a>
-                        </h5>
+                <p class="text-muted mb-4">{{ $category->description }}</p>
 
-                        <p class="card-text overflow-y-scroll" style="flex: 1 1 auto; overflow-y: auto;">
-                            {{ $lecture->description }}
-                        </p>
-                    </div>
-                </article>
-            @endforeach
-        </div>
+                <div class="d-flex gap-4 flex-wrap justify-content-start">
+                    @foreach ($category->lectures as $lecture)
+                        <x-lecture-card :lecture="$lecture" />
+                    @endforeach
+                </div>
+            </section>
 
-        @unless ($loop->last)
-            <hr>
-        @endunless
-    @endforeach
+            @unless ($loop->last)
+                <hr class="my-5">
+            @endunless
+        @endforeach
+    </div>
 @endsection

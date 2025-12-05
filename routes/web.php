@@ -27,10 +27,6 @@ Route::get("/", function () {
     ]);
 })->name("index");
 
-Route::get("/editor-test", function () {
-    return view("editor-test");
-})->middleware("auth");
-
 // Auth
 Route::controller(AuthController::class)->group(function () {
     Route::middleware("guest")->group(function () {
@@ -89,13 +85,13 @@ Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])
 
 // Quiz
 Route::controller(QuizController::class)->middleware(["auth", "verified"])->name("quizzes.")->group(function () {
-    Route::get("/kvizy/", "index")->name("index");
+    Route::get("/kvizy", "index")->name("index");
     Route::get("/kviz/{quiz}", "show")->name("show");
 });
 
 // Exercise
 Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->name("exercises.")->group(function () {
-    Route::get("/cvicenia/", "index")->name("index");
+    Route::get("/cvicenia", "index")->name("index");
     Route::get("/cvicenie/{exercise}", "show")->name("show");
 
     Route::post("/exercise/{exercise}/submit", "submitSolution")->name("submit");

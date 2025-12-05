@@ -107,6 +107,7 @@ class LectureController extends Controller
             "categoryLectures" => $lecture->category->lectures,
             "completedQuizzes" => $completedQuizzes,
             "completedExercises" => $completedExercises,
+            "isLecture" => true
         ]);
     }
 
