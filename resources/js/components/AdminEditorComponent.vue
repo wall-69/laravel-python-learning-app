@@ -66,7 +66,7 @@ function initEditor() {
         holder: "editor",
         autofocus: true,
         placeholder: "Finally, Consider Moving on If All Else Fails.",
-        logLevel: "WARN", // TODO: set to ERROR in prod
+        logLevel: "WARN", // PROD: set to ERROR
 
         tools: {
             header: {
