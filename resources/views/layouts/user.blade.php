@@ -23,8 +23,9 @@
                     <a href="{{ route('index') }}" class="navbar-brand">
                         <x-logo />
                     </a>
-                    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
-                        <i class="navbar-toggler-icon"></i>
+                    <button class="ms-auto bg-transparent text-white border-0 d-md-none align-items-center d-flex"
+                        data-bs-toggle="collapse" data-bs-target="#nav">
+                        <i class="bx bx-menu bx-lg"></i>
                     </button>
                     <div id="nav" class="collapse navbar-collapse justify-content-center">
                         <ul class="navbar-nav">

@@ -1,6 +1,7 @@
 @props(['lecture'])
 
-<a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark">
+<a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
+    style="width: 100%; max-width: 374px;">
     <div class="card shadow-sm border-0 h-100 lecture-card">
         <div class="ratio ratio-16x9">
             <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}" class="rounded-top object-fit-cover"
