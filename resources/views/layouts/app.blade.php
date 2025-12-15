@@ -89,10 +89,10 @@
                 <nav class="navbar navbar-expand-md shadow">
                     <div class="container">
                         @if (isset($categoryLectures))
-                            <button class="d-flex d-md-none justify-content-center align-items-center navbar-toggler"
-                                type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryLecturesOffcanvas"
-                                aria-controls="categoryLecturesOffcanvas">
-                                <i class="bx bx-dock-right-arrow bx-md"></i>
+                            <button
+                                class="d-flex d-md-none justify-content-center fw-bold gap-1 align-items-center bg-transparent text-white border-0"
+                                data-bs-toggle="offcanvas" data-bs-target="#categoryLecturesOffcanvas">
+                                <i class="bx bxs-bookmark bx-md"></i> {{ $lecture->category->title }}
                             </button>
                         @endif
 
