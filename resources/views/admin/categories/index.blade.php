@@ -60,7 +60,8 @@
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="submit" class="btn btn-danger d-flex align-items-center">
+                                            <button type="submit" class="btn btn-danger d-flex align-items-center"
+                                                onclick="return confirm('Ste si istý, že chcete vymazať {{ $category->title }}?')">
                                                 <i class="bx bxs-trash"></i>
                                             </button>
                                         </form>
