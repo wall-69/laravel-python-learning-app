@@ -6,7 +6,6 @@
         <p v-if="slots.description">
             <slot name="description"></slot>
         </p>
-
         <div ref="editorContainer" class="border" style="height: 300px"></div>
         <button
             @click="runCode"
@@ -16,7 +15,6 @@
             Spustiť
             <i v-show="loading" class="spinner-border spinner-border-sm"></i>
         </button>
-
         <h3 class="mt-3">Výstup</h3>
         <textarea
             ref="editorOutput"
@@ -25,22 +23,36 @@
             readonly
         ></textarea>
 
-        <!-- Value slot -->
+        <!-- Input field for stdin -->
+        <div v-if="waitingForInput" class="mt-2">
+            <input
+                ref="stdinInput"
+                v-model="inputValue"
+                @keydown.enter="sendInput"
+                type="text"
+                class="form-control"
+                placeholder="Zadajte vstup a stlačte Enter..."
+            />
+            <button @click="sendInput" class="btn btn-secondary btn-sm mt-1">
+                Odoslať
+            </button>
+        </div>
+
         <div ref="editorValue" class="d-none" style="white-space: pre">
             <slot name="code"></slot>
         </div>
     </div>
 </template>
+
 <script setup>
 import axios from "axios";
+import { io } from "socket.io-client";
 import * as monaco from "monaco-editor";
-import { onMounted, ref, useSlots } from "vue";
+import { onMounted, ref, useSlots, nextTick } from "vue";
 import { normalizeIndentation } from "../helpers";
 
-// Composables
 const slots = useSlots();
 
-// Lifecycle
 onMounted(() => {
     if (editorContainer.value) {
         editor = monaco.editor.create(editorContainer.value, {
@@ -49,67 +61,75 @@ onMounted(() => {
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
         });
-
         editor.setValue(normalizeIndentation(editorValue.value.innerText));
     }
 });
 
-// Variables
 let editor = null;
+let socket = null;
 const editorContainer = ref(null);
 const editorOutput = ref(null);
 const editorValue = ref(null);
+const stdinInput = ref(null);
 const loading = ref(false);
+const waitingForInput = ref(false);
+const inputValue = ref("");
 
-// Functions
 async function runCode() {
     if (loading.value) {
         return;
     }
-
     const code = getEditorText();
+    if (!code) {
+        return;
+    }
 
+    editorOutput.value.value = "";
+    inputValue.value = "";
+    waitingForInput.value = false;
     loading.value = true;
 
-    try {
-        const response = await axios.post("/code-runner", { code });
+    socket = io("http://localhost:3000");
 
-        if (response.status === 200) {
-            editorOutput.value.value = response.data.output;
-        }
-    } catch (error) {
-        // Server responded with a status outside 2xx
-        if (error.response) {
-            // Not logged in
-            if (error.response.status === 401) {
-                window.location.href = "/login";
-                return;
+    socket.emit("run", { code: code });
+
+    socket.on("output", (output) => {
+        editorOutput.value.value += output;
+    });
+
+    // Server tells us when it's waiting for input
+    socket.on("waiting_for_input", (waiting) => {
+        waitingForInput.value = true;
+        nextTick(() => {
+            if (stdinInput.value) {
+                stdinInput.value.focus();
             }
+        });
+    });
 
-            // Email not verified
-            if (error.response.status === 403) {
-                window.location.href = "/email/verify";
-                return;
-            }
+    socket.on("error", (error) => {
+        editorOutput.value.value += "\nNastala chyba:\n" + error;
+        waitingForInput.value = false;
+    });
 
-            editorOutput.value.value =
-                "Error: " + error.response.data.message ||
-                error.response.statusText;
-        }
-
-        // No response
-        else if (error.request) {
-            editorOutput.value.value =
-                "Error: Server neodpovedal. Skúste znova alebo neskôr.";
-        }
-
-        // Other errors
-        else {
-            editorOutput.value.value = "Error: " + error.message;
-        }
-    } finally {
+    socket.on("disconnect", () => {
         loading.value = false;
+        waitingForInput.value = false;
+        socket = null;
+    });
+}
+
+function sendInput() {
+    if (!waitingForInput.value || !socket) {
+        return;
     }
+
+    // Send to server with newline
+    socket.emit("stdin", inputValue.value + "\n");
+
+    // Clear input
+    inputValue.value = "";
+    waitingForInput.value = false;
 }
 
 function getEditorText() {
