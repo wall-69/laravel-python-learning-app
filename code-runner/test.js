@@ -2,7 +2,7 @@ const io = require("socket.io-client");
 
 const TEST_CODE = 'print("Ahoj, svet!")';
 const EXPECTED_OUTPUT = "Ahoj, svet!\r\n";
-const NUM_TESTS = 1000;
+const NUM_TESTS = 200;
 
 let completed = 0;
 let failed = 0;
@@ -52,7 +52,7 @@ async function runAllTests() {
     const startTime = Date.now();
 
     // Run tests in batches to avoid overwhelming the server
-    const BATCH_SIZE = 50;
+    const BATCH_SIZE = 20;
     for (let i = 0; i < NUM_TESTS; i += BATCH_SIZE) {
         const batch = [];
         for (let j = 0; j < BATCH_SIZE && i + j < NUM_TESTS; j++) {

@@ -4,6 +4,7 @@ const Docker = require("dockerode");
 const docker = new Docker();
 const { log, warn, error } = require("./helpers.js");
 
+// Memory
 const MEMORY_LIMIT_ERROR_MESSAGE =
     "Terminated: Memory limit exceeded - your program used too much memory.";
 
@@ -11,16 +12,13 @@ const MEMORY_LIMIT_ERROR_MESSAGE =
 const TIMEOUT_SECONDS = 7;
 const TIMEOUT_ERROR_MESSAGE =
     "Terminated: Timeout - your program took too long to run.";
-const HARD_KILL_SECONDS = TIMEOUT_SECONDS + 2;
-const HARD_KILL_ERROR_MESSAGE =
-    "Terminated: Timeout - your program took too long to run.";
 
 // Max output
 const MAX_OUTPUT_SIZE = 512 * 1024;
 const MAX_OUTPUT_SIZE_ERROR_MESSAGE = "Terminated: Max output size exceeded.";
 
 // Queue
-const MAX_CONCURRENT = 10;
+const MAX_CONCURRENT = 4;
 let currentlyRunning = 0;
 const queue = [];
 
@@ -34,21 +32,17 @@ async function executeCode(socket, data) {
     let timeoutHandle = null;
     let totalOutputSize = 0;
 
-    const hardKillTimer = setTimeout(() => {
-        cleanup(HARD_KILL_ERROR_MESSAGE);
-    }, HARD_KILL_SECONDS * 1000);
-
     async function cleanup(reason) {
         if (finished) return;
         finished = true;
 
-        clearTimeout(hardKillTimer);
         if (timeoutHandle) clearTimeout(timeoutHandle);
 
         if (container) {
             try {
-                await container.kill();
-            } catch {}
+                await container.kill().catch(() => {});
+                await container.remove({ force: true }).catch(() => {});
+            } catch (err) {}
         }
 
         if (socket.connected) {
@@ -76,9 +70,9 @@ async function executeCode(socket, data) {
             StdinOnce: false,
             HostConfig: {
                 Memory: 64 * 1024 * 1024,
-                CpuQuota: 30000,
+                CpuQuota: 50000,
                 NetworkMode: "none",
-                AutoRemove: false,
+                AutoRemove: true,
             },
         });
 
@@ -129,15 +123,8 @@ async function executeCode(socket, data) {
                 TIMEOUT_SECONDS * 1000
             );
         });
-        const streamEndedPromise = new Promise((resolve) => {
-            stream.on("end", resolve);
-            stream.on("close", resolve);
-        });
 
-        await Promise.race([
-            Promise.all([waitPromise, streamEndedPromise]),
-            timeoutPromise,
-        ]);
+        await Promise.race([waitPromise, timeoutPromise]);
 
         let inspect;
         try {
