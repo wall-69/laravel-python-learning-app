@@ -20,7 +20,7 @@ async function executeCode(socket, data) {
     let timeoutHandle = null;
 
     try {
-        const codeInjection = [
+        const codeInjectionLines = [
             "import builtins, sys",
             "_raw_input = builtins.input",
             'def magic_input(prompt=""):',
@@ -28,7 +28,9 @@ async function executeCode(socket, data) {
             "    sys.stdout.flush()",
             "    return _raw_input(prompt)",
             "builtins.input = magic_input",
-        ].join("\n");
+        ];
+        const LINE_OFFSET = codeInjectionLines.length;
+        const codeInjection = codeInjectionLines.join("\n");
 
         const wrappedCode = `${codeInjection}\n${data.code}`.trim();
 
@@ -76,6 +78,9 @@ async function executeCode(socket, data) {
                 output = output.split(INPUT_SIGNAL).join("");
             }
 
+            // Fix line numbers in error messages
+            output = fixLineNumbers(output, LINE_OFFSET);
+
             if (output.length > 0) {
                 socket.emit("output", output);
             }
@@ -105,7 +110,7 @@ async function executeCode(socket, data) {
     } catch (err) {
         if (timeoutHandle) clearTimeout(timeoutHandle);
 
-        socket.emit("error", err.message);
+        socket.emit("error", fixLineNumbers(err.message, LINE_OFFSET));
 
         // Remove container if it exists (ignore any removal related errors)
         if (container) {
@@ -117,6 +122,17 @@ async function executeCode(socket, data) {
         currentlyRunning--;
         processQueue();
     }
+}
+
+function fixLineNumbers(text, lineOffset) {
+    // Replace "<string>" with "main.py" and adjust line numbers
+    return text
+        .replace(/<string>/g, "main.py")
+        .replace(/File "main\.py", line (\d+)/g, (match, lineNum) => {
+            const originalLine = parseInt(lineNum);
+            const adjustedLine = Math.max(1, originalLine - lineOffset);
+            return `File "main.py", line ${adjustedLine}`;
+        });
 }
 
 function processQueue() {
