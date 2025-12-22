@@ -89,7 +89,7 @@ async function runCode() {
     waitingForInput.value = false;
     loading.value = true;
 
-    socket = io("http://localhost:3000");
+    socket = io("http://localhost:3000", { reconnection: false });
 
     socket.emit("run", { code: code });
 

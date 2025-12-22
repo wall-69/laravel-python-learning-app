@@ -4,9 +4,15 @@ const Docker = require("dockerode");
 const docker = new Docker();
 const { log, warn, error } = require("./helpers.js");
 
+const MEMORY_LIMIT_ERROR_MESSAGE =
+    "Terminated: Memory limit exceeded - your program used too much memory.";
+
 // Timeout
 const TIMEOUT_SECONDS = 7;
 const TIMEOUT_ERROR_MESSAGE =
+    "Terminated: Timeout - your program took too long to run.";
+const HARD_KILL_SECONDS = TIMEOUT_SECONDS + 2;
+const HARD_KILL_ERROR_MESSAGE =
     "Terminated: Timeout - your program took too long to run.";
 
 // Max output
@@ -28,18 +34,20 @@ async function executeCode(socket, data) {
     let timeoutHandle = null;
     let totalOutputSize = 0;
 
+    const hardKillTimer = setTimeout(() => {
+        cleanup(HARD_KILL_ERROR_MESSAGE);
+    }, HARD_KILL_SECONDS * 1000);
+
     async function cleanup(reason) {
         if (finished) return;
         finished = true;
 
+        clearTimeout(hardKillTimer);
         if (timeoutHandle) clearTimeout(timeoutHandle);
 
         if (container) {
             try {
                 await container.kill();
-            } catch {}
-            try {
-                await container.remove({ force: true });
             } catch {}
         }
 
@@ -121,8 +129,29 @@ async function executeCode(socket, data) {
                 TIMEOUT_SECONDS * 1000
             );
         });
+        const streamEndedPromise = new Promise((resolve) => {
+            stream.on("end", resolve);
+            stream.on("close", resolve);
+        });
 
-        await Promise.race([waitPromise, timeoutPromise]);
+        await Promise.race([
+            Promise.all([waitPromise, streamEndedPromise]),
+            timeoutPromise,
+        ]);
+
+        let inspect;
+        try {
+            inspect = await container.inspect();
+        } catch (err) {
+            // Container was likely auto-removed, cannot inspect
+            inspect = null;
+        }
+
+        if (inspect && inspect.State.OOMKilled) {
+            await cleanup(MEMORY_LIMIT_ERROR_MESSAGE);
+            return;
+        }
+
         await cleanup();
     } catch (err) {
         await cleanup(err.message);

@@ -2,7 +2,7 @@ const io = require("socket.io-client");
 
 const TEST_CODE = 'print("Ahoj, svet!")';
 const EXPECTED_OUTPUT = "Ahoj, svet!\r\n";
-const NUM_TESTS = 200;
+const NUM_TESTS = 1000;
 
 let completed = 0;
 let failed = 0;
@@ -10,7 +10,7 @@ let failedTests = [];
 
 function runTest(testNumber) {
     return new Promise((resolve) => {
-        const socket = io("http://localhost:3000");
+        const socket = io("http://localhost:3000", { reconnection: false });
         let output = "";
         let hasUnexpectedJson = false;
 
