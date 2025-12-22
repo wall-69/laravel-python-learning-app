@@ -20,23 +20,13 @@ async function executeCode(socket, data) {
     let timeoutHandle = null;
 
     try {
-        const codeInjectionLines = [
-            "import builtins, sys",
-            "_raw_input = builtins.input",
-            'def magic_input(prompt=""):',
-            `    sys.stdout.write("${INPUT_SIGNAL}")`,
-            "    sys.stdout.flush()",
-            "    return _raw_input(prompt)",
-            "builtins.input = magic_input",
-        ];
-        const LINE_OFFSET = codeInjectionLines.length;
-        const codeInjection = codeInjectionLines.join("\n");
-
-        const wrappedCode = `${codeInjection}\n${data.code}`.trim();
-
         container = await docker.createContainer({
-            Image: "python:3.12-slim",
-            Cmd: ["python3", "-u", "-c", wrappedCode],
+            Image: "fernefer/python-3.12-slim-student:1.0",
+            Cmd: [
+                "sh",
+                "-c",
+                `cat << 'EOF' > /main.py && python3 -u /main.py\n${data.code}\nEOF`,
+            ],
             AttachStdin: true,
             AttachStdout: true,
             AttachStderr: true,
@@ -59,27 +49,17 @@ async function executeCode(socket, data) {
             hijack: true,
         });
 
-        let isFirstChunk = true;
         stream.on("data", (chunk) => {
             let output = chunk.toString();
 
-            if (isFirstChunk) {
-                // This removes the "{"stream":true..." JSON if it exists
-                // and any null bytes/headers Docker TTY sends
-                output = output.replace(/^.*\{.*"hijack":true\}/s, "");
-                isFirstChunk = false;
-            }
+            output = output.replace(/^.*\{.*"hijack":true\}/s, "");
 
             // Handle input signal
             if (output.includes(INPUT_SIGNAL)) {
                 if (timeoutHandle) clearTimeout(timeoutHandle);
-
                 socket.emit("waiting_for_input");
                 output = output.split(INPUT_SIGNAL).join("");
             }
-
-            // Fix line numbers in error messages
-            output = fixLineNumbers(output, LINE_OFFSET);
 
             if (output.length > 0) {
                 socket.emit("output", output);
@@ -110,7 +90,7 @@ async function executeCode(socket, data) {
     } catch (err) {
         if (timeoutHandle) clearTimeout(timeoutHandle);
 
-        socket.emit("error", fixLineNumbers(err.message, LINE_OFFSET));
+        socket.emit("error", err.message);
 
         // Remove container if it exists (ignore any removal related errors)
         if (container) {
@@ -122,17 +102,6 @@ async function executeCode(socket, data) {
         currentlyRunning--;
         processQueue();
     }
-}
-
-function fixLineNumbers(text, lineOffset) {
-    // Replace "<string>" with "main.py" and adjust line numbers
-    return text
-        .replace(/<string>/g, "main.py")
-        .replace(/File "main\.py", line (\d+)/g, (match, lineNum) => {
-            const originalLine = parseInt(lineNum);
-            const adjustedLine = Math.max(1, originalLine - lineOffset);
-            return `File "main.py", line ${adjustedLine}`;
-        });
 }
 
 function processQueue() {
@@ -163,6 +132,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         log("User disconnected");
+
         // Remove from queue if still waiting
         const index = queue.findIndex((item) => item.socket === socket);
         if (index !== -1) {
