@@ -4,34 +4,33 @@ const Docker = require("dockerode");
 const docker = new Docker();
 const { log, warn, error } = require("./helpers.js");
 
+// Timeout
 const TIMEOUT_SECONDS = 7;
+
+// Queue
 const MAX_CONCURRENT = 10;
 let currentlyRunning = 0;
 const queue = [];
 
-const READY_SIGNAL = "\x02PYTHON_READY\x03";
-const INPUT_SIGNAL = "\x02WAITING_FOR_INPUT\x03";
+// Signals
+const INPUT_SIGNAL = "\x02\x05\x03";
 
 async function executeCode(socket, data) {
     let container = null;
     let timeoutHandle = null;
 
     try {
-        const wrappedCode = `
-import builtins, sys
-_raw_input = builtins.input
-def magic_input(prompt=""):
-    sys.stdout.write("${INPUT_SIGNAL}")
-    sys.stdout.flush()
-    return _raw_input(prompt)
-builtins.input = magic_input
+        const codeInjection = [
+            "import builtins, sys",
+            "_raw_input = builtins.input",
+            'def magic_input(prompt=""):',
+            `    sys.stdout.write("${INPUT_SIGNAL}")`,
+            "    sys.stdout.flush()",
+            "    return _raw_input(prompt)",
+            "builtins.input = magic_input",
+        ].join("\n");
 
-# THE CLEAN START SIGNAL
-sys.stdout.write("${READY_SIGNAL}")
-sys.stdout.flush()
-
-${data.code}
-`.trim();
+        const wrappedCode = `${codeInjection}\n${data.code}`.trim();
 
         container = await docker.createContainer({
             Image: "python:3.12-slim",
@@ -39,12 +38,12 @@ ${data.code}
             AttachStdin: true,
             AttachStdout: true,
             AttachStderr: true,
-            Tty: true, // <--- TURN THIS ON
+            Tty: true,
             OpenStdin: true,
             StdinOnce: false,
             HostConfig: {
-                Memory: 100 * 1024 * 1024,
-                CpuQuota: 50000,
+                Memory: 64 * 1024 * 1024,
+                CpuQuota: 30000,
                 NetworkMode: "none",
                 AutoRemove: false,
             },
@@ -55,30 +54,24 @@ ${data.code}
             stdin: true,
             stdout: true,
             stderr: true,
-            hijack: true, // <--- ADD THIS
+            hijack: true,
         });
 
-        let pythonIsReady = false;
-
+        let isFirstChunk = true;
         stream.on("data", (chunk) => {
             let output = chunk.toString();
 
-            // 1. Check for the Ready Signal
-            if (!pythonIsReady) {
-                if (output.includes(READY_SIGNAL)) {
-                    pythonIsReady = true;
-                    // Remove the signal and anything BEFORE it (the Docker handshake)
-                    output = output.split(READY_SIGNAL).pop();
-                } else {
-                    // Still receiving handshake/docker noise, ignore it
-                    return;
-                }
+            if (isFirstChunk) {
+                // This removes the "{"stream":true..." JSON if it exists
+                // and any null bytes/headers Docker TTY sends
+                output = output.replace(/^.*\{.*"hijack":true\}/s, "");
+                isFirstChunk = false;
             }
 
-            if (!output) return;
-
-            // 2. Handle Input Signal
+            // Handle input signal
             if (output.includes(INPUT_SIGNAL)) {
+                if (timeoutHandle) clearTimeout(timeoutHandle);
+
                 socket.emit("waiting_for_input");
                 output = output.split(INPUT_SIGNAL).join("");
             }
@@ -90,8 +83,6 @@ ${data.code}
 
         socket.on("stdin", (input) => {
             if (stream && stream.writable) {
-                // IMPORTANT: When Tty: true, we must write exactly what
-                // the user typed. Python is waiting for that newline.
                 stream.write(input);
             }
         });
@@ -102,19 +93,25 @@ ${data.code}
         const timeoutPromise = new Promise((_, reject) => {
             timeoutHandle = setTimeout(() => {
                 reject(new Error("Execution timeout"));
-            }, 30000); // Increased to 30s so YOU have time to type!
+            }, TIMEOUT_SECONDS * 1000);
         });
 
         await Promise.race([waitPromise, timeoutPromise]);
         clearTimeout(timeoutHandle);
 
         await container.remove({ force: true }).catch(() => {});
-        socket.emit("finished");
+
         socket.disconnect();
     } catch (err) {
         if (timeoutHandle) clearTimeout(timeoutHandle);
+
         socket.emit("error", err.message);
-        if (container) await container.remove({ force: true }).catch(() => {});
+
+        // Remove container if it exists (ignore any removal related errors)
+        if (container) {
+            await container.remove({ force: true }).catch(() => {});
+        }
+
         socket.disconnect();
     } finally {
         currentlyRunning--;
@@ -135,8 +132,9 @@ io.on("connection", (socket) => {
 
     socket.on("run", async (data) => {
         if (currentlyRunning >= MAX_CONCURRENT) {
-            log(`Queue full, adding to queue (${queue.length + 1} waiting)`);
             queue.push({ socket, data });
+
+            log(`Queue full, adding to queue (${queue.length} waiting)`);
         } else {
             currentlyRunning++;
             executeCode(socket, data);
