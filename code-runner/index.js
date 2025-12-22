@@ -6,6 +6,12 @@ const { log, warn, error } = require("./helpers.js");
 
 // Timeout
 const TIMEOUT_SECONDS = 7;
+const TIMEOUT_ERROR_MESSAGE =
+    "Terminated: Timeout - your program took too long to run.";
+
+// Max output
+const MAX_OUTPUT_SIZE = 512 * 1024;
+const MAX_OUTPUT_SIZE_ERROR_MESSAGE = "Terminated: Max output size exceeded.";
 
 // Queue
 const MAX_CONCURRENT = 10;
@@ -17,7 +23,34 @@ const INPUT_SIGNAL = "\x02\x05\x03";
 
 async function executeCode(socket, data) {
     let container = null;
+    let finished = false;
+
     let timeoutHandle = null;
+    let totalOutputSize = 0;
+
+    async function cleanup(reason) {
+        if (finished) return;
+        finished = true;
+
+        if (timeoutHandle) clearTimeout(timeoutHandle);
+
+        if (container) {
+            try {
+                await container.kill();
+            } catch {}
+            try {
+                await container.remove({ force: true });
+            } catch {}
+        }
+
+        if (socket.connected) {
+            if (reason) socket.emit("error", reason);
+            socket.disconnect();
+        }
+
+        currentlyRunning--;
+        processQueue();
+    }
 
     try {
         container = await docker.createContainer({
@@ -50,11 +83,18 @@ async function executeCode(socket, data) {
         });
 
         stream.on("data", (chunk) => {
-            let output = chunk.toString();
+            totalOutputSize += chunk.length;
 
-            output = output.replace(/^.*\{.*"hijack":true\}/s, "");
+            if (totalOutputSize > MAX_OUTPUT_SIZE) {
+                cleanup(MAX_OUTPUT_SIZE_ERROR_MESSAGE);
+                stream.destroy();
+                return;
+            }
 
-            // Handle input signal
+            let output = chunk
+                .toString()
+                .replace(/^.*\{.*"hijack":true\}/s, "");
+
             if (output.includes(INPUT_SIGNAL)) {
                 if (timeoutHandle) clearTimeout(timeoutHandle);
                 socket.emit("waiting_for_input");
@@ -76,31 +116,16 @@ async function executeCode(socket, data) {
 
         const waitPromise = container.wait();
         const timeoutPromise = new Promise((_, reject) => {
-            timeoutHandle = setTimeout(() => {
-                reject(new Error("Execution timeout"));
-            }, TIMEOUT_SECONDS * 1000);
+            timeoutHandle = setTimeout(
+                () => reject(new Error(TIMEOUT_ERROR_MESSAGE)),
+                TIMEOUT_SECONDS * 1000
+            );
         });
 
         await Promise.race([waitPromise, timeoutPromise]);
-        clearTimeout(timeoutHandle);
-
-        await container.remove({ force: true }).catch(() => {});
-
-        socket.disconnect();
+        await cleanup();
     } catch (err) {
-        if (timeoutHandle) clearTimeout(timeoutHandle);
-
-        socket.emit("error", err.message);
-
-        // Remove container if it exists (ignore any removal related errors)
-        if (container) {
-            await container.remove({ force: true }).catch(() => {});
-        }
-
-        socket.disconnect();
-    } finally {
-        currentlyRunning--;
-        processQueue();
+        await cleanup(err.message);
     }
 }
 

@@ -94,7 +94,7 @@ async function runCode() {
     socket.emit("run", { code: code });
 
     socket.on("output", (output) => {
-        editorOutput.value.value += output;
+        addEditorOutput(output);
     });
 
     // Server tells us when it's waiting for input
@@ -108,7 +108,7 @@ async function runCode() {
     });
 
     socket.on("error", (error) => {
-        editorOutput.value.value += "\nNastala chyba:\n" + error;
+        addEditorOutput("\nNastala chyba:\n" + error);
         waitingForInput.value = false;
     });
 
@@ -138,5 +138,10 @@ function getEditorText() {
     }
 
     return "";
+}
+
+function addEditorOutput(output) {
+    editorOutput.value.value += output;
+    editorOutput.value.scrollTop = editorOutput.value.scrollHeight;
 }
 </script>
