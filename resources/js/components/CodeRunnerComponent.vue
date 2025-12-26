@@ -75,6 +75,11 @@ const loading = ref(false);
 const waitingForInput = ref(false);
 const inputValue = ref("");
 
+// Buffered output to reduce frequent DOM writes
+let outputBuffer = "";
+let flushTimer = null;
+const FLUSH_INTERVAL_MS = 50;
+
 async function runCode() {
     if (loading.value) {
         return;
@@ -113,6 +118,9 @@ async function runCode() {
     });
 
     socket.on("disconnect", () => {
+        // flush any remaining buffered output and finish
+        flushOutput();
+
         loading.value = false;
         waitingForInput.value = false;
         socket = null;
@@ -141,7 +149,29 @@ function getEditorText() {
 }
 
 function addEditorOutput(output) {
-    editorOutput.value.value += output;
+    // Buffer output and schedule a flush to minimize expensive DOM writes
+    outputBuffer += output;
+
+    if (!flushTimer) {
+        flushTimer = setTimeout(() => {
+            flushTimer = null;
+            flushOutput();
+        }, FLUSH_INTERVAL_MS);
+    }
+}
+
+function flushOutput() {
+    if (!editorOutput.value) {
+        outputBuffer = "";
+        return;
+    }
+
+    if (outputBuffer.length == 0) return;
+
+    editorOutput.value.value += outputBuffer;
+
     editorOutput.value.scrollTop = editorOutput.value.scrollHeight;
+
+    outputBuffer = "";
 }
 </script>
