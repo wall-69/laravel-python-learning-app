@@ -67,6 +67,18 @@ async function executeCode(socket, data) {
         processQueue();
     }
 
+    function resetTimeout() {
+        if (timeoutHandle) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+        }
+
+        timeoutHandle = setTimeout(
+            () => cleanup(TIMEOUT_ERROR_MESSAGE),
+            TIMEOUT_SECONDS * 1000
+        );
+    }
+
     try {
         container = await docker.createContainer({
             Image: "fernefer/python-3.12-slim-student:1.0",
@@ -111,16 +123,7 @@ async function executeCode(socket, data) {
                 .replace(/^.*\{.*"hijack":true\}/s, "");
 
             if (output.includes(INPUT_SIGNAL)) {
-                // reset/rearm timeout to TIMEOUT_SECONDS whenever program waits for input
-                if (timeoutHandle) {
-                    clearTimeout(timeoutHandle);
-                    timeoutHandle = null;
-                }
-                // arm a new timeout for the input period
-                timeoutHandle = setTimeout(
-                    () => cleanup(TIMEOUT_ERROR_MESSAGE),
-                    TIMEOUT_SECONDS * 1000
-                );
+                resetTimeout();
 
                 socket.emit("waiting_for_input");
                 output = output.split(INPUT_SIGNAL).join("");
@@ -136,14 +139,7 @@ async function executeCode(socket, data) {
                 stream.write(input);
             }
 
-            // User provided input — reset input timeout so next input has full TIMEOUT_SECONDS
-            if (timeoutHandle) {
-                clearTimeout(timeoutHandle);
-                timeoutHandle = setTimeout(
-                    () => cleanup(TIMEOUT_ERROR_MESSAGE),
-                    TIMEOUT_SECONDS * 1000
-                );
-            }
+            resetTimeout();
         });
 
         await container.start();
@@ -178,6 +174,8 @@ async function executeCode(socket, data) {
 
         await cleanup();
     } catch (err) {
+        error("Execution error: " + err.message);
+
         await cleanup(err.message);
     }
 }
