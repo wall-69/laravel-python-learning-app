@@ -18,7 +18,7 @@ const MAX_OUTPUT_SIZE = 512 * 1024;
 const MAX_OUTPUT_SIZE_ERROR_MESSAGE = "Terminated: Max output size exceeded.";
 
 // Queue
-const MAX_CONCURRENT = 4;
+const MAX_CONCURRENT = 10;
 let currentlyRunning = 0;
 const queue = [];
 
@@ -32,6 +32,8 @@ async function executeCode(socket, data) {
     let timeoutHandle = null;
     let totalOutputSize = 0;
 
+    socket.on("disconnect", () => cleanup("User disconnected"));
+
     async function cleanup(reason) {
         if (finished) return;
         finished = true;
@@ -40,9 +42,17 @@ async function executeCode(socket, data) {
 
         if (container) {
             try {
-                await container.kill().catch(() => {});
+                // Check state before killing
+                const state = await container.inspect().catch(() => null);
+                if (state && state.State.Running) {
+                    await container.kill().catch(() => {});
+                }
+
+                // Always try to remove if its not already gone
                 await container.remove({ force: true }).catch(() => {});
-            } catch (err) {}
+            } catch (err) {
+                error("Cleanup error: " + err.message);
+            }
         }
 
         if (socket.connected) {
