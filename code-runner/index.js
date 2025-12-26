@@ -1,8 +1,20 @@
 const http = require("http").createServer();
-const io = require("socket.io")(http, { cors: { origin: "*" } });
+const io = require("socket.io")(http, {
+    cors: {
+        origin: "http://127.0.0.1:8000",
+        methods: ["GET", "POST"],
+        credentials: true,
+    },
+});
 const Docker = require("dockerode");
 const docker = new Docker();
 const { log, warn, error } = require("./helpers.js");
+const axios = require("axios");
+
+// TODO use env?
+// Laravel validation endpoint and server secret
+const LARAVEL_VALIDATE_URL = "http://127.0.0.1:8000/internal/validate-socket";
+const LARAVEL_INTERNAL_KEY = "BwQkW3OPvrYc5Soq45LE1lqMMqKjyZ8l";
 
 // Memory
 const MEMORY_LIMIT_ERROR_MESSAGE =
@@ -215,6 +227,45 @@ io.on("connection", (socket) => {
             queue.splice(index, 1);
         }
     });
+});
+
+// Authentication middleware
+io.use(async (socket, next) => {
+    try {
+        const headers = {};
+
+        const cookie = socket.handshake.headers.cookie;
+        if (cookie) {
+            headers.Cookie = cookie;
+        }
+
+        headers["x-internal-key"] = LARAVEL_INTERNAL_KEY;
+
+        const response = await axios.post(
+            LARAVEL_VALIDATE_URL,
+            {},
+            { headers, timeout: 2000 }
+        );
+
+        if (response.data && response.data.success) {
+            return next();
+        }
+
+        return next(new Error("not_authenticated"));
+    } catch (err) {
+        // Distinguish 401 (not logged in) vs other authorization errors
+        const status = err && err.response && err.response.status;
+
+        if (status === 401) {
+            // Client should redirect to login
+            return next(new Error("not_authenticated"));
+        }
+
+        // Other failures: emit an authorization error
+        error("Auth validation error: " + (err && err.message));
+
+        return next(new Error("auth_error"));
+    }
 });
 
 http.listen(3000, () => log("Code Runner active on 3000"));

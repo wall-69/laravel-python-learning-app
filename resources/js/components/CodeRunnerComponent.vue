@@ -39,7 +39,7 @@
 import { io } from "socket.io-client";
 import * as monaco from "monaco-editor";
 import { onMounted, ref, useSlots, nextTick } from "vue";
-import { normalizeIndentation } from "../helpers";
+import { addAlert, normalizeIndentation } from "../helpers";
 
 const slots = useSlots();
 
@@ -90,7 +90,10 @@ async function runCode() {
     waitingForInput.value = false;
     loading.value = true;
 
-    socket = io("http://localhost:3000", { reconnection: false });
+    socket = io("http://127.0.0.1:3000", {
+        reconnection: false,
+        withCredentials: true,
+    });
 
     socket.emit("run", { code: code });
 
@@ -118,6 +121,30 @@ async function runCode() {
         addConsoleOutput("\nNastala chyba:\n" + error);
         waitingForInput.value = false;
         editorConsole.value.readOnly = true;
+    });
+
+    socket.on("connect_error", (error) => {
+        loading.value = false;
+        waitingForInput.value = false;
+        socket.disconnect();
+
+        switch (error.message) {
+            case "not_authenticated":
+                addAlert(
+                    "warning",
+                    "Pre používanie spúšťača kódu sa musíte prihlásiť."
+                );
+                break;
+
+            case "auth_error":
+                addAlert(
+                    "danger",
+                    "Nepodarilo sa overiť, či ste prihlásení. Prosím, obnovte stránku a skúste to znova alebo nás kontaktujte."
+                );
+                break;
+            default:
+                break;
+        }
     });
 
     socket.on("disconnect", () => {

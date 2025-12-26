@@ -12,6 +12,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProgressController;
 use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 // Proxy
 if (!app()->isProduction()) {
@@ -26,6 +29,22 @@ Route::get("/", function () {
         "latestLectures" => $latestLectures
     ]);
 })->name("index");
+
+// Internal endpoint used by the external code-runner service to validate that the request comes from an authenticated user.
+// Exempt from CSRF because its called server-to-server by the code-runner.
+Route::post("/internal/validate-socket", function (Request $request) {
+    $internalKey = env("APP_INTERNAL_KEY");
+
+    if (!$internalKey || $request->header("x-internal-key") != $internalKey) {
+        return response()->json(["success" => false], 401);
+    }
+
+    if (!Auth::check()) {
+        return response()->json(["success" => false], 401);
+    }
+
+    return response()->json(["success" => true]);
+})->withoutMiddleware([VerifyCsrfToken::class]);
 
 // Auth
 Route::controller(AuthController::class)->group(function () {
