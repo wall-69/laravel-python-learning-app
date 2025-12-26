@@ -38,7 +38,10 @@ async function executeCode(socket, data) {
         if (finished) return;
         finished = true;
 
-        if (timeoutHandle) clearTimeout(timeoutHandle);
+        if (timeoutHandle) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+        }
 
         if (container) {
             try {
@@ -48,7 +51,7 @@ async function executeCode(socket, data) {
                     await container.kill().catch(() => {});
                 }
 
-                // Always try to remove if its not already gone
+                // Try to remove if its not already gone
                 await container.remove({ force: true }).catch(() => {});
             } catch (err) {
                 error("Cleanup error: " + err.message);
@@ -108,7 +111,17 @@ async function executeCode(socket, data) {
                 .replace(/^.*\{.*"hijack":true\}/s, "");
 
             if (output.includes(INPUT_SIGNAL)) {
-                if (timeoutHandle) clearTimeout(timeoutHandle);
+                // reset/rearm timeout to TIMEOUT_SECONDS whenever program waits for input
+                if (timeoutHandle) {
+                    clearTimeout(timeoutHandle);
+                    timeoutHandle = null;
+                }
+                // arm a new timeout for the input period
+                timeoutHandle = setTimeout(
+                    () => cleanup(TIMEOUT_ERROR_MESSAGE),
+                    TIMEOUT_SECONDS * 1000
+                );
+
                 socket.emit("waiting_for_input");
                 output = output.split(INPUT_SIGNAL).join("");
             }
@@ -118,23 +131,37 @@ async function executeCode(socket, data) {
             }
         });
 
-        socket.on("stdin", (input) => {
+        socket.on("input", (input) => {
             if (stream && stream.writable) {
                 stream.write(input);
+            }
+
+            // User provided input — reset input timeout so next input has full TIMEOUT_SECONDS
+            if (timeoutHandle) {
+                clearTimeout(timeoutHandle);
+                timeoutHandle = setTimeout(
+                    () => cleanup(TIMEOUT_ERROR_MESSAGE),
+                    TIMEOUT_SECONDS * 1000
+                );
             }
         });
 
         await container.start();
 
-        const waitPromise = container.wait();
-        const timeoutPromise = new Promise((_, reject) => {
-            timeoutHandle = setTimeout(
-                () => reject(new Error(TIMEOUT_ERROR_MESSAGE)),
-                TIMEOUT_SECONDS * 1000
-            );
-        });
+        // Start a timeout that will cleanup if the whole run takes too long
+        timeoutHandle = setTimeout(
+            () => cleanup(TIMEOUT_ERROR_MESSAGE),
+            TIMEOUT_SECONDS * 1000
+        );
 
-        await Promise.race([waitPromise, timeoutPromise]);
+        // Wait for container to finish. If timeout triggers, cleanup() will kill the container
+        await container.wait();
+
+        // If we reached here, the container finished; clear any remaining timeout
+        if (timeoutHandle) {
+            clearTimeout(timeoutHandle);
+            timeoutHandle = null;
+        }
 
         let inspect;
         try {

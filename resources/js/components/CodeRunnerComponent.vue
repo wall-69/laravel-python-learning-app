@@ -15,28 +15,19 @@
             Spustiť
             <i v-show="loading" class="spinner-border spinner-border-sm"></i>
         </button>
-        <h3 class="mt-3">Výstup</h3>
+        <h3 class="mt-3">Konzola</h3>
         <textarea
-            ref="editorOutput"
-            class="form-control"
-            style="height: 200px"
+            ref="editorConsole"
+            @keydown="onConsoleKeyDown"
+            @click="onConsoleClick"
+            @select="onConsoleSelect"
+            @paste.prevent
+            @cut.prevent
+            class="form-control font-monospace rounded-0"
+            style="height: 200px; box-shadow: none"
+            spellcheck="false"
             readonly
         ></textarea>
-
-        <!-- Input field for stdin -->
-        <div v-if="waitingForInput" class="mt-2">
-            <input
-                ref="stdinInput"
-                v-model="inputValue"
-                @keydown.enter="sendInput"
-                type="text"
-                class="form-control"
-                placeholder="Zadajte vstup a stlačte Enter..."
-            />
-            <button @click="sendInput" class="btn btn-secondary btn-sm mt-1">
-                Odoslať
-            </button>
-        </div>
 
         <div ref="editorValue" class="d-none" style="white-space: pre">
             <slot name="code"></slot>
@@ -54,41 +45,47 @@ const slots = useSlots();
 
 onMounted(() => {
     if (editorContainer.value) {
-        editor = monaco.editor.create(editorContainer.value, {
+        editorOptions = {
             language: "python",
             automaticLayout: true,
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
-        });
+        };
+
+        editor = monaco.editor.create(editorContainer.value, editorOptions);
         editor.setValue(normalizeIndentation(editorValue.value.innerText));
     }
 });
 
 let editor = null;
+let editorOptions = {};
 let socket = null;
 const editorContainer = ref(null);
-const editorOutput = ref(null);
+const editorConsole = ref(null);
 const editorValue = ref(null);
-const stdinInput = ref(null);
 const loading = ref(false);
-const waitingForInput = ref(false);
-const inputValue = ref("");
 
 // Buffered output to reduce frequent DOM writes
 let outputBuffer = "";
 let flushTimer = null;
 const FLUSH_INTERVAL_MS = 50;
 
+// Console input
+const waitingForInput = ref(false);
+const inputValue = ref("");
+let lockedLength = 0;
+
 async function runCode() {
     if (loading.value) {
         return;
     }
+
     const code = getEditorText();
     if (!code) {
         return;
     }
 
-    editorOutput.value.value = "";
+    editorConsole.value.value = "";
     inputValue.value = "";
     waitingForInput.value = false;
     loading.value = true;
@@ -98,26 +95,33 @@ async function runCode() {
     socket.emit("run", { code: code });
 
     socket.on("output", (output) => {
-        addEditorOutput(output);
+        addConsoleOutput(output);
     });
 
-    // Server tells us when it's waiting for input
     socket.on("waiting_for_input", (waiting) => {
         waitingForInput.value = true;
+
+        // Mark current output as locked (immutable) and make console writable
+        lockedLength = editorConsole.value
+            ? editorConsole.value.value.length
+            : 0;
+        editorConsole.value.readOnly = false;
+
         nextTick(() => {
-            if (stdinInput.value) {
-                stdinInput.value.focus();
+            if (editorConsole.value) {
+                editorConsole.value.focus();
             }
         });
     });
 
     socket.on("error", (error) => {
-        addEditorOutput("\nNastala chyba:\n" + error);
+        addConsoleOutput("\nNastala chyba:\n" + error);
         waitingForInput.value = false;
+        editorConsole.value.readOnly = true;
     });
 
     socket.on("disconnect", () => {
-        // flush any remaining buffered output and finish
+        // Flush any remaining buffered output and finish
         flushOutput();
 
         loading.value = false;
@@ -132,11 +136,21 @@ function sendInput() {
     }
 
     // Send to server with newline
-    socket.emit("stdin", inputValue.value + "\n");
+    socket.emit("input", inputValue.value + "\n");
 
-    // Clear input
+    // Append the entered line (and newline) to the console and make it immutable
+    if (editorConsole.value) {
+        editorConsole.value.value = editorConsole.value.value.substr(
+            0,
+            lockedLength
+        );
+        lockedLength = editorConsole.value.value.length;
+    }
+
     inputValue.value = "";
     waitingForInput.value = false;
+
+    editorConsole.value.readOnly = true;
 }
 
 function getEditorText() {
@@ -147,7 +161,7 @@ function getEditorText() {
     return "";
 }
 
-function addEditorOutput(output) {
+function addConsoleOutput(output) {
     // Buffer output and schedule a flush to minimize expensive DOM writes
     outputBuffer += output;
 
@@ -160,17 +174,110 @@ function addEditorOutput(output) {
 }
 
 function flushOutput() {
-    if (!editorOutput.value) {
+    if (!editorConsole.value) {
         outputBuffer = "";
         return;
     }
 
     if (outputBuffer.length == 0) return;
 
-    editorOutput.value.value += outputBuffer;
+    editorConsole.value.value += outputBuffer;
 
-    editorOutput.value.scrollTop = editorOutput.value.scrollHeight;
+    editorConsole.value.scrollTop = editorConsole.value.scrollHeight;
+
+    // Update lockedLength to reflect immutable printed output
+    lockedLength = editorConsole.value.value.length;
 
     outputBuffer = "";
+}
+
+function onConsoleKeyDown(e) {
+    if (!waitingForInput.value) {
+        return;
+    }
+    const start = editorConsole.value.selectionStart;
+    const end = editorConsole.value.selectionEnd;
+    const hasSelection = start !== end;
+
+    // Handle Ctrl/Cmd + A to select only editable area
+    if ((e.ctrlKey || e.metaKey) && e.key === "a") {
+        e.preventDefault();
+        editorConsole.value.setSelectionRange(
+            lockedLength,
+            editorConsole.value.value.length
+        );
+        return;
+    }
+
+    // Block backspace before locked area
+    if (e.key === "Backspace") {
+        if (hasSelection) {
+            if (end <= lockedLength || start < lockedLength) {
+                e.preventDefault();
+            }
+        } else {
+            if (start <= lockedLength) {
+                e.preventDefault();
+            }
+        }
+    }
+
+    // Block delete before locked area
+    if (e.key === "Delete" && start < lockedLength) {
+        e.preventDefault();
+    }
+
+    // Block left arrow before locked area
+    if (e.key === "ArrowLeft" && start <= lockedLength) {
+        e.preventDefault();
+    }
+
+    // Handle Enter key to send input
+    if (e.key === "Enter") {
+        e.preventDefault();
+
+        sendInput();
+
+        if (editorConsole.value) {
+            editorConsole.value.readOnly = true;
+        }
+    }
+
+    requestAnimationFrame(() => {
+        const full = editorConsole.value.value;
+        inputValue.value = full.slice(lockedLength);
+    });
+}
+
+function onConsoleClick() {
+    if (!waitingForInput.value) {
+        return;
+    }
+
+    // Move cursor to the end if clicked before locked area
+    if (editorConsole.value.selectionStart < lockedLength) {
+        const end = editorConsole.value.value.length;
+        editorConsole.value.selectionStart = end;
+        editorConsole.value.selectionEnd = end;
+    }
+}
+
+function onConsoleSelect() {
+    if (!waitingForInput.value) {
+        return;
+    }
+
+    const start = editorConsole.value.selectionStart;
+    const end = editorConsole.value.selectionEnd;
+
+    // If selection extends into locked area, constrain it
+    if (start < lockedLength || end < lockedLength) {
+        requestAnimationFrame(() => {
+            editorConsole.value.setSelectionRange(
+                Math.max(lockedLength, start),
+                Math.max(lockedLength, end)
+            );
+        });
+    }
 }
 </script>
