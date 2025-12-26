@@ -9,7 +9,7 @@ const MEMORY_LIMIT_ERROR_MESSAGE =
     "Terminated: Memory limit exceeded - your program used too much memory.";
 
 // Timeout
-const TIMEOUT_SECONDS = 7;
+const TIMEOUT_SECONDS = 5;
 const TIMEOUT_ERROR_MESSAGE =
     "Terminated: Timeout - your program took too long to run.";
 

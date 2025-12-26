@@ -45,7 +45,6 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { io } from "socket.io-client";
 import * as monaco from "monaco-editor";
 import { onMounted, ref, useSlots, nextTick } from "vue";
