@@ -136,6 +136,11 @@
                     </exercise>
                 @break
 
+                {{-- Revision --}}
+                @case('revision')
+                    <x-lectures.revision :block-data="$blockData"></x-lectures.revision>
+                @break
+
                 @default
             @endswitch
         @endforeach
