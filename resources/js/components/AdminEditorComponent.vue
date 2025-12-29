@@ -25,6 +25,7 @@ import CodeBlockTool from "../editorjs/tools/CodeBlockTool.js";
 import QuizTool from "../editorjs/tools/QuizTool.js";
 import ExerciseTool from "..//editorjs/tools/ExerciseTool.js";
 import RevisionTool from "../editorjs/tools/RevisionTool.js";
+import FAQTool from "../editorjs/tools/FAQTool.js";
 
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
@@ -187,6 +188,10 @@ function initEditor() {
             },
             revision: {
                 class: RevisionTool,
+                inlineToolbar: true,
+            },
+            faq: {
+                class: FAQTool,
                 inlineToolbar: true,
             },
         },

@@ -3,6 +3,8 @@
 @php
     $blockType = $block->type;
     $blockData = $block->data;
+
+    $faqIdx = 0;
 @endphp
 @switch($blockType)
     @case('header')
@@ -119,6 +121,14 @@
 
     @case('revision')
         <x-lectures.revision :block-data="$blockData"></x-lectures.revision>
+    @break
+
+    @case('faq')
+        @php
+            $faqIdx++;
+        @endphp
+
+        <x-lectures.faq :block-data="$blockData" :faq-idx="$faqIdx"></x-lectures.faq>
     @break
 
     @case('columns')
