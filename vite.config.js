@@ -5,6 +5,9 @@ import monacoEditorEsmPlugin from "vite-plugin-monaco-editor-esm";
 import string from "vite-plugin-string";
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ["@coolbytes/editorjs-delimiter", "@calumk/editorjs-columns"],
+    },
     plugins: [
         laravel({
             input: ["resources/sass/app.scss", "resources/js/app.js"],

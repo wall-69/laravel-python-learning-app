@@ -18,6 +18,7 @@
         "vite-plugin-string": "^1.2.3"
     },
     "dependencies": {
+        "@calumk/editorjs-columns": "^0.3.2",
         "@coolbytes/editorjs-delimiter": "^1.0.4",
         "@editorjs/editorjs": "^2.30.8",
         "@editorjs/header": "^2.8.8",
