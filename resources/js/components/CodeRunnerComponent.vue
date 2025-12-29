@@ -143,6 +143,10 @@ async function runCode() {
                 );
                 break;
             default:
+                addAlert(
+                    "danger",
+                    "Nastala chyba pri spúšťaní kódu, skúste to znova alebo nás kontaktujte."
+                );
                 break;
         }
     });
