@@ -9,6 +9,7 @@ const io = require("socket.io")(http, {
 const Docker = require("dockerode");
 const docker = new Docker();
 const { log, warn, error } = require("./helpers.js");
+const { randomBytes } = require("crypto");
 const axios = require("axios");
 
 // TODO use env?
@@ -38,6 +39,8 @@ const queue = [];
 const INPUT_SIGNAL = "\x02\x05\x03";
 
 async function executeCode(socket, data) {
+    const execId = randomBytes(6).toString("hex");
+
     let container = null;
     let finished = false;
 
@@ -66,7 +69,7 @@ async function executeCode(socket, data) {
                 // Try to remove if its not already gone
                 await container.remove({ force: true }).catch(() => {});
             } catch (err) {
-                error("Cleanup error: " + err.message);
+                error("[" + execId + "] Cleanup error: " + err.message);
             }
         }
 
@@ -154,6 +157,7 @@ async function executeCode(socket, data) {
             resetTimeout();
         });
 
+        log(`[${execId}] Starting container (ID: ${container.id})`);
         await container.start();
 
         // Start a timeout that will cleanup if the whole run takes too long
@@ -186,7 +190,7 @@ async function executeCode(socket, data) {
 
         await cleanup();
     } catch (err) {
-        error("Execution error: " + err.message);
+        error("[" + execId + "] Execution error: " + err.message);
 
         await cleanup(err.message);
     }
