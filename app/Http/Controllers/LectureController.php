@@ -83,12 +83,13 @@ class LectureController extends Controller
         if ($user) {
             $completedExercises = $user->completedExercises->keyBy("exercise_id");
             $blocks = $lecture->blocks;
-            foreach ($lecture->blocks->blocks as &$block) {
+
+            foreach ($blocks->blocks as &$block) {
                 if ($block->type == "exercise") {
                     $exerciseId = $block->id;
 
                     if ($completedExercises->has($exerciseId)) {
-                        $block->data->code = $completedExercises[$exerciseId]["code"];
+                        $block->data->code = $completedExercises->get($exerciseId)->code;
                     }
                 }
             }
