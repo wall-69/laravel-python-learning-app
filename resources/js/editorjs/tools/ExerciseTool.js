@@ -212,9 +212,7 @@ export default class ExerciseBlock {
 
         // 4. Type check: x is type
         if (testCase.includes(" is ")) {
-            let [namePart, expectedTypePart] = testCase.split("is");
-            let name = namePart.trim();
-            let expected = expectedTypePart.trim();
+            let [name, expected] = testCase.split(" is ").map((s) => s.trim());
 
             return {
                 type: "type",

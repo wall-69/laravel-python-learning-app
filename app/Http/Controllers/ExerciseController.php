@@ -74,121 +74,68 @@ class ExerciseController extends Controller
 
         // Parse tests, create test cases & checks
         $tests = json_decode($exercise->tests, true);
-        $checks = collect();
+        $checks = [];
         $testCases = [];
+        $inputs = []; // TODO: add mocked inputs support later
 
         foreach ($tests as $test) {
             switch ($test["type"]) {
                 case "variable":
+                    $checks[] = [
+                        "type" => "variable",
+                        "name" => $test["variable"]
+                    ];
                     $testCases[] = [
                         "type" => "variable",
                         "name" => $test["variable"],
-                        "test" => "print({$test["raw"]})"
+                        "expected" => $test["raw"]
                     ];
-                    $checks->push(["type" => "variable", "name" => $test["variable"]]);
                     break;
 
                 case "function":
-                    $args = implode(", ", $test["args"]);
-
+                    $checks[] = [
+                        "type" => "function",
+                        "name" => $test["name"],
+                        "arg_count" => count($test["args"])
+                    ];
                     $testCases[] = [
                         "type" => "function",
                         "name" => $test["name"],
                         "args" => $test["args"],
-                        "expected" => $test["expected"],
-                        "test" => "print({$test["name"]}({$args}) == {$test["expected"]})",
+                        "expected" => $test["expected"]
                     ];
-                    $checks->push(["type" => "function", "name" => $test["name"], "args" => $test["args"]]);
                     break;
 
                 case "print":
                     $testCases[] = [
                         "type" => "print",
-                        "expected" => $test["expected"],
-                        "test" => "print({$test["expected"]} in __user_output)"
+                        "expected" => trim($test["expected"], "\"")
                     ];
                     break;
 
                 case "type":
-                    $checks->push([
+                    $checks[] = [
                         "type" => "type",
                         "name" => $test["name"],
                         "expected" => $test["expected"]
-                    ]);
+                    ];
+                    $testCases[] = [
+                        "type" => "type",
+                        "name" => $test["name"],
+                        "expected" => $test["expected"]
+                    ];
                     break;
             }
         }
-
-        // Put type checks at the end (so variable checks are first)
-        $checks = collect($checks)
-            ->sortBy(function ($check) {
-                return $check["type"] === "type";
-            })
-            ->values()
-            ->toArray();
 
         // Temp file
         $tempFile = storage_path("app/exercise_" . uniqid() . ".py");
+        file_put_contents($tempFile, $request->code);
 
-        // Markers
-        $CHECKS_MARKER = "CHECKS";
-        $TESTS_MARKER = "TESTS";
-        $TESTS_END_MARKER = "TESTS END";
-
-        // Take over stdout
-        $code = <<<TAKEOVER
-        import sys
-        from io import StringIO
-        
-        __old_stdout = sys.stdout
-        __buffer = StringIO()
-        sys.stdout = __buffer\n
-        TAKEOVER;
-
-        $code .= $request->code . "\n";
-
-        // Give back stdout
-        $code .= <<<GIVE
-        sys.stdout = __old_stdout
-        __user_output = __buffer.getvalue().splitlines()\n
-        GIVE;
-
-        // Checks
-        $code .= "print('$CHECKS_MARKER')\n";
-        $code .= "import inspect\n";
-
-        foreach ($checks as $check) {
-            switch ($check["type"]) {
-                case "variable":
-                    $code .= "print('{$check["name"]}' in locals())" . "\n";
-                    break;
-
-                case "function":
-                    $argCount = count($check['args']);
-
-                    $code .= "print('{$check["name"]}' in locals()"
-                        . " and callable(locals()['{$check["name"]}'])"
-                        . " and len(inspect.signature(locals()['{$check["name"]}']).parameters) == $argCount)"
-                        . "\n";
-                    break;
-
-                case "type":
-                    $code .= "print('{$check["name"]}' in locals() and type({$check["name"]}) is {$check["expected"]})\n";
-                    break;
-            }
-        }
-
-        // Tests
-        $code .= "print('$TESTS_MARKER')\n";
-
-        foreach ($testCases as $testCase) {
-            $code .= $testCase["test"] . "\n";
-        }
-
-        $code .= "print('$TESTS_END_MARKER')\n";
-
-        // Put the users code & tests into the temp file
-        file_put_contents($tempFile, $code);
+        // Prepare environment variables
+        $checksJson = json_encode($checks);
+        $testsJson = json_encode($testCases);
+        $inputsJson = implode("\n", array_map(fn($v) => (string)$v, $inputs));
 
         // Run inside docker
         $command = [
@@ -200,11 +147,17 @@ class ExerciseController extends Controller
             "--memory=100m",
             "--tmpfs",
             "/code:rw,size=15m",
+            "-e",
+            "PYTHON_CHECKS=$checksJson",
+            "-e",
+            "PYTHON_TESTS=$testsJson",
+            "-e",
+            "PYTHON_INPUTS=$inputsJson",
             "-v",
             "$tempFile:/code/main.py:ro",
             "-w",
             "/code",
-            "python:3.12-slim",
+            "fernefer/python-3.12-slim-student-exercise:1.0",
             "python3",
             "/code/main.py"
         ];
@@ -218,11 +171,19 @@ class ExerciseController extends Controller
         // Error message for checks
         $error = mb_convert_encoding($process->getErrorOutput(), "UTF-8", "auto");
         // The output (in lines) of checks & tests
-        $outputLines = explode("\n", $process->getOutput());
+        $outputLines = explode("\n", trim($process->getOutput()));
+
+        if ($error) {
+            return response()->json([
+                "test_results" => [],
+                "error" => $error,
+                "user_output" => ""
+            ]);
+        }
 
         // Go through all checks
-        $checksStart = array_search($CHECKS_MARKER, $outputLines);
-        $checksEnd = array_search($TESTS_MARKER, $outputLines);
+        $checksStart = array_search("CHECKS", $outputLines);
+        $checksEnd = array_search("TESTS", $outputLines);
         foreach (array_slice($outputLines, $checksStart + 1, $checksEnd - $checksStart - 1) as $i => $line) {
             if ($line == "False") {
                 $check = $checks[$i];
@@ -248,12 +209,13 @@ class ExerciseController extends Controller
         // Go through all tests & keep track of the test results
         $testResults = collect();
 
-        $testsStart = array_search($TESTS_MARKER, $outputLines);
-        $testsEnd = array_search($TESTS_END_MARKER, $outputLines);
+        $testsStart = array_search("TESTS", $outputLines);
+        $testsEnd = array_search("TESTS END", $outputLines);
         foreach (array_slice($outputLines, $testsStart + 1, $testsEnd - $testsStart - 1) as $i => $line) {
             $testCase = $testCases[$i];
+            $success = $line == "True";
 
-            if ($line == "False") {
+            if (!$success) {
                 switch ($testCase["type"]) {
                     case "variable":
                         $message = "Premenná <b>{$testCase["name"]}</b> nie je správna.";
@@ -264,11 +226,13 @@ class ExerciseController extends Controller
                         break;
 
                     case "print":
-                        $message = "<b>{$testCase["expected"]}</b> nebolo vypísané do konzole.";
+                        $message = "<b>\"{$testCase["expected"]}\"</b> nebolo vypísané do konzole.";
+                        break;
+
+                    case "type":
+                        $message = "Premenná <b>{$testCase["name"]}</b> nemá správny dátový typ.";
                         break;
                 }
-
-                $success = false;
             } else {
                 switch ($testCase["type"]) {
                     case "variable":
@@ -280,11 +244,13 @@ class ExerciseController extends Controller
                         break;
 
                     case "print":
-                        $message = "<b>{$testCase["expected"]}</b> bolo vypísané do konzole.";
+                        $message = "<b>\"{$testCase["expected"]}\"</b> bolo vypísané do konzole.";
+                        break;
+
+                    case "type":
+                        $message = "Premenná <b>{$testCase["name"]}</b> má správny dátový typ.";
                         break;
                 }
-
-                $success = true;
             }
 
             $testResults->push([
@@ -292,6 +258,13 @@ class ExerciseController extends Controller
                 "message" => $message
             ]);
         }
+
+        // Get user output
+        $userOutput = "";
+        $outputStart = array_search("USER OUTPUT", $outputLines);
+        $outputEnd = array_search("USER OUTPUT END", $outputLines);
+        $userOutput = implode("\n", array_slice($outputLines, $outputStart + 1, $outputEnd - $outputStart - 1));
+        $userOutput = trim(mb_convert_encoding($userOutput, "UTF-8", "auto"));
 
         // If this exercise was already completed and everything is okay, we resave the users submitted code
         $allTestsPassed = $testResults->every(fn($testResult) => $testResult["success"]);
@@ -305,6 +278,7 @@ class ExerciseController extends Controller
         return response()->json([
             "test_results" => $testResults,
             "error" => $error,
+            "user_output" => $userOutput,
             ...($successfulCompletion ? ["celebrate" => "Skvele! Cvičenie si úspešne zvládol, len tak ďalej!"] : [])
         ]);
     }

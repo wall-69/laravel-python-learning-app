@@ -35,8 +35,17 @@
             <i v-show="loading" class="spinner-border spinner-border-sm"></i>
         </button>
 
+        <h3 class="mt-2 mb-0">Konzola</h3>
+        <textarea
+            ref="editorConsole"
+            class="form-control font-monospace rounded-0"
+            style="height: 200px; box-shadow: none"
+            spellcheck="false"
+            readonly
+        ></textarea>
+
         <h3 class="mt-2 mb-0">Kontrola</h3>
-        <div v-if="testResults.length > 0 && !error" class="d-flex flex-column">
+        <div v-if="testResults.length > 0" class="d-flex flex-column">
             <div
                 v-for="test in testResults"
                 class="px-2 py-1 border d-flex flex-column flex-md-row gap-1"
@@ -59,13 +68,6 @@
                 <p class="mb-0" v-html="test.message"></p>
             </div>
         </div>
-        <textarea
-            v-else-if="error"
-            class="form-control"
-            style="height: 200px"
-            readonly
-            :value="error"
-        ></textarea>
         <p v-else class="mb-0">
             Keď svoje riešenie odovzdáš, tak bude skontrolované, či je správne.
         </p>
@@ -113,10 +115,10 @@ onMounted(() => {
 let editor = null;
 const editorContainer = ref(null);
 const editorValue = ref(null);
+const editorConsole = ref(null);
 
 const loading = ref(false);
 const testResults = ref([]);
-const error = ref("");
 
 const completedExercises = inject("completedExercises");
 
@@ -145,8 +147,8 @@ async function runCode() {
 
         if (response.status === 200) {
             if (response.data.error) {
-                error.value = response.data.error;
                 testResults.value = [];
+                editorConsole.value.value = response.data.error;
                 return;
             }
 
@@ -154,10 +156,11 @@ async function runCode() {
                 addAlert("celebrate", response.data.celebrate);
             }
 
-            error.value = "";
             testResults.value = response.data.test_results;
+            editorConsole.value.value = response.data.user_output;
         }
     } catch (error) {
+        // TODO SHOW ALERT INSTEAD OF REDIRECTION
         // Server responded with a status outside 2xx
         if (error.response) {
             // Not logged in
@@ -172,21 +175,21 @@ async function runCode() {
                 return;
             }
 
-            error.value = "Error: " + error.response.statusText;
             testResults.value = [];
+            editorConsole.value.value = "Error: " + error.response.statusText;
         }
 
         // No response
         else if (error.request) {
-            error.value =
-                "Error: Server neodpovedal. Skúste znova alebo neskôr.";
             testResults.value = [];
+            editorConsole.value.value =
+                "Error: Server neodpovedal. Skúste znova alebo neskôr.";
         }
 
         // Other errors
         else {
-            error.value = "Error: " + error.message;
             testResults.value = [];
+            editorConsole.value.value = "Error: " + error.message;
         }
     } finally {
         loading.value = false;
