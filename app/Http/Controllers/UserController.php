@@ -14,6 +14,15 @@ class UserController extends Controller
 {
     // GET
 
+    public function adminIndex(Request $request)
+    {
+        $users = User::orderBy("created_at", "desc")->paginate(20);
+
+        return view("admin.users.index", [
+            "users" => $users
+        ]);
+    }
+
     public function profile(Request $request, string $firstName, string $lastName, User $user)
     {
         $expectedFirstName = strtolower($user->first_name);

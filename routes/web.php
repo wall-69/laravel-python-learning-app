@@ -10,6 +10,7 @@ use App\Http\Controllers\LectureController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProgressController;
+use App\Http\Middleware\EnsureUserIsNotBanned;
 use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -122,6 +123,14 @@ Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () 
         Route::get("/", "dashboard")->name("dashboard");
 
         Route::post("/img/upload", "uploadImage")->name("upload-image");
+
+        // User ban/unban
+        Route::post("/users/{user}/ban", "banUser")->name("users.ban");
+        Route::post("/users/{user}/unban", "unbanUser")->name("users.unban");
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get("/users", "adminIndex")->name("users");
     });
 
     Route::controller(CategoryController::class)->group(function () {

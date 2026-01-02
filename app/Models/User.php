@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -77,6 +79,14 @@ class User extends Authenticatable implements MustVerifyEmail
             "email_verified_at" => "datetime",
             "password" => "hashed",
         ];
+    }
+
+    #[Scope]
+    protected function search(Builder $query, string $value)
+    {
+        $query->where("first_name", "LIKE", "%$value%")
+            ->orWhere("last_name", "LIKE", "%$value%")
+            ->orWhere("email", "LIKE", "%$value%");
     }
 
     public function getProfileUrlAttribute(): string

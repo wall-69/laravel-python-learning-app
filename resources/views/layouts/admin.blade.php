@@ -51,6 +51,13 @@
                                 Kategórie
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.users') }}"
+                                class="@active('admin.users') nav-link d-flex align-items-center gap-2">
+                                <i class="bx bxs-users bx-md"></i>
+                                Používatelia
+                            </a>
+                        </li>
                     </ul>
 
                     <ul class="d-flex d-md-none nav nav-pills nav-fill flex-column" style="margin-top: 60px">
@@ -70,6 +77,12 @@
                             <a href="{{ route('admin.categories') }}"
                                 class="@active('admin.categories') nav-link py-3 border-bottom rounded-0 d-flex justify-content-center align-items-center gap-2">
                                 <i class="bx bxs-categories bx-lg"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.users') }}"
+                                class="@active('admin.users') nav-link py-3 border-bottom rounded-0 d-flex justify-content-center align-items-center gap-2">
+                                <i class="bx bxs-users bx-lg"></i>
                             </a>
                         </li>
                     </ul>

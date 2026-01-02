@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Auth;
+use Hash;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -30,7 +32,20 @@ class AuthController extends Controller
 
         if (!Auth::attempt($credentials, (bool) $request->remember_me)) {
             return back()->withErrors([
-                "password" => __("auth.failed")
+                "email" => __("auth.failed")
+            ])->onlyInput("email");
+        }
+
+        $user = Auth::user();
+
+        if ($user->banned_at !== null) {
+            Auth::logout();
+
+            session()->invalidate();
+            session()->regenerateToken();
+
+            return back()->withErrors([
+                "email" => __("auth.banned")
             ])->onlyInput("email");
         }
 
