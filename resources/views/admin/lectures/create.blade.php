@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div>
+    <div class="ms-5">
         <form action="{{ route('admin.lectures.store') }}" method="POST" enctype="multipart/form-data" class="mw-form p-3">
             @csrf
             @method('POST')
@@ -13,8 +13,9 @@
             {{-- Title --}}
             <div class="mb-3">
                 <label for="titleInput" class="form-label">Názov</label>
-                <input type="text" name="title" id="titleInput" class="form-control @error('title') is-invalid @enderror"
-                    placeholder="Základy" value="{{ old('title') }}" required>
+                <input type="text" name="title" id="titleInput"
+                    class="form-control @error('title') is-invalid @enderror" placeholder="Základy"
+                    value="{{ old('title') }}" required>
 
                 @error('title')
                     <span class="text-danger mt-1">
