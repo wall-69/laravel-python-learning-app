@@ -4,7 +4,7 @@
     $blockType = $block->type;
     $blockData = $block->data;
 
-    $faqIdx = 0;
+    $accordionIdx = 0;
 @endphp
 @switch($blockType)
     @case('header')
@@ -23,7 +23,7 @@
     @break
 
     @case('warning')
-        <div class="lecture-warning bg-warning rounded-3 px-3 py-2">
+        <div class="lecture-warning bg-warning rounded-3 px-3 py-2 mb-3">
             <span class="fw-bold d-flex gap-2 mb-1">
                 <i class="bx bx-alert-triangle bx-md align-self-start"></i> {{ $blockData->title }}
             </span>
@@ -123,12 +123,12 @@
         <x-lectures.revision :block-data="$blockData"></x-lectures.revision>
     @break
 
-    @case('faq')
+    @case('accordion')
         @php
-            $faqIdx++;
+            $accordionIdx++;
         @endphp
 
-        <x-lectures.faq :block-data="$blockData" :faq-idx="$faqIdx"></x-lectures.faq>
+        <x-lectures.accordion :block-data="$blockData" :accordion-idx="$accordionIdx"></x-lectures.accordion>
     @break
 
     @case('columns')

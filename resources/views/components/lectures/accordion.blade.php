@@ -1,9 +1,9 @@
-@props(['blockData', 'faqIdx'])
+@props(['blockData', 'accordionIdx'])
 
-<div id="faq-{{ $faqIdx }}" class="accordion" style="max-width: 600px;">
+<div id="accordion-{{ $accordionIdx }}" class="accordion">
     @foreach ($blockData->questions as $index => $item)
         @php
-            $questionId = 'faq-' . $faqIdx . '-item-' . ($index + 1);
+            $questionId = 'accordion-' . $accordionIdx . '-item-' . ($index + 1);
         @endphp
 
         <div class="accordion-item" style="border-radius: 0 !important;">
@@ -12,7 +12,8 @@
                 aria-controls="{{ $questionId }}">
                 {!! $item->question !!}
             </button>
-            <div id="{{ $questionId }}" class="accordion-collapse collapse" data-bs-parent="#faq-{{ $faqIdx }}">
+            <div id="{{ $questionId }}" class="accordion-collapse collapse"
+                data-bs-parent="#accordion-{{ $accordionIdx }}">
                 <div class="accordion-body">
                     {!! $item->answer !!}
                 </div>

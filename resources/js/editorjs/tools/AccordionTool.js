@@ -1,10 +1,10 @@
-import templateHTML from "./html/FAQTool.html?raw";
+import templateHTML from "./html/AccordionTool.html?raw";
 import createAddButton from "./utils/addButton";
 
-export default class FAQTool {
+export default class AccordionTool {
     static get toolbox() {
         return {
-            title: "FAQ",
+            title: "Accordion",
             icon: "",
         };
     }
@@ -13,7 +13,7 @@ export default class FAQTool {
         this.data = data || {};
 
         this.questions = [];
-        this.faqContainer = null;
+        this.accordionContainer = null;
     }
 
     render() {
@@ -21,35 +21,38 @@ export default class FAQTool {
         wrapper.innerHTML = templateHTML.trim();
         wrapper.classList.add("mb-3");
 
-        this.faqContainer = wrapper.querySelector(".editor-faq");
+        this.accordionContainer = wrapper.querySelector(".editor-accordion");
 
         this.data.questions?.forEach((item, index) => {
-            this.addFAQ(item, index + 1);
+            this.addAccordion(item, index + 1);
         });
 
-        // Button for adding FAQ items
+        // Button for adding accordion questions
         const addBtn = createAddButton();
         addBtn.addEventListener("click", (e) => {
             e.preventDefault();
 
-            this.addFAQ();
+            this.addAccordion();
 
             // Move the add button to the bottom of the DOM
-            this.faqContainer.appendChild(addBtn);
+            this.accordionContainer.appendChild(addBtn);
         });
-        this.faqContainer.appendChild(addBtn);
+        this.accordionContainer.appendChild(addBtn);
 
         return wrapper;
     }
 
     save(blockContent) {
-        const items = this.faqContainer.querySelectorAll(".accordion-item");
+        const items =
+            this.accordionContainer.querySelectorAll(".accordion-item");
         this.questions = [];
         items.forEach((item) => {
             const question = item.querySelector(
-                ".editor-faq-question"
+                ".editor-accordion-question"
             ).innerHTML;
-            const answer = item.querySelector(".editor-faq-answer").innerHTML;
+            const answer = item.querySelector(
+                ".editor-accordion-answer"
+            ).innerHTML;
             this.questions.push({ question, answer });
         });
 
@@ -58,23 +61,26 @@ export default class FAQTool {
         };
     }
 
-    addFAQ(item = { question: "Otázka", answer: "Odpoveď" }, index = null) {
-        const questionId = `faq-${Math.random()}-item-${index + 1}`;
+    addAccordion(
+        item = { question: "Otázka", answer: "Odpoveď" },
+        index = null
+    ) {
+        const questionId = `accordion-${Math.random()}-item-${index + 1}`;
         const accordionItem = document.createElement("div");
         accordionItem.classList.add("accordion-item", "mb-2");
         accordionItem.innerHTML = `
                 <h5 class="accordion-header">
-                    <span class="editor-edittable editor-faq-question" contenteditable="true">
+                    <span class="editor-edittable editor-accordion-question" contenteditable="true">
                         ${item.question}
                     </span>
                     <button type="button" class="btn btn-sm btn-danger ms-2" onclick="this.closest('.accordion-item').remove()">X</button>
                 </h5>
-                <div id="${questionId}" class="" data-bs-parent="#faq-1">
-                    <div class="editor-edittable editor-faq-answer" contenteditable="true">
+                <div id="${questionId}" class="" data-bs-parent="#accordion-1">
+                    <div class="editor-edittable editor-accordion-answer" contenteditable="true">
                         ${item.answer}
                     </div>
                 </div>
             `;
-        this.faqContainer.appendChild(accordionItem);
+        this.accordionContainer.appendChild(accordionItem);
     }
 }
