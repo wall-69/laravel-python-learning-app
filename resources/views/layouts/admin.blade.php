@@ -54,7 +54,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.users') }}"
                                 class="@active('admin.users') nav-link d-flex align-items-center gap-2">
-                                <i class="bx bxs-users bx-md"></i>
+                                <i class="bx bxs-user bx-md"></i>
                                 Používatelia
                             </a>
                         </li>
@@ -82,7 +82,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.users') }}"
                                 class="@active('admin.users') nav-link py-3 border-bottom rounded-0 d-flex justify-content-center align-items-center gap-2">
-                                <i class="bx bxs-users bx-lg"></i>
+                                <i class="bx bxs-user bx-lg"></i>
                             </a>
                         </li>
                     </ul>
