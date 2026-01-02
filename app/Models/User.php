@@ -92,8 +92,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getProfileUrlAttribute(): string
     {
         return route("users.profile", [
-            "first_name" => str_replace(" ", ".", strtolower($this->first_name)),
-            "last_name" => str_replace(" ", ".", strtolower($this->last_name)),
+            "first_name" => strtolower($this->first_name),
+            "last_name" => strtolower($this->last_name),
             "user" => $this->id,
         ]);
     }
