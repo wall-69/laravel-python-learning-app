@@ -219,6 +219,10 @@ $theme-colors: map-merge(
     }
 }
 
+.accordion-body :last-child {
+    margin-bottom: 0;
+}
+
 // Index
 .hero-divider {
     width: 100%;
