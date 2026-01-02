@@ -48,7 +48,7 @@ const columnsTools = {
             additionalRequestHeaders: {
                 "X-CSRF-TOKEN": document
                     .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
+                    ?.getAttribute("content"),
             },
         },
     },
@@ -95,7 +95,7 @@ window.editorJsTools = {
             additionalRequestHeaders: {
                 "X-CSRF-TOKEN": document
                     .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
+                    ?.getAttribute("content"),
             },
         },
     },

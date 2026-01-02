@@ -6,6 +6,10 @@
         <h1 class="text-center text-primary p-1 rounded-3">
             {{ $lecture->title }}
         </h1>
+        {{-- Description --}}
+        <p class="text-center text-muted mb-3">
+            {{ $lecture->description }}
+        </p>
 
         @foreach ($lecture->blocks->blocks as $block)
             <x-lectures.render-block :block="$block" />
