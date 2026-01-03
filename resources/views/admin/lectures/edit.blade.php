@@ -44,17 +44,30 @@
             </div>
 
             {{-- Blocks --}}
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
                 <label for="blocksInput" class="form-label">Lekcia:</label>
-                <input type="hidden" name="blocks" id="blocksInput"
-                    value="{{ old('blocks', json_encode($lecture->blocks)) }}" />
-                <admin-editor></admin-editor>
 
-                @error('blocks')
-                    <span class="text-danger mt-1">
-                        {{ $message }}
-                    </span>
-                @enderror
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1 position-relative">
+                        <input type="hidden" name="blocks" id="blocksInput"
+                            value="{{ old('blocks', json_encode($lecture->blocks)) }}" />
+
+                        <admin-editor></admin-editor>
+
+                        @error('blocks')
+                            <span class="text-danger mt-1 d-block">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="position-sticky ms-3 align-self-start z-1 d-none d-xl-block" style="top: 1rem;">
+                        <button class="btn btn-primary btn-sm py-2 editor-update-blocks-button"
+                            data-lecture-id="{{ $lecture->id }}">
+                            Upraviť
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- Category --}}

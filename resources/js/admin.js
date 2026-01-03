@@ -145,3 +145,39 @@ window.editorJsTools = {
         },
     },
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+    const updateButton = document.querySelector(".editor-update-blocks-button");
+
+    if (updateButton) {
+        updateButton.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            const blocksInput = document.querySelector("#blocksInput");
+            if (!blocksInput) {
+                return;
+            }
+
+            const lectureId = updateButton.getAttribute("data-lecture-id");
+
+            try {
+                updateButton.classList.add("disabled");
+
+                const response = await axios.patch(
+                    `/admin/lectures/${lectureId}/blocks`,
+                    { blocks: blocksInput.value }
+                );
+
+                if (response?.data?.success) {
+                    updateButton.classList.remove("disabled");
+                } else {
+                    updateButton.classList.add("btn-danger");
+                    console.error("Update blocks failed:", response?.data);
+                }
+            } catch (error) {
+                updateButton.classList.add("btn-danger");
+                console.error("Update blocks error:", error.response || error);
+            }
+        });
+    }
+});

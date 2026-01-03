@@ -12,7 +12,6 @@
 </template>
 <script setup>
 import EditorJS from "@editorjs/editorjs";
-
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 // Lifecycle
@@ -30,10 +29,10 @@ onBeforeUnmount(() => {
 
 // Variables
 const screenWidth = ref(window.innerWidth);
+let editor = null;
 
 // Computed
 const isScreenWide = computed(() => screenWidth.value > 992);
-let editor = null;
 
 // Functions
 function onResize(e) {
