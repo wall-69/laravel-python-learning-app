@@ -53,6 +53,11 @@ export default class QuizTool {
             data: this.data.questions,
         });
 
+        // Prevent inner editor from propagating keydown events to outer editor
+        innerEditorContainer.addEventListener("keydown", (e) => {
+            e.stopPropagation();
+        });
+
         return wrapper;
     }
 

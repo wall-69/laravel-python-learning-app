@@ -160,6 +160,11 @@ export default class AccordionTool {
                 tools: toolsConfig,
                 readOnly: false,
             });
+
+            // Prevent inner editor from propagating keydown events to outer editor
+            holder.addEventListener("keydown", (e) => {
+                e.stopPropagation();
+            });
         } catch (err) {
             // If EditorJS init fails, fallback: render initial HTML inside holder
             holder.innerHTML = initialData.blocks
