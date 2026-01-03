@@ -19,7 +19,7 @@
 
     @case('delimiter')
         <hr class="mx-auto opacity-75 rounded-pill"
-            style="width: {{ $blockData->lineWidth }}%; height: {{ $blockData->lineThickness }}px; border: none; color: #333; background-color: #333;">
+            style="width: {{ $blockData->lineWidth }}%; height: {{ $blockData->lineThickness }}px; border: none; color: #000; background-color: #000;">
     @break
 
     @case('warning')
