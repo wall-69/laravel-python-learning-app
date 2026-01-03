@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="ms-5">
+    <div class="ms-0 ms-xl-5">
         <form action="{{ route('admin.lectures.store') }}" method="POST" enctype="multipart/form-data" class="mw-form p-3">
             @csrf
             @method('POST')
@@ -43,16 +43,28 @@
             </div>
 
             {{-- Blocks --}}
-            <div class="mb-3">
+            <div class="mb-3 position-relative">
                 <label for="blocksInput" class="form-label">Lekcia:</label>
-                <input type="hidden" name="blocks" id="blocksInput" value="{{ old('blocks') }}" />
-                <admin-editor></admin-editor>
 
-                @error('blocks')
-                    <span class="text-danger mt-1">
-                        {{ $message }}
-                    </span>
-                @enderror
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1 position-relative">
+                        <input type="hidden" name="blocks" id="blocksInput" value="{{ old('blocks') }}" />
+
+                        <admin-editor></admin-editor>
+
+                        @error('blocks')
+                            <span class="text-danger mt-1 d-block">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="position-sticky ms-3 align-self-start z-1 d-none d-xl-block" style="top: 1rem;">
+                        <button type="submit" class="btn btn-primary btn-sm py-2">
+                            Vytvoriť
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{-- Category --}}
@@ -119,7 +131,7 @@
             </div>
 
             {{-- Create --}}
-            <div class="">
+            <div>
                 <button type="submit" class="btn btn-primary btn-sm py-2">
                     Vytvoriť
                 </button>
