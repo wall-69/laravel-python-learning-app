@@ -10,7 +10,7 @@
     <title>{{ env('APP_NAME') }} - Admin</title>
 
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/admin.js', 'resources/js/app.js'])
 </head>
 
 <body class="d-flex flex-column min-vh-100">
