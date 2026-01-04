@@ -31,6 +31,10 @@ Route::get("/", function () {
     ]);
 })->name("index");
 
+// Static pages
+Route::view("/zasady-ochrany-osobnych-udajov", "privacy-policy")->name("privacyPolicy");
+Route::view("/podmienky-pouzivania", "terms-of-service")->name("termsOfService");
+
 // Internal endpoint used by the external code-runner service to validate that the request comes from an authenticated user.
 // Exempt from CSRF because its called server-to-server by the code-runner.
 Route::post("/internal/validate-socket", function (Request $request) {

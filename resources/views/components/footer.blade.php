@@ -28,6 +28,14 @@
             </ul>
         </div>
 
+        <div>
+            <h6 class="fw-bold">Právne informácie</h6>
+            <ul class="list-unstyled">
+                <li><a href="{{ route('privacyPolicy') }}" class="text-white-50">Zásady ochrany osobných údajov</a>
+                </li>
+                <li><a href="{{ route('termsOfService') }}" class="text-white-50">Podmienky používania</a></li>
+            </ul>
+        </div>
     </div>
 
     <div class="text-center text-white-50 mt-4">

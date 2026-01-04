@@ -27,7 +27,7 @@ class LectureController extends Controller
             }
         ])->get();
 
-        return view("lectures", [
+        return view("lectures.index", [
             "hideSidebar" => true,
             "categories" => $categories,
         ]);
@@ -102,7 +102,7 @@ class LectureController extends Controller
         $completedQuizzes = $user?->completedQuizzes->pluck("quiz_id") ?? collect();
         $completedExercises = $user?->completedExercises->pluck("exercise_id") ?? collect();
 
-        return view("lecture", [
+        return view("lectures.show", [
             "lecture" => $lecture,
             "nextLecture" => $nextLecture,
             "categoryLectures" => $lecture->category->lectures,
