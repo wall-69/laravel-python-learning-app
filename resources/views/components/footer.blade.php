@@ -2,7 +2,7 @@
     <div class="container d-flex flex-column flex-md-row justify-content-between">
 
         <div>
-            <h5 class="fw-bold">Pythonškola</h5>
+            <h5 class="fw-bold">{{ env('APP_NAME') }}</h5>
             <p class="text-white-50">Interaktívna platforma na učenie sa Pythonu.</p>
         </div>
 
@@ -39,6 +39,6 @@
     </div>
 
     <div class="text-center text-white-50 mt-4">
-        <span class="fw-bold">© {{ date('Y') }} {{ env('APP_NAME') }}.</span> Všetky práva vyhradené.
+        <span class="fw-bold">© {{ date('Y') }} {{ env('APP_NAME') }}</span> - všetky práva vyhradené.
     </div>
 </footer>
