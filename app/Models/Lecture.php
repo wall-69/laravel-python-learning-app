@@ -115,6 +115,7 @@ class Lecture extends Model
     public function nextLecture()
     {
         return Lecture::where("category_id", $this->category_id)
+            ->where("status", LectureStatus::PUBLIC->value)
             ->where("category_order", ">", $this->category_order)
             ->orderBy("category_order")
             ->first();
