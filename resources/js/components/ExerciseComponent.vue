@@ -13,7 +13,7 @@
             testy sa zobrazia nižšie. Cvičenie si môžeš zopakovať koľkokrát len
             chceš.
         </p>
-        <p v-else class="fst-italic">
+        <p v-else class="fst-italic fw-bold">
             Toto cvičenie si už úspešne vyriešil! Nižšie je tvoj kód tvojho
             úspešného riešenia. Ak sa ti chce, tak si ho kľudne môžeš zopakovať.
         </p>
