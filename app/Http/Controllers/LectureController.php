@@ -70,7 +70,7 @@ class LectureController extends Controller
 
         // Count lecture views
         $viewedLectures = session("viewed_lectures", []);
-        if (!isset($viewedLectures[$lecture->id])) {
+        if (!isset($viewedLectures[$lecture->id]) && $lecture->isPublic()) {
             $viewedLectures[$lecture->id] = true;
             session(["viewed_lectures" => $viewedLectures]);
 
