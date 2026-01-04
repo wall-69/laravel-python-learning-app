@@ -4,7 +4,7 @@
     <div class="d-flex flex-column">
         {{-- Navbar --}}
         <header class="bg-brand-purple">
-            <nav class="navbar navbar-expand-md shadow">
+            <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
                     <button class="ms-auto bg-transparent text-white border-0 d-md-none align-items-center d-flex"
                         data-bs-toggle="collapse" data-bs-target="#nav">

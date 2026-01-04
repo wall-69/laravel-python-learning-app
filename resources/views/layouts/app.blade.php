@@ -85,7 +85,7 @@
         <x-alerts />
 
         @if (!isset($hideHeader) || !$hideHeader)
-            <header class="bg-brand-purple sticky-top">
+            <header class="sticky-top bg-brand-purple">
                 <nav class="navbar navbar-expand-md shadow">
                     <div class="container">
                         @if (isset($categoryLectures))
