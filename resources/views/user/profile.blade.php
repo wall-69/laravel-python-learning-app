@@ -44,14 +44,14 @@
             <tbody class="table-group-divider">
                 @foreach ($latestActivity as $activity)
                     <tr>
-                        <td>
+                        <td class="text-nowrap" style="width: 1%;">
                             {{ $activity->created_at->locale('sk')->isoFormat('D. MMMM, YYYY') }}
-                            &nbsp; &nbsp;
+                        </td>
+                        <td>
                             {{ $activity->quiz_id ? 'Úspešne vyriešil kvíz.' : 'Vyriešil cvičenie.' }}
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
     @endif
