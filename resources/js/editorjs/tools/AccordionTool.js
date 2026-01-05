@@ -96,7 +96,7 @@ export default class AccordionTool {
 
         accordionItem.innerHTML = `
 			<h5 class="accordion-header">
-				<span class="editor-edittable editor-accordion-question" contenteditable="true">
+				<span class="editor-editable editor-accordion-question" contenteditable="true">
 					${item.question}
 				</span>
 				<button type="button" class="btn btn-sm btn-danger ms-2 remove-accordion">X</button>
