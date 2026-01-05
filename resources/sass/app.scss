@@ -141,6 +141,13 @@ $theme-colors: map-merge(
     // white-space: pre-wrap;
 }
 
+div.editor-editable {
+    width: 100%;
+    height: 4rem;
+    resize: vertical;
+    overflow: auto;
+}
+
 .codex-editor {
     z-index: 0;
 }

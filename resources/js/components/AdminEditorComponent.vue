@@ -71,6 +71,7 @@ function initEditor() {
             }
 
             const saved = await editor.save();
+            console.log(saved);
             document.querySelector("#blocksInput").value =
                 JSON.stringify(saved);
         },

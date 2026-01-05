@@ -20,6 +20,14 @@ export default class ExerciseBlock {
         this.testsContainer = null;
     }
 
+    static get sanitize() {
+        return {
+            header: true,
+            description: true,
+            assignment: true,
+        };
+    }
+
     render() {
         const wrapper = document.createElement("div");
         wrapper.innerHTML = templateHTML.trim();
@@ -37,6 +45,16 @@ export default class ExerciseBlock {
         this.header.innerHTML = this.data.header || "";
         this.description.innerHTML = this.data.description || "";
         this.assignment.innerHTML = this.data.assignment || "";
+
+        // Description textarea keydown fix
+        this.description.addEventListener("keydown", (e) => {
+            e.stopPropagation();
+        });
+
+        // Assignment textarea keydown fix
+        this.assignment.addEventListener("keydown", (e) => {
+            e.stopPropagation();
+        });
 
         // Load saved tests
         if (this.data.tests) {
