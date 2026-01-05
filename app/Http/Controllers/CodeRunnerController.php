@@ -10,6 +10,9 @@ class CodeRunnerController extends Controller
 {
     // POST
 
+    /**
+     * @deprecated User code is now ran in separate service: app/code-runner/index.js
+     */
     public function runCode(Request $request)
     {
         $request->validate([
