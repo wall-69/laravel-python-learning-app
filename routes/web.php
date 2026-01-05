@@ -10,7 +10,6 @@ use App\Http\Controllers\LectureController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProgressController;
-use App\Http\Middleware\EnsureUserIsNotBanned;
 use App\Models\Lecture;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -45,7 +44,9 @@ Route::post("/internal/validate-socket", function (Request $request) {
     }
 
     if (!Auth::check()) {
-        return response()->json(["success" => false], 401);
+        return response()->json(["success" => false, "error_code" => "not_authenticated"], 401);
+    } else if (!Auth::user()->hasVerifiedEmail()) {
+        return response()->json(["success" => false, "error_code" => "email_not_verified"], 403);
     }
 
     return response()->json(["success" => true]);
@@ -67,8 +68,8 @@ Route::controller(AuthController::class)->group(function () {
 
 // Email verification
 Route::controller(EmailVerificationController::class)->middleware("auth")->name("verification.")->group(function () {
-    Route::get("/email/verify", "notice")->name("notice");
-    Route::get("/email/verify/{id}/{hash}", "verify")->middleware("signed")->name("verify");
+    Route::get("/email/overenie", "notice")->name("notice");
+    Route::get("/email/overenie/{id}/{hash}", "verify")->middleware("signed")->name("verify");
 
     Route::post("/email/verification-notification", "send")->middleware("throttle:1,3")->name("send");
 });

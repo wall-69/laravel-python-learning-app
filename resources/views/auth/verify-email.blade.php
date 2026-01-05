@@ -13,7 +13,7 @@
             @csrf
             @method('POST')
             <span>
-                Ak vám e-mail neprišiel,<button type="submit" class="link-primary border-0 bg-transparent">
+                Ak vám e-mail neprišiel, <button type="submit" class="link-primary border-0 bg-transparent px-0">
                     kliknutím sem vám ho pošleme znovu</button>.
             </span>
         </form>

@@ -160,18 +160,23 @@ async function runCode() {
             editorConsole.value.value = response.data.user_output;
         }
     } catch (error) {
-        // TODO SHOW ALERT INSTEAD OF REDIRECTION
         // Server responded with a status outside 2xx
         if (error.response) {
             // Not logged in
             if (error.response.status === 401) {
-                window.location.href = "/login";
+                addAlert(
+                    "warning",
+                    "Pre používanie spúšťača kódu sa musíte prihlásiť."
+                );
                 return;
             }
 
             // Email not verified
             if (error.response.status === 403) {
-                window.location.href = "/email/verify";
+                addAlert(
+                    "warning",
+                    "Pre používanie spúšťača kódu musíte overiť svoj email."
+                );
                 return;
             }
 

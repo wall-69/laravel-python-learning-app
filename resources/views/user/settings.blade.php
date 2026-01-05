@@ -3,6 +3,21 @@
 @section('content')
     <h1>Nastavenia</h1>
 
+    @if (!auth()->user()->hasVerifiedEmail())
+        <div class="alert alert-danger" role="alert">
+            <span class="fw-bold">Váš email nie je overený.</span>
+            Prosím, skontrolujte svoju emailovú schránku a overte svoj email kliknutím na odkaz,
+            ktorý sme vám
+            poslali. Ak ste email neobdržali, môžete si nechať poslať nový
+            <form class="d-inline" method="POST" action="{{ route('verification.send') }}">
+                @csrf
+                @method('POST')
+
+                <button type="submit" class="link-primary border-0 bg-transparent px-0">kliknutím sem</button>.
+            </form>
+        </div>
+    @endif
+
     <hr>
 
     <form action="{{ route('users.change-password', auth()->user()) }}" method="POST">

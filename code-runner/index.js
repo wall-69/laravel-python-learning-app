@@ -257,16 +257,14 @@ io.use(async (socket, next) => {
 
         return next(new Error("not_authenticated"));
     } catch (err) {
-        // Distinguish 401 (not logged in) vs other authorization errors
-        const status = err && err.response && err.response.status;
+        const errorCode = err.response.data.error_code || "";
 
-        if (status === 401) {
-            // Client should redirect to login
-            return next(new Error("not_authenticated"));
+        if (errorCode) {
+            return next(new Error(errorCode));
         }
 
         // Other failures: emit an authorization error
-        error("Auth validation error: " + (err && err.message));
+        error("Auth validation error: " + err);
 
         return next(new Error("auth_error"));
     }

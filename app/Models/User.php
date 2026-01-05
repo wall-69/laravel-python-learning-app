@@ -62,17 +62,6 @@ class User extends Authenticatable implements MustVerifyEmail
         "remember_token",
     ];
 
-    protected static function booted()
-    {
-        parent::booted();
-
-        static::creating(function ($user) {
-            if (app()->isLocal()) {
-                $user->email_verified_at = now();
-            }
-        });
-    }
-
     protected function casts(): array
     {
         return [

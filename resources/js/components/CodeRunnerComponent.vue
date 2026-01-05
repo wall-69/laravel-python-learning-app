@@ -136,12 +136,20 @@ async function runCode() {
                 );
                 break;
 
+            case "email_not_verified":
+                addAlert(
+                    "warning",
+                    "Pre používanie spúšťača kódu musíte overiť svoj email."
+                );
+                break;
+
             case "auth_error":
                 addAlert(
                     "danger",
                     "Nepodarilo sa overiť, či ste prihlásení. Prosím, obnovte stránku a skúste to znova alebo nás kontaktujte."
                 );
                 break;
+
             default:
                 addAlert(
                     "danger",
