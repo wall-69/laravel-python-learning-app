@@ -20,12 +20,7 @@ class LectureController extends Controller
 
     public function index(Request $request)
     {
-        $categories = Category::with([
-            "lectures" => function ($query) {
-                $query->where("status", LectureStatus::PUBLIC->value)
-                    ->orderBy("category_order");
-            }
-        ])->get();
+        $categories = Category::with("publicLectures")->get();
 
         return view("lectures.index", [
             "hideSidebar" => true,
@@ -105,7 +100,7 @@ class LectureController extends Controller
         return view("lectures.show", [
             "lecture" => $lecture,
             "nextLecture" => $nextLecture,
-            "categoryLectures" => $lecture->category->lectures,
+            "categoryLectures" => $lecture->category->publicLectures,
             "completedQuizzes" => $completedQuizzes,
             "completedExercises" => $completedExercises,
             "isLecture" => true

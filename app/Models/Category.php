@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LectureStatus;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,5 +50,12 @@ class Category extends Model
     public function lectures()
     {
         return $this->hasMany(Lecture::class)->orderBy("category_order");
+    }
+
+    public function publicLectures()
+    {
+        return $this->hasMany(Lecture::class)
+            ->where("status", LectureStatus::PUBLIC->value)
+            ->orderBy("category_order");
     }
 }

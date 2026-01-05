@@ -14,7 +14,7 @@
                 <p class="text-muted mb-4">{{ $category->description }}</p>
 
                 <div class="d-flex gap-4 flex-wrap justify-content-start">
-                    @foreach ($category->lectures as $lecture)
+                    @foreach ($category->publicLectures as $lecture)
                         <x-lecture-card :lecture="$lecture" />
                     @endforeach
                 </div>
