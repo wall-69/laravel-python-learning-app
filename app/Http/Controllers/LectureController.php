@@ -285,21 +285,13 @@ class LectureController extends Controller
             }
         });
 
+        if ($request->get("is_api")) {
+            return response()->json([
+                "success" => true
+            ]);
+        }
         return redirect(route("admin.lectures"))
             ->with("success", "Lekcia bola úspešne upravená.");
-    }
-
-    public function updateBlocks(Request $request, Lecture $lecture)
-    {
-        $request->validate([
-            "blocks" => "required|string"
-        ]);
-
-        $blocks = json_decode($request->input("blocks"), true);
-
-        $lecture->update(["blocks" => $blocks]);
-
-        return response()->json(["success" => true]);
     }
 
     public function destroy(Request $request, Lecture $lecture)

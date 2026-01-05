@@ -156,7 +156,6 @@ Route::middleware("admin")->name("admin.")->prefix("/admin")->group(function () 
 
         Route::post("/lectures", "store")->name("lectures.store");
         Route::patch("/lectures/{lecture}", "update")->name("lectures.update");
-        Route::patch("/lectures/{lecture}/blocks", "updateBlocks")->name("lectures.updateBlocks");
         Route::delete("/lectures/{lecture}", "destroy")->name("lectures.destroy");
     });
 });

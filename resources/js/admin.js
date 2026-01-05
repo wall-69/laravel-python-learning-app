@@ -147,37 +147,36 @@ window.editorJsTools = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    const updateButton = document.querySelector(".editor-update-blocks-button");
+    const updateButton = document.querySelector(".editor-update-button");
 
-    if (updateButton) {
-        updateButton.addEventListener("click", async (e) => {
-            e.preventDefault();
+    if (!updateButton) return;
 
-            const blocksInput = document.querySelector("#blocksInput");
-            if (!blocksInput) {
-                return;
-            }
+    updateButton.addEventListener("click", async (e) => {
+        e.preventDefault();
 
-            const lectureId = updateButton.getAttribute("data-lecture-id");
+        const form = updateButton.closest("form");
+        if (!form) return;
 
-            try {
-                updateButton.classList.add("disabled");
+        const formData = new FormData(form);
+        formData.append("is_api", true);
 
-                const response = await axios.patch(
-                    `/admin/lectures/${lectureId}/blocks`,
-                    { blocks: blocksInput.value }
-                );
+        try {
+            updateButton.classList.add("disabled");
 
-                if (response?.data?.success) {
-                    updateButton.classList.remove("disabled");
-                } else {
-                    updateButton.classList.add("btn-danger");
-                    console.error("Update blocks failed:", response?.data);
-                }
-            } catch (error) {
+            const response = await axios.post(form.action, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            if (response?.data?.success) {
+                updateButton.classList.remove("disabled");
+                updateButton.classList.remove("btn-danger");
+            } else {
                 updateButton.classList.add("btn-danger");
-                console.error("Update blocks error:", error.response || error);
+                console.error("Update failed:", response?.data);
             }
-        });
-    }
+        } catch (err) {
+            updateButton.classList.add("btn-danger");
+            console.error("Update error:", err.response || err);
+        }
+    });
 });

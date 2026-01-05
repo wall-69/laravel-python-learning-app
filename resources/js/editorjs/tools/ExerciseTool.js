@@ -116,7 +116,7 @@ export default class ExerciseBlock {
             "mb-1"
         );
 
-        let testCase = document.createElement("div");
+        let testCase = document.createElement("span");
         testCase.classList.add("editor-editable", "editor-exercise-test");
         testCase.contentEditable = true;
         testCase.innerHTML = test || "Zadajte test";
