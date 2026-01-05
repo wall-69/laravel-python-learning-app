@@ -173,38 +173,45 @@ class ExerciseController extends Controller
         // The output (in lines) of checks & tests
         $outputLines = explode("\n", trim($process->getOutput()));
 
+        // Get user output
+        $userOutput = "";
+        $outputStart = array_search("USER OUTPUT", $outputLines);
+        $outputEnd = array_search("USER OUTPUT END", $outputLines);
+        $userOutput = implode("\n", array_slice($outputLines, $outputStart + 1, $outputEnd - $outputStart - 1));
+        $userOutput = trim(mb_convert_encoding($userOutput, "UTF-8", "auto"));
+
         if ($error) {
             return response()->json([
                 "test_results" => [],
                 "error" => $error,
-                "user_output" => ""
+                "user_output" => $userOutput
             ]);
         }
 
         // Go through all checks
-        $checksStart = array_search("CHECKS", $outputLines);
-        $checksEnd = array_search("TESTS", $outputLines);
-        foreach (array_slice($outputLines, $checksStart + 1, $checksEnd - $checksStart - 1) as $i => $line) {
-            if ($line == "False") {
-                $check = $checks[$i];
+        // $checksStart = array_search("CHECKS", $outputLines);
+        // $checksEnd = array_search("TESTS", $outputLines);
+        // foreach (array_slice($outputLines, $checksStart + 1, $checksEnd - $checksStart - 1) as $i => $line) {
+        //     if ($line == "False") {
+        //         $check = $checks[$i];
 
-                switch ($check["type"]) {
-                    case "variable":
-                        $error = "Premenná {$check["name"]} nie je definovaná.";
-                        break;
+        //         switch ($check["type"]) {
+        //             case "variable":
+        //                 $error = "Premenná {$check["name"]} nie je definovaná.";
+        //                 break;
 
-                    case "function":
-                        $error = "Funkcia {$check["name"]} nie je definovaná alebo je nesprávne definovaná.";
-                        break;
+        //             case "function":
+        //                 $error = "Funkcia {$check["name"]} nie je definovaná alebo je nesprávne definovaná.";
+        //                 break;
 
-                    case "type":
-                        $error = "Premenná {$check["name"]} má nesprávny dátový typ: očakávali sme {$check["expected"]}.";
-                        break;
-                }
+        //             case "type":
+        //                 $error = "Premenná {$check["name"]} má nesprávny dátový typ: očakávali sme {$check["expected"]}.";
+        //                 break;
+        //         }
 
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
 
         // Go through all tests & keep track of the test results
         $testResults = collect();
@@ -218,7 +225,7 @@ class ExerciseController extends Controller
             if (!$success) {
                 switch ($testCase["type"]) {
                     case "variable":
-                        $message = "Premenná <b>{$testCase["name"]}</b> nie je správna.";
+                        $message = "Premenná <b>{$testCase["name"]}</b> nemá správnu hodnotu.";
                         break;
 
                     case "function":
@@ -236,7 +243,7 @@ class ExerciseController extends Controller
             } else {
                 switch ($testCase["type"]) {
                     case "variable":
-                        $message = "Premenná <b>{$testCase["name"]}</b> je správna.";
+                        $message = "Premenná <b>{$testCase["name"]}</b> má správnu hodnotu.";
                         break;
 
                     case "function":
@@ -258,13 +265,6 @@ class ExerciseController extends Controller
                 "message" => $message
             ]);
         }
-
-        // Get user output
-        $userOutput = "";
-        $outputStart = array_search("USER OUTPUT", $outputLines);
-        $outputEnd = array_search("USER OUTPUT END", $outputLines);
-        $userOutput = implode("\n", array_slice($outputLines, $outputStart + 1, $outputEnd - $outputStart - 1));
-        $userOutput = trim(mb_convert_encoding($userOutput, "UTF-8", "auto"));
 
         // If this exercise was already completed and everything is okay, we resave the users submitted code
         $allTestsPassed = $testResults->every(fn($testResult) => $testResult["success"]);

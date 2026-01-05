@@ -36,13 +36,16 @@
         </button>
 
         <h3 class="mt-2 mb-0">Konzola</h3>
-        <textarea
+        <pre
             ref="editorConsole"
             class="form-control font-monospace rounded-0"
-            style="height: 200px; box-shadow: none"
-            spellcheck="false"
-            readonly
-        ></textarea>
+            style="
+                height: 200px;
+                box-shadow: none;
+                overflow-y: auto;
+                white-space: pre-wrap;
+            "
+        ></pre>
 
         <h3 class="mt-2 mb-0">Kontrola</h3>
         <div v-if="testResults.length > 0" class="d-flex flex-column">
@@ -146,18 +149,19 @@ async function runCode() {
         });
 
         if (response.status === 200) {
-            if (response.data.error) {
-                testResults.value = [];
-                editorConsole.value.value = response.data.error;
-                return;
-            }
+            testResults.value = response.data.test_results;
+
+            const userOutput = response.data.user_output;
+            const error =
+                "<span class='text-danger'>" +
+                    response.data.error +
+                    "</span>" ?? "";
+            editorConsole.value.innerHTML =
+                userOutput + (userOutput.trim() ? "\n" : "") + error;
 
             if (response.data.celebrate && !exerciseIsComplete.value) {
                 addAlert("celebrate", response.data.celebrate);
             }
-
-            testResults.value = response.data.test_results;
-            editorConsole.value.value = response.data.user_output;
         }
     } catch (error) {
         // Server responded with a status outside 2xx
