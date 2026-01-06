@@ -167,16 +167,6 @@ div.editor-editable {
     box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
 }
 
-.lecture-image {
-    width: 100%;
-}
-
-@media (min-width: 768px) {
-    .lecture-image {
-        width: 50%;
-    }
-}
-
 // User progress
 .user-progress {
     width: 100%;
@@ -217,6 +207,12 @@ div.editor-editable {
     min-width: 120px;
 }
 
+@media (min-width: 720px) {
+    #lecture-container {
+        max-width: 720px;
+    }
+}
+
 .lecture-warning {
     width: 100%;
 }
@@ -227,10 +223,8 @@ div.editor-editable {
     }
 }
 
-@media (min-width: 992px) {
-    .lecture-warning {
-        width: 50%;
-    }
+.lecture-image {
+    width: 100%;
 }
 
 .accordion-body :last-child {

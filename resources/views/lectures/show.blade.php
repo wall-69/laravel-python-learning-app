@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-3">
+    <div id="lecture-container" class="container py-3">
         {{-- Title --}}
         <h1 class="text-center text-primary p-1 rounded-3">
             {{ $lecture->title }}
