@@ -2,7 +2,7 @@
 
 <quiz id="{{ $quizId }}">
     <template #header>
-        {!! $quizData->header !!}
+        Kvíz: {!! $quizData->header !!}
     </template>
 
     @foreach ($quizData->questions->blocks as $index => $quizBlock)
