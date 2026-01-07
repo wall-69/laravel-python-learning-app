@@ -72,6 +72,25 @@
                     </template>
                 </quiz-drag-and-drop>
             @break
+
+            {{-- Code block --}}
+            @case('codeBlock')
+                <code-block>
+                    @if (!empty($data->header))
+                        <template #header>
+                            {!! $data->header !!}
+                        </template>
+                    @endif
+                    @if (!empty($data->description))
+                        <template #description>
+                            {!! $data->description !!}
+                        </template>
+                    @endif
+                    <template #code>
+                        <pre>{{ $data->code }}</pre>
+                    </template>
+                </code-block>
+            @break
         @endswitch
     @endforeach
 </quiz>

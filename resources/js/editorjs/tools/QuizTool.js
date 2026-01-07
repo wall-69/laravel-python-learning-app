@@ -3,6 +3,7 @@ import templateHTML from "./html/QuizTool.html?raw";
 import EditorJS from "@editorjs/editorjs";
 import QuizChoiceTool from "./QuizChoiceTool";
 import QuizDragAndDropTool from "./QuizDragAndDropTool";
+import CodeBlockTool from "./CodeBlockTool";
 
 export default class QuizTool {
     static get toolbox() {
@@ -46,6 +47,10 @@ export default class QuizTool {
                 },
                 quizDragAndDrop: {
                     class: QuizDragAndDropTool,
+                    inlineToolbar: true,
+                },
+                codeBlock: {
+                    class: CodeBlockTool,
                     inlineToolbar: true,
                 },
             },

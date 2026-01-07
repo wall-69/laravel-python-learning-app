@@ -72,12 +72,16 @@
 
     @case('codeRunner')
         <code-runner>
-            <template #header>
-                {!! $blockData->header !!}
-            </template>
-            <template #description>
-                {!! $blockData->description !!}
-            </template>
+            @if (!empty($blockData->header))
+                <template #header>
+                    {!! $blockData->header !!}
+                </template>
+            @endif
+            @if (!empty($blockData->description))
+                <template #description>
+                    {!! $blockData->description !!}
+                </template>
+            @endif
             <template #code>
                 <pre>{{ $blockData->code }}</pre>
             </template>
@@ -85,13 +89,17 @@
     @break
 
     @case('codeBlock')
-        <code-block>
-            <template #header>
-                {!! $blockData->header !!}
-            </template>
-            <template #description>
-                {!! $blockData->description !!}
-            </template>
+        <code-block class="mb-3">
+            @if (!empty($blockData->header))
+                <template #header>
+                    {!! $blockData->header !!}
+                </template>
+            @endif
+            @if (!empty($blockData->description))
+                <template #description>
+                    {!! $blockData->description !!}
+                </template>
+            @endif
             <template #code>
                 <pre>{{ $blockData->code }}</pre>
             </template>
