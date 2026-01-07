@@ -63,14 +63,13 @@
 
                     <div class="d-flex">
                         <i class="bx bxs-layers fs-3 text-primary me-3"></i>
-                        <p class="mb-0 align-self-center">Interaktívna platforma, ktorá spája lekcie, príklady, spúšťanie
-                            kódu a cvičenia do
-                            jedného miesta.</p>
+                        <p class="mb-0 align-self-center">
+                            Interaktívna platforma, ktorá spája lekcie, príklady a cvičenia do jedného miesta.</p>
                     </div>
 
                     <div class="d-flex">
                         <i class="bx bxs-cloud fs-3 text-primary me-3"></i>
-                        <p class="mb-0 align-self-center">Nepotrebuješ inštalovať Python, všetko beží v prehliadači.</p>
+                        <p class="mb-0 align-self-center">Ukladanie tvojho pokroku, online spúšťanie kódu.</p>
                     </div>
 
                     <div class="d-flex">
