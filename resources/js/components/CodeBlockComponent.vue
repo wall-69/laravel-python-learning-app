@@ -10,7 +10,7 @@
         <div
             ref="codeBlockContainer"
             class="border"
-            style="height: 300px"
+            :style="{ height: heightBasedOnContent, overflow: 'hidden' }"
         ></div>
 
         <!-- Value slot -->
@@ -41,6 +41,14 @@ onMounted(() => {
         codeBlockEditor.setValue(
             normalizeIndentation(codeBlockValue.value.innerText)
         );
+
+        // Initial height adjustment
+        const lineHeight = codeBlockEditor.getOption(
+            monaco.editor.EditorOption.lineHeight
+        );
+        const lineCount = codeBlockEditor.getModel().getLineCount();
+
+        heightBasedOnContent.value = `${lineHeight * lineCount + 16}px`;
     }
 });
 
@@ -48,4 +56,5 @@ onMounted(() => {
 let codeBlockEditor = null;
 const codeBlockContainer = ref(null);
 const codeBlockValue = ref(null);
+const heightBasedOnContent = ref("auto");
 </script>
