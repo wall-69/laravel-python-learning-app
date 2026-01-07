@@ -158,13 +158,16 @@ div.editor-editable {
     opacity: 0.75 !important;
 }
 
-.lecture-card {
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+.lecture-card,
+.lecture-card .read-more {
+    transition: all 0.15s ease;
 }
 
 .lecture-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
+    border-color: #{$primary} !important;
+}
+.lecture-card:hover .read-more {
+    transform: translateX(4px);
 }
 
 // User progress
@@ -185,16 +188,6 @@ div.editor-editable {
 }
 
 // Lectures
-.lecture-card {
-    width: 100%;
-    height: auto;
-}
-@media (min-width: 768px) {
-    .lecture-card {
-        width: 24rem;
-    }
-}
-
 #lecture-side-button-container {
     position: fixed;
     left: 0;
