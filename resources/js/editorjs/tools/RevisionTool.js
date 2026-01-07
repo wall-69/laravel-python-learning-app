@@ -24,7 +24,9 @@ export default class RevisionTool {
         this.points = wrapper.querySelector(".editor-revision-points");
 
         this.header.innerHTML = this.data.header || "Zopakuj si!";
-        this.points.innerHTML = this.data.points.join("<br>") || "";
+        this.points.innerHTML = this.data.points
+            ? this.data.points.join("<br>")
+            : "";
 
         return wrapper;
     }
