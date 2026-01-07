@@ -23,6 +23,13 @@
             </div>
         </div>
 
+        <button
+            @click.prevent="resetPosition"
+            class="btn btn-secondary btn-block mt-1 d-flex align-items-center gap-1"
+        >
+            <i class="bx bxs-eraser"></i> Resetovať
+        </button>
+
         <div
             v-show="reveal"
             class="border px-3 py-2 mt-1"
@@ -100,4 +107,20 @@ provide("questionNumber", props.questionNumber);
 
 // Computed
 const correct = computed(() => questionMap[props.questionNumber]);
+
+// Functions
+function resetPosition() {
+    if (!dragsCol.value) return;
+
+    const drags = dragsCol.value.querySelectorAll(".drag");
+
+    drags.forEach((d) => {
+        // Remove inline left/top so the element returns to its original layout
+        d.style.left = "";
+        d.style.top = "";
+
+        // Ensure the data-in-drop attribute is reset for checks
+        d.dataset.inDrop = -1;
+    });
+}
 </script>
