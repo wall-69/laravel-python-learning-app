@@ -2,7 +2,7 @@
     <div class="position-relative">
         <div
             ref="drag"
-            class="position-absolute border drag z-1 bg-white px-3 py-2 text-center"
+            class="position-absolute border drag z-1 bg-white px-3 py-2 text-center d-flex align-items-center justify-content-center"
             :class="{
                 'overflow-y-scroll': !dragging,
                 'overflow-y-hidden': dragging,
