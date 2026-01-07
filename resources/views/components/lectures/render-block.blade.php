@@ -105,7 +105,7 @@
     @case('exercise')
         <exercise id="{{ $block->id }}">
             <template #header>
-                {!! $blockData->header !!}
+                Cvičenie: {!! $blockData->header !!}
             </template>
             <template #description>
                 {!! $blockData->description !!}

@@ -3,7 +3,7 @@
         <h2 v-if="slots.header">
             <slot name="header"></slot>
         </h2>
-        <p v-if="slots.description" class="mb-0">
+        <p v-if="slots.description">
             <slot name="description"></slot>
         </p>
         <p v-if="!exerciseIsComplete">
