@@ -1,5 +1,6 @@
 @props(['lecture'])
 
+{{-- Horizontal --}}
 <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
     style="width:100%; max-width:900px;">
     <div class="card shadow-sm h-100 lecture-card border-brand-blue">
@@ -30,10 +31,10 @@
     </div>
 </a>
 
-{{-- Old vertical --}}
-{{-- <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
+{{-- Vertical --}}
+<a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
     style="width: 100%; max-width: 374px;">
-    <div class="card shadow-sm border-0 h-100 lecture-card">
+    <div class="card shadow-sm h-100 lecture-card border-brand-blue">
         <div class="ratio ratio-16x9">
             <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}" class="rounded-top object-fit-cover"
                 style="object-position: center top;">
@@ -50,8 +51,8 @@
             </p>
 
             <div class="mt-3 d-flex align-items-center justify-content-between">
-                <span class="text-primary fw-semibold">Čítať viac →</span>
+                <span class="text-primary fw-semibold read-more">Čítať viac →</span>
             </div>
         </div>
     </div>
-</a> --}}
+</a>
