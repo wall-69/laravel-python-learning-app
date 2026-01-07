@@ -67,9 +67,11 @@
                         @endforeach
                     </template>
 
-                    <template #explanation>
-                        {!! $data->explanation !!}
-                    </template>
+                    @if (!empty($data->explanation))
+                        <template #explanation>
+                            {!! $data->explanation !!}
+                        </template>
+                    @endif
                 </quiz-drag-and-drop>
             @break
 

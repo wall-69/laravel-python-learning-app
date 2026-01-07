@@ -96,23 +96,41 @@ function onMouseUp(e) {
 
     // Hide dragged element to detect underlying element
     drag.value.style.pointerEvents = "none";
-    const droppedOn = document.elementFromPoint(e.clientX, e.clientY);
+    const elemAtPoint = document.elementFromPoint(e.clientX, e.clientY);
     drag.value.style.pointerEvents = "";
 
-    if (!droppedOn || !droppedOn.classList.contains("drop")) {
+    // Find nearest ancestor with class 'drop' (elementFromPoint might return inner content)
+    const droppedOn = elemAtPoint ? elemAtPoint.closest(".drop") : null;
+
+    if (!droppedOn) {
         drag.value.style.left = `${startX}px`;
         drag.value.style.top = `${startY}px`;
 
+        // Restore original height and clear constraints
+        drag.value.style.height = "100%";
+        drag.value.style.maxHeight = "";
+        drag.value.style.minHeight = "";
+
         inDrop.value = -1;
+        // Ensure DOM attribute is set immediately for checks elsewhere
+        drag.value.dataset.inDrop = `${-1}`;
         return;
     }
 
-    // Move the drag to the center of drop
+    // Move the drag to the center of drop and adjust height only
     const rect = droppedOn.getBoundingClientRect();
-    const elRect = drag.value.getBoundingClientRect();
     const parentRect = drag.value.offsetParent.getBoundingClientRect();
 
-    // Center
+    // Set height to drop's height (allow shrinking); cap at 150 to preserve existing logic
+    const targetHeight = Math.min(rect.height, 150);
+    drag.value.style.height = `${targetHeight}px`;
+    drag.value.style.maxHeight = `${targetHeight}px`;
+    drag.value.style.minHeight = `0px`;
+
+    // Recompute element rect after resizing
+    const elRect = drag.value.getBoundingClientRect();
+
+    // Keep width unchanged; center horizontally & vertically
     drag.value.style.left = `${
         rect.left + rect.width / 2 - elRect.width / 2 - parentRect.left
     }px`;
@@ -121,6 +139,8 @@ function onMouseUp(e) {
     }px`;
 
     inDrop.value = droppedOn.dataset.id;
+    // Also set the DOM attribute immediately so checks that read attributes (not Vue refs) are reliable
+    drag.value.dataset.inDrop = `${droppedOn.dataset.id}`;
 }
 
 function onTouchStart(e) {
@@ -167,20 +187,40 @@ function onTouchEnd(e) {
     const touch = e.changedTouches[0];
 
     drag.value.style.pointerEvents = "none";
-    const droppedOn = document.elementFromPoint(touch.clientX, touch.clientY);
+    const elemAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
     drag.value.style.pointerEvents = "";
 
-    if (!droppedOn || !droppedOn.classList.contains("drop")) {
+    // Find nearest ancestor with class 'drop' (elementFromPoint might return inner content)
+    const droppedOn = elemAtPoint ? elemAtPoint.closest(".drop") : null;
+
+    if (!droppedOn) {
         drag.value.style.left = `${startX}px`;
         drag.value.style.top = `${startY}px`;
+
+        // Restore original height and clear constraints
+        drag.value.style.height = "100%";
+        drag.value.style.maxHeight = "";
+        drag.value.style.minHeight = "";
+
         inDrop.value = -1;
+        // Ensure DOM attribute is set immediately
+        drag.value.dataset.inDrop = `${-1}`;
         return;
     }
 
     const rect = droppedOn.getBoundingClientRect();
-    const elRect = drag.value.getBoundingClientRect();
     const parentRect = drag.value.offsetParent.getBoundingClientRect();
 
+    // Set height to drop's height (allow shrinking); cap at 150
+    const targetHeight = Math.min(rect.height, 150);
+    drag.value.style.height = `${targetHeight}px`;
+    drag.value.style.maxHeight = `${targetHeight}px`;
+    drag.value.style.minHeight = `0px`;
+
+    // Recompute element rect after resizing
+    const elRect = drag.value.getBoundingClientRect();
+
+    // Center within drop (width unchanged)
     drag.value.style.left = `${
         rect.left + rect.width / 2 - elRect.width / 2 - parentRect.left
     }px`;
@@ -189,6 +229,8 @@ function onTouchEnd(e) {
     }px`;
 
     inDrop.value = droppedOn.dataset.id;
+    // Also set the DOM attribute immediately so checks that read attributes (not Vue refs) are reliable
+    drag.value.dataset.inDrop = `${droppedOn.dataset.id}`;
 }
 
 function onWindowResize() {

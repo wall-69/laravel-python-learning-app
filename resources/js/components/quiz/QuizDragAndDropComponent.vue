@@ -42,7 +42,7 @@
                 {{ correct ? "Správne!" : "Nesprávne!" }} <br />
             </span>
             <a
-                v-if="!correct"
+                v-if="!correct && slots.explanation"
                 class="text-bg-danger"
                 data-bs-toggle="collapse"
                 :href="'#explanation_' + questionNumber"
@@ -63,7 +63,18 @@
     </li>
 </template>
 <script setup>
-import { computed, inject, nextTick, onMounted, provide, ref } from "vue";
+import {
+    computed,
+    inject,
+    nextTick,
+    onMounted,
+    provide,
+    ref,
+    useSlots,
+} from "vue";
+
+// Composables
+const slots = useSlots();
 
 // Define
 const props = defineProps({
@@ -118,6 +129,12 @@ function resetPosition() {
         // Remove inline left/top so the element returns to its original layout
         d.style.left = "";
         d.style.top = "";
+
+        d.style.height = "100%";
+
+        // Clear any drop-imposed height constraints
+        d.style.maxHeight = "";
+        d.style.minHeight = "";
 
         // Ensure the data-in-drop attribute is reset for checks
         d.dataset.inDrop = -1;
