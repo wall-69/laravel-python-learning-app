@@ -158,6 +158,7 @@ div.editor-editable {
     opacity: 0.75 !important;
 }
 
+// Lecture cards
 .lecture-card,
 .lecture-card .read-more {
     transition: all 0.15s ease;
@@ -168,6 +169,15 @@ div.editor-editable {
 }
 .lecture-card:hover .read-more {
     transform: translateX(4px);
+}
+
+.lecture-card-image {
+    display: none;
+}
+@media (min-width: 768px) {
+    .lecture-card-image {
+        display: block;
+    }
 }
 
 // User progress

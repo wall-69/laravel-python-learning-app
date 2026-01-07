@@ -2,10 +2,10 @@
 
 {{-- Horizontal --}}
 <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
-    style="width:100%; max-width:900px;">
+    style="width: 100%; max-width: 900px;">
     <div class="card shadow-sm h-100 lecture-card border-brand-blue">
         <div class="row g-0 align-items-center">
-            <div class="col-auto" style="width: 220px; height: 140px;">
+            <div class="lecture-card-image col-auto" style="width: 220px; height: 140px;">
                 <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}"
                     class="img-fluid rounded-start object-fit-cover"
                     style="width: 220px; height: 140px; object-position: center top;">
@@ -31,8 +31,8 @@
     </div>
 </a>
 
-{{-- Vertical --}}
-<a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
+{{-- (Old) Vertical --}}
+{{-- <a href="{{ route('lectures.show', [$lecture, $lecture->slug]) }}" class="text-decoration-none text-dark"
     style="width: 100%; max-width: 374px;">
     <div class="card shadow-sm h-100 lecture-card border-brand-blue">
         <div class="ratio ratio-16x9">
@@ -55,4 +55,4 @@
             </div>
         </div>
     </div>
-</a>
+</a> --}}
