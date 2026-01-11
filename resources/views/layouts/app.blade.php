@@ -103,7 +103,7 @@
                             @foreach ($categoryLectures as $categoryLecture)
                                 <a href="{{ route('lectures.show', [$categoryLecture, $categoryLecture->slug]) }}"
                                     class="list-group-item border-bottom px-2 py-1 @if ($lecture->id == $categoryLecture->id) active @endif">
-                                    {{ $categoryLecture->title }}
+                                    {{ $categoryLecture->category_order }}. {{ $categoryLecture->title }}
                                 </a>
                             @endforeach
                         </div>
