@@ -71,6 +71,8 @@
                 </p>
             </div>
         </footer>
+
+        {{ questionMap }}
     </form>
 </template>
 <script setup>
