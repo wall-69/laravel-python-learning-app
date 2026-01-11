@@ -5,7 +5,10 @@
         Kvíz: {!! $quizData->header !!}
     </template>
 
-    @foreach ($quizData->questions->blocks as $index => $quizBlock)
+    @php
+        $qNum = 0;
+    @endphp
+    @foreach ($quizData->questions->blocks as $quizBlock)
         @php
             $type = $quizBlock->type;
             $data = $quizBlock->data;
@@ -25,7 +28,7 @@
                     $inputType = $correctCount == 1 ? 'radio' : 'checkbox';
                 @endphp
 
-                <quiz-choice :question-number="{{ $index }}">
+                <quiz-choice :question-number="{{ $qNum++ }}">
                     <template #question>
                         {!! $data->question !!}
                     </template>
@@ -47,7 +50,7 @@
 
             {{-- Drag and drop --}}
             @case('quizDragAndDrop')
-                <quiz-drag-and-drop :question-number="{{ $index }}">
+                <quiz-drag-and-drop :question-number="{{ $qNum++ }}">
                     <template #question>
                         {!! $data->question !!}
                     </template>

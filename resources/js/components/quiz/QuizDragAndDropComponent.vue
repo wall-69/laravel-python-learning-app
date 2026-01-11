@@ -1,5 +1,5 @@
 <template>
-    <li :data-type="type">
+    <li>
         <p
             class="mb-0 fw-bold d-flex align-items-center gap-1"
             :class="{
@@ -78,7 +78,6 @@ const slots = useSlots();
 
 // Define
 const props = defineProps({
-    type: String,
     questionNumber: Number,
 });
 
@@ -117,7 +116,7 @@ const questionMap = inject("questionMap");
 provide("questionNumber", props.questionNumber);
 
 // Computed
-const correct = computed(() => questionMap[props.questionNumber]);
+const correct = computed(() => questionMap[props.questionNumber] === true);
 
 // Functions
 function resetPosition() {

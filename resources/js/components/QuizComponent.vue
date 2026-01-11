@@ -71,6 +71,8 @@
                 </p>
             </div>
         </footer>
+
+        {{ questionMap }}
     </form>
 </template>
 <script setup>
@@ -112,22 +114,22 @@ const quizIsComplete = computed(() => completedQuizzes.includes(props.id));
 async function checkQuiz(event) {
     event.preventDefault();
 
-    let qNum = 0;
+    // Only consider elements that actually contain answers (skip paragraphs, etc.)
+    const quizQuestions = Array.from(questions.value.children).filter((child) =>
+        child.querySelector(".answers")
+    );
 
-    for (let question of questions.value.children) {
+    quizQuestions.forEach((question, qNum) => {
         let allCorrect = true;
 
         let answersContainer = question.querySelector(".answers");
-        // This can be non quiz element such as a paragraph
-        if (!answersContainer) {
-            continue;
-        }
+
         for (let answer of answersContainer.children) {
             if (answer.classList.contains("answer")) {
                 const input = answer.querySelector("input");
 
                 if (input.type == "radio" || input.type == "checkbox") {
-                    const isChecked = input.checked;
+                    const isChecked = input.checked === true;
                     const isCorrect = input.dataset.correct === "true";
 
                     if (
@@ -148,9 +150,7 @@ async function checkQuiz(event) {
         }
 
         questionMap[qNum] = allCorrect;
-
-        qNum++;
-    }
+    });
 
     if (!reveal.value) {
         results.value.scrollIntoView();
