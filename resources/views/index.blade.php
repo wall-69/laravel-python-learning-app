@@ -53,7 +53,7 @@
         <section class="p-5 d-flex flex-column flex-xl-row gap-5 justify-content-xl-between">
             {{-- Hero content --}}
             <div class="animate__animated animate__bounceInLeft d-flex flex-column gap-3" style="max-width: 670px;">
-                <img src="/img/logo.png" alt="" class="mb-3" style="max-width: 320px; width: 100%; height: auto;">
+                <img src="/img/logo.png" alt="" class="mb-3" style="max-width: 400px; width: 100%; height: auto;">
 
                 <div class="p-4 shadow-sm bg-light d-flex flex-column gap-3">
                     <div class="d-flex">
@@ -222,7 +222,5 @@
                 </div>
             </div>
         </section>
-
-        <x-footer />
     </div>
 @endsection
