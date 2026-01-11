@@ -64,5 +64,5 @@ const questionMap = inject("questionMap");
 provide("questionNumber", props.questionNumber);
 
 // Computed
-const correct = computed(() => questionMap[props.questionNumber]);
+const correct = computed(() => questionMap[props.questionNumber] === true);
 </script>
