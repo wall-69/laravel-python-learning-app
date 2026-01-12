@@ -60,6 +60,16 @@ const columnsTools = {
             maxCols: 5,
         },
     },
+
+    // Custom
+    codeRunner: {
+        class: CodeRunnerTool,
+        inlineToolbar: true,
+    },
+    codeBlock: {
+        class: CodeBlockTool,
+        inlineToolbar: true,
+    },
 };
 const accordionTools = columnsTools; // Reuse columns tools for accordion nested editor
 

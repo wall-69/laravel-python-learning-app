@@ -23,7 +23,7 @@
     @break
 
     @case('warning')
-        <div class="lecture-warning bg-warning rounded-3 px-3 py-2 mb-3">
+        <div class="bg-warning rounded-3 px-3 py-2 mb-3 w-100">
             <span class="fw-bold d-flex gap-2 mb-1">
                 <i class="bx bx-alert-triangle bx-md align-self-start"></i> {{ $blockData->title }}
             </span>
