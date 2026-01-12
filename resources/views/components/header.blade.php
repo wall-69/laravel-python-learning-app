@@ -19,15 +19,24 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a href="{{ route('lectures.index') }}"
-                            class="nav-link text-white text-decoration-underline @active('lectures.index')">Lekcie</a>
+                            class="nav-link text-white d-flex justify-content-center align-items-center gap-1">
+                            <i class="bx bxs-article bx-md"></i>
+                            Lekcie
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('exercises.index') }}"
-                            class="nav-link text-white text-decoration-underline @active('exercises.index')">Cvičenia</a>
+                            class="nav-link text-white d-flex justify-content-center align-items-center gap-1">
+                            <i class="bx bxs-keyboard bx-md"></i>
+                            Cvičenia
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('quizzes.index') }}"
-                            class="nav-link text-white text-decoration-underline @active('quizzes.index')">Kvízy</a>
+                            class="nav-link text-white d-flex justify-content-center align-items-center gap-1">
+                            <i class="bx bxs-education bx-md"></i>
+                            Kvízy
+                        </a>
                     </li>
                 </ul>
 
@@ -37,11 +46,18 @@
                         <a href="{{ route('register') }}" class="btn btn-warning">Registrovať sa</a>
                     @endguest
                     @auth
-                        <a href="{{ auth()->user()->profile_url }}" class="text-decoration-none text-white">Môj
-                            profil</a>
+                        <a href="{{ auth()->user()->profile_url }}"
+                            class="text-white text-decoration-none d-flex justify-content-center align-items-center gap-1">
+                            <i class="bx bxs-user bx-md"></i>
+                            Môj profil
+                        </a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="nav-link text-white">Odhlásiť sa</button>
+                            <button type="submit"
+                                class="nav-link text-white d-flex justify-content-center align-items-center gap-1">
+                                <i class="bx bx-arrow-in-left-square-half bx-md"></i>
+                                Odhlásiť sa
+                            </button>
                         </form>
                         @if (auth()->user()->admin)
                             <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin panel</a>
