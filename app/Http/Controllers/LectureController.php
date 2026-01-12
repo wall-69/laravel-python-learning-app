@@ -30,7 +30,7 @@ class LectureController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $paginator = Lecture::search($request->get("search") ?? "")->with("category")->paginate(10);
+        $paginator = Lecture::search($request->get("search") ?? "")->with("category")->orderBy("category_id")->orderBy("category_order")->paginate(10);
 
         return view("admin.lectures.index", [
             "lectures" => $paginator,
