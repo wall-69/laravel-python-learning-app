@@ -8,7 +8,7 @@
             <div class="lecture-card-image col-auto" style="width: 220px; height: 140px;">
                 <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}"
                     class="img-fluid rounded-start object-fit-cover"
-                    style="width: 220px; height: 140px; object-position: center top;">
+                    style="width: 220px; height: 140px; object-position: center;">
             </div>
 
             <div class="col">
@@ -37,7 +37,7 @@
     <div class="card shadow-sm h-100 lecture-card border-brand-blue">
         <div class="ratio ratio-16x9">
             <img src="{{ asset($lecture->thumbnail) }}" alt="{{ $lecture->title }}" class="rounded-top object-fit-cover"
-                style="object-position: center top;">
+                style="object-position: center;">
         </div>
 
         <div class="card-body d-flex flex-column">
