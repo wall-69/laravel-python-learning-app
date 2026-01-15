@@ -47,8 +47,9 @@ export default class AccordionTool {
     }
 
     async save(blockContent) {
-        const items =
-            this.accordionContainer.querySelectorAll(".accordion-item");
+        const items = this.accordionContainer.querySelectorAll(
+            ".editor-accordion-item"
+        );
         this.questions = [];
 
         for (const item of items) {
@@ -79,6 +80,8 @@ export default class AccordionTool {
             this.questions.push({ question, answer: answerBlocks });
         }
 
+        console.log(this.questions);
+
         return {
             questions: this.questions,
         };
@@ -92,16 +95,16 @@ export default class AccordionTool {
             (index || 0) + 1
         }`;
         const accordionItem = document.createElement("div");
-        accordionItem.classList.add("accordion-item", "mb-2");
+        accordionItem.classList.add("editor-accordion-item", "mb-2");
 
         accordionItem.innerHTML = `
-			<h5 class="accordion-header">
+			<div>
 				<span class="editor-editable editor-accordion-question" contenteditable="true">
 					${item.question}
 				</span>
 				<button type="button" class="btn btn-sm btn-danger ms-2 remove-accordion">X</button>
-			</h5>
-			<div id="${questionId}" class="" data-bs-parent="#accordion-1">
+			</div>
+			<div id="${questionId}" class="border-bottom" data-bs-parent="#accordion-1">
 				<div class="editor-accordion-answer"></div>
 			</div>
 		`;
@@ -113,7 +116,7 @@ export default class AccordionTool {
         const removeBtn = accordionItem.querySelector(".remove-accordion");
         removeBtn.addEventListener("click", (e) => {
             e.preventDefault();
-            const itemEl = e.target.closest(".accordion-item");
+            const itemEl = e.target.closest(".editor-accordion-item");
             const editorInstance = this.editors.get(itemEl);
             if (
                 editorInstance &&

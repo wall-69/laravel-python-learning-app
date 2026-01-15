@@ -90,7 +90,7 @@ $theme-colors: map-merge(
     padding-bottom: 150px !important;
 }
 #editor .editor-accordion .codex-editor__redactor {
-    padding-bottom: 50px !important;
+    padding-bottom: 0px !important;
 }
 
 .editor-code-runner-header:empty::before,
