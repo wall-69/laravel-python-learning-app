@@ -33,7 +33,21 @@ class UserController extends Controller
             return redirect($user->profile_url);
         }
 
-        $latestActivity = $user->completedQuizzes->merge($user->completedExercises)->sortByDesc('created_at')->take(5);
+        $latestActivity = $user->completedQuizzes
+            ->map(function ($c) {
+                $c->header = data_get($c->quiz?->block, 'data.header');
+                $c->type = 'quiz';
+                return $c;
+            })
+            ->merge(
+                $user->completedExercises->map(function ($c) {
+                    $c->header = data_get($c->exercise?->block, 'data.header');
+                    $c->type = 'exercise';
+                    return $c;
+                })
+            )
+            ->sortByDesc('created_at')
+            ->take(10);
 
         return view("user.profile", [
             "user" => $user->load("progress"),

@@ -5,6 +5,7 @@
 // Functions
 @import "bootstrap/scss/functions";
 
+// Variables
 @import "bootstrap/scss/variables";
 
 // Custom colors
@@ -17,7 +18,7 @@ $theme-colors: map-merge(
     )
 );
 
-// Variables
+// Custom variables
 @import "variables";
 
 // Bootstrap
@@ -41,6 +42,11 @@ $theme-colors: map-merge(
 }
 .bx-lg {
     font-size: 2rem;
+}
+
+// Shadows
+.shadow-md {
+    box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.15) !important;
 }
 
 // Alerts
@@ -182,21 +188,30 @@ div.editor-editable {
     }
 }
 
-// User progress
-.user-progress {
-    width: 100%;
-}
-
-@media (min-width: 375px) {
-    .user-progress {
-        width: 50%;
-    }
-}
-
+// User profile
 @media (min-width: 768px) {
-    .user-progress {
-        width: 35%;
+    #user-profile-card {
+        box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.15) !important;
     }
+}
+
+.fade-scroll-wrap {
+    position: relative;
+}
+
+.fade-scroll-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 64px;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 1)
+    );
 }
 
 // Lectures

@@ -20,8 +20,8 @@
 
         <x-header :lecture="null" :category-lectures="null" />
 
-        <main class="flex-grow-1 row g-0">
-            <div class="col-12 col-lg-10 container py-3">
+        <main class="flex-grow-1">
+            <div class="container py-3">
                 @yield('content')
             </div>
         </main>
@@ -33,6 +33,26 @@
     <script>
         window.completedQuizzes = @json($completedQuizzes ?? []);
         window.completedExercises = @json($completedExercises ?? []);
+    </script>
+
+    {{-- Activities line --}}
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function() {
+            const activityLines = document.querySelectorAll(".activity-line");
+
+            window.addEventListener("resize", function() {
+                resizeActivityLines();
+            });
+
+            resizeActivityLines();
+
+            function resizeActivityLines() {
+                activityLines.forEach(line => {
+                    const parentHeight = line.parentElement.nextElementSibling.offsetHeight;
+                    line.style.height = parentHeight + "px";
+                });
+            }
+        });
     </script>
 </body>
 

@@ -13,7 +13,7 @@
                 @csrf
                 @method('POST')
 
-                <button type="submit" class="link-primary border-0 bg-transparent px-0">kliknutím sem</button>.
+                <button type="submit" class="link-secondary border-0 bg-transparent px-0">kliknutím sem</button>.
             </form>
         </div>
     @endif
