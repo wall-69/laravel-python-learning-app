@@ -21,7 +21,7 @@
                 @foreach ($lecture->exercises as $nth => $exercise)
                     <tr onclick="window.location='{{ route('exercises.show', $exercise) }}'" style="cursor: pointer;">
                         <td class="text-center">
-                            @if (auth()->user()->completedExercises->contains('exercise_id', $exercise->id))
+                            @if (auth()->user()?->completedExercises->contains('exercise_id', $exercise->id))
                                 <i class="bx bx-check bx-md text-success align-middle"></i>
                             @else
                                 <i class="bx bx-x bx-md text-danger align-middle"></i>

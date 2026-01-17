@@ -109,13 +109,13 @@ Route::controller(CodeRunnerController::class)->middleware(["auth", "verified"])
 });
 
 // Quiz
-Route::controller(QuizController::class)->middleware(["auth", "verified"])->name("quizzes.")->group(function () {
+Route::controller(QuizController::class)->middleware(["auth"])->name("quizzes.")->group(function () {
     Route::get("/kvizy", "index")->name("index");
     Route::get("/kviz/{quiz}", "show")->name("show");
 });
 
 // Exercise
-Route::controller(ExerciseController::class)->middleware(["auth", "verified"])->name("exercises.")->group(function () {
+Route::controller(ExerciseController::class)->middleware(["auth"])->name("exercises.")->group(function () {
     Route::get("/cvicenia", "index")->name("index");
     Route::get("/cvicenie/{exercise}", "show")->name("show");
 

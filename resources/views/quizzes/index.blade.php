@@ -21,7 +21,7 @@
                 @foreach ($lecture->quizzes as $nth => $quiz)
                     <tr onclick="window.location='{{ route('quizzes.show', $quiz) }}'" style="cursor: pointer;">
                         <td class="text-center">
-                            @if (auth()->user()->completedQuizzes->contains('quiz_id', $quiz->id))
+                            @if (auth()->user()?->completedQuizzes->contains('quiz_id', $quiz->id))
                                 <i class="bx bx-check bx-md text-success align-middle"></i>
                             @else
                                 <i class="bx bx-x bx-md text-danger align-middle"></i>
