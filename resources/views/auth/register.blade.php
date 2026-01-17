@@ -5,7 +5,7 @@
         @csrf
         @method('POST')
 
-        <h3 class="text-center text-primary mb-3">
+        <h3 class="text-center text-secondary mb-3">
             Registrovať sa
         </h3>
 
@@ -101,7 +101,7 @@
 
         {{-- Sign in --}}
         <div class="text-center">
-            <button type="submit" class="btn btn-primary py-2">
+            <button type="submit" class="btn btn-secondary py-2">
                 Registrovať sa
             </button>
         </div>
@@ -109,7 +109,7 @@
         <hr class="w-75 mx-auto">
 
         <p>
-            Už máte účet? <a href="{{ route('login') }}" class="link-primary">Prihláste sa tu</a>.
+            Už máte účet? <a href="{{ route('login') }}" class="link-secondary">Prihláste sa tu</a>.
         </p>
     </form>
 @endsection

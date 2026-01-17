@@ -5,18 +5,20 @@
 // Functions
 @import "bootstrap/scss/functions";
 
-// Variables
-@import "variables";
 @import "bootstrap/scss/variables";
 
 // Custom colors
 $theme-colors: map-merge(
     $theme-colors,
     (
+        "primary": #022f66,
+        "secondary": #4d5eff,
         "brand-blue": #74c1fc,
-        "brand-purple": #022f66,
     )
 );
+
+// Variables
+@import "variables";
 
 // Bootstrap
 @import "bootstrap/scss/maps";

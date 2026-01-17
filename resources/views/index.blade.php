@@ -3,7 +3,7 @@
 @section('content')
     <div class="d-flex flex-column">
         {{-- Navbar --}}
-        <header class="bg-brand-purple">
+        <header class="bg-primary">
             <nav class="navbar navbar-expand-md border-bottom">
                 <div class="container">
                     <button class="ms-auto bg-transparent text-white border-0 d-md-none align-items-center d-flex"
