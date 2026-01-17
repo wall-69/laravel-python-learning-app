@@ -90,17 +90,18 @@ async function executeCode(socket, data) {
 
         timeoutHandle = setTimeout(
             () => cleanup(TIMEOUT_ERROR_MESSAGE),
-            TIMEOUT_SECONDS * 1000
+            TIMEOUT_SECONDS * 1000,
         );
     }
 
     try {
         container = await docker.createContainer({
             Image: "fernefer/python-3.12-slim-student:1.0",
+            WorkingDir: "/code",
             Cmd: [
                 "sh",
                 "-c",
-                `cat << 'EOF' > /main.py && python3 -u /main.py\n${data.code}\nEOF`,
+                `cat << 'EOF' > /code/main.py && python3 -u /code/main.py\n${data.code}\nEOF`,
             ],
             AttachStdin: true,
             AttachStdout: true,
@@ -109,10 +110,21 @@ async function executeCode(socket, data) {
             OpenStdin: true,
             StdinOnce: false,
             HostConfig: {
+                AutoRemove: true,
+                NetworkMode: "none",
+
                 Memory: 64 * 1024 * 1024,
                 CpuQuota: 50000,
-                NetworkMode: "none",
-                AutoRemove: true,
+                PidsLimit: 64,
+
+                ReadonlyRootfs: true,
+                Tmpfs: {
+                    "/code": "rw,size=15m,noexec,nosuid,nodev",
+                    "/tmp": "rw,size=8m,noexec,nosuid,nodev",
+                },
+
+                CapDrop: ["ALL"],
+                SecurityOpt: ["no-new-privileges"],
             },
         });
 
@@ -163,7 +175,7 @@ async function executeCode(socket, data) {
         // Start a timeout that will cleanup if the whole run takes too long
         timeoutHandle = setTimeout(
             () => cleanup(TIMEOUT_ERROR_MESSAGE),
-            TIMEOUT_SECONDS * 1000
+            TIMEOUT_SECONDS * 1000,
         );
 
         // Wait for container to finish. If timeout triggers, cleanup() will kill the container
@@ -248,7 +260,7 @@ io.use(async (socket, next) => {
         const response = await axios.post(
             LARAVEL_VALIDATE_URL,
             {},
-            { headers, timeout: 2000 }
+            { headers, timeout: 2000 },
         );
 
         if (response.data && response.data.success) {

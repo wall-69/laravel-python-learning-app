@@ -141,26 +141,40 @@ class ExerciseController extends Controller
         $command = [
             "docker",
             "run",
+
             "--rm",
             "--network=none",
+
             "--cpus=0.5",
-            "--memory=100m",
+            "--memory=64m",
+            "--pids-limit=64",
+
+            "--read-only",
             "--tmpfs",
-            "/code:rw,size=15m",
+            "/code:rw,size=15m,noexec,nosuid,nodev",
+            "--tmpfs",
+            "/tmp:rw,size=8m,noexec,nosuid,nodev",
+
+            "--cap-drop=ALL",
+            "--security-opt=no-new-privileges",
+
             "-e",
             "PYTHON_CHECKS=$checksJson",
             "-e",
             "PYTHON_TESTS=$testsJson",
             "-e",
             "PYTHON_INPUTS=$inputsJson",
+
             "-v",
             "$tempFile:/code/main.py:ro",
             "-w",
             "/code",
+
             "fernefer/python-3.12-slim-student-exercise:1.0",
             "python3",
-            "/code/main.py"
+            "/code/main.py",
         ];
+
 
         $process = new Process($command, cwd: base_path(), timeout: 10);
         $process->run();
